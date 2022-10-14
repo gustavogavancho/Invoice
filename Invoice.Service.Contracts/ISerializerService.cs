@@ -1,6 +1,6 @@
 ﻿namespace Invoice.Service.Contracts;
 
-public interface ISeriazerService
+public interface ISerializerService
 {
     Task SerializeInvoiceType();
 }

@@ -1,9 +1,8 @@
 ﻿using Invoice.Service.Contracts;
-using Ubl.V2.Pe.maindoc;
 
 namespace Invoice.Service;
 
-public class SerializerService : ISeriazerService
+public class SerializerService : ISerializerService
 {
     public async Task SerializeInvoiceType()
     {
