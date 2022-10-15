@@ -11,10 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Invoice.LoggerService\Invoice.LoggerService.csproj" />
     <ProjectReference Include="..\Invoice.Repository\Invoice.Repository.csproj" />
     <ProjectReference Include="..\Invoice.Service\Invoice.Service.csproj" />

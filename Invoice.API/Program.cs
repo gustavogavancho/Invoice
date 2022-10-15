@@ -4,7 +4,8 @@ using Invoice.Service.Contracts;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddScoped<ISerializerService, SerializerService>();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddScoped<IInvoiceSerializerService, InvoiceSerializerService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
