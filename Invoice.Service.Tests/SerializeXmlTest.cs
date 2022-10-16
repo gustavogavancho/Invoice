@@ -9,8 +9,8 @@ namespace Invoice.Service
         {
             //Arrange
             var service = new SerializeXmlService();
-            var fileName = "InvoiceTypeTest";
-            var path = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + "\\XMLTest";
+            var fileName = "InvoiceTypeTest.xml";
+            var path = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + "\\XML";
             var documentType = typeof(InvoiceType);
             var document = new InvoiceType
             {

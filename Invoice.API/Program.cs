@@ -5,7 +5,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddScoped<IInvoiceSerializerService, InvoiceSerializerService>();
+builder.Services.AddScoped<IInvoiceService, InvoiceService>();
+builder.Services.AddScoped<ISerializeXmlService, SerializeXmlService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

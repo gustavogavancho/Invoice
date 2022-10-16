@@ -1,15 +1,20 @@
 ﻿using Invoice.Service.Contracts;
 using Invoice.Shared;
 using Invoice.Shared.Request;
-using System.Xml;
-using System.Xml.Serialization;
 using UBLSunatPE;
 
 namespace Invoice.Service;
 
-public class InvoiceSerializerService : IInvoiceSerializerService
+public class InvoiceService : IInvoiceService
 {
-    public void SerializeInvoiceType(InvoiceRequest request)
+    private readonly ISerializeXmlService _serializeXmlService;
+
+    public InvoiceService(ISerializeXmlService serializeXmlService)
+    {
+        _serializeXmlService = serializeXmlService;
+    }
+
+    public void SendInvoiceType(InvoiceRequest request)
     {
         var invoice = new InvoiceType
         {
@@ -396,33 +401,7 @@ public class InvoiceSerializerService : IInvoiceSerializerService
 
         var fileName = $"{request.SenderData.SenderId}-{request.InvoiceData.DocumentType}-{request.InvoiceData.Serie}{request.InvoiceData.SerialNumber.ToString("00")}-{request.InvoiceData.CorrelativeNumber.ToString("00000000")}.xml";
         var path = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + "\\XML";
-        
-        //Serialize docuemnt to XML
-        SerializeXmlDocument(fileName, path, typeof(InvoiceType), invoice);
-    }
 
-    private static void SerializeXmlDocument(string fileName, string path, Type documentType, object document)
-    {
-        if (!Directory.Exists(path))
-        {
-            Directory.CreateDirectory(path);
-        }
-
-        using var xmlWriter = XmlWriter.Create($"{path}\\{fileName}", new XmlWriterSettings
-        {
-            Indent = true,
-            IndentChars = "\t",
-        });
-
-        try
-        {
-            var xmlSerialized = new XmlSerializer(documentType);
-
-            xmlSerialized.Serialize(xmlWriter, document);
-        }
-        finally
-        {
-            xmlWriter.Close();
-        }
+        _serializeXmlService.SerializeXmlDocument(fileName, path, typeof(InvoiceType), invoice);
     }
 }

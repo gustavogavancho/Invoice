@@ -2,7 +2,7 @@
 
 namespace Invoice.Service.Contracts;
 
-public interface IInvoiceSerializerService
+public interface IInvoiceService
 {
-    void SerializeInvoiceType(InvoiceRequest request);
+    void SendInvoiceType(InvoiceRequest request);
 }

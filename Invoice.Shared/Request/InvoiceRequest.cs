@@ -11,8 +11,8 @@ public record InvoiceRequest
     [Required] public SenderDataRequest SenderData { get; set; } = default!;
     [Required] public ReceiverDataRequest ReceiverData { get; set; } = default!;
     [Required] public IEnumerable<PaymentTermsRequest> PaymentTerms { get; set; } = default!;
-    [Required, Range(0, 9999999999999999.99)] public decimal TaxTotalAmount { get; set; }
-    [Required, Range(0, 9999999999999999.99)] public decimal TotalAmount { get; set; }
+    [Range(0, 9999999999999999.99)] public decimal TaxTotalAmount { get; set; }
+    [Range(0, 9999999999999999.99)] public decimal TotalAmount { get; set; }
     [Required] public IEnumerable<TaxSubTotalRequest> TaxSubTotal { get; set; } = default!;
     [Required] public IEnumerable<ProductsDetailsRequest> ProductsDetail { get; set; } = default!;
 }

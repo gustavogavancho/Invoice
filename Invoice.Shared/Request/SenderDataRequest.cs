@@ -2,7 +2,7 @@
 
 namespace Invoice.Shared.Request;
 
-public class SenderDataRequest
+public record SenderDataRequest
 {
     [Range(10000000000, 99999999999)]public ulong SenderId { get; set; } //RUC 
     [Required] public string SenderName { get; set; } = default!;

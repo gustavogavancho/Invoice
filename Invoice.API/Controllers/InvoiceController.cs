@@ -8,9 +8,9 @@ namespace Invoice.API.Controllers;
 [ApiController]
 public class InvoiceController : ControllerBase
 {
-	private readonly IInvoiceSerializerService _invoiceSerializerService;
+	private readonly IInvoiceService _invoiceSerializerService;
 
-	public InvoiceController(IInvoiceSerializerService invoiceSerializerService)
+	public InvoiceController(IInvoiceService invoiceSerializerService)
 	{
 		_invoiceSerializerService = invoiceSerializerService;
 	}
@@ -18,7 +18,7 @@ public class InvoiceController : ControllerBase
 	[HttpPost("Send")]
 	public IActionResult Send(InvoiceRequest request)
 	{
-		_invoiceSerializerService.SerializeInvoiceType(request);
+		_invoiceSerializerService.SendInvoiceType(request);
 
 		return Ok();
 	}
