@@ -1,3 +1,4 @@
+using Invoice.Contracts;
 using Invoice.Repository;
 using Invoice.Service;
 using Invoice.Service.Contracts;
@@ -8,8 +9,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IInvoiceService, InvoiceService>();
+builder.Services.AddScoped<ISenderService, SenderService>();
 builder.Services.AddScoped<ISerializeXmlService, SerializeXmlService>();
 builder.Services.AddScoped<ISignerService, SignerService>();
+
+builder.Services.AddScoped<ISenderRepository, SenderRepository>();
 
 builder.Services.AddDbContext<InvoiceContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
