@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Invoice.Shared.Request;
+namespace Invoice.Entities;
 
-public record SenderDataRequest
+public class Sender
 {
+    public Guid Id { get; set; }
     [Range(10000000000, 99999999999)] public ulong SenderId { get; set; } //RUC 
     [Required] public string SenderName { get; set; } = default!;
     [Required, MinLength(1), MaxLength(1)] public string SenderType { get; set; } = default!; //Catalog 6

@@ -13,7 +13,7 @@ public class SerializeXmlService : ISerializeXmlService
             Directory.CreateDirectory(path);
         }
 
-        using var xmlWriter = XmlWriter.Create($"{path}\\{fileName}", new XmlWriterSettings
+        using var xmlWriter = XmlWriter.Create(Path.Combine(path, fileName), new XmlWriterSettings
         {
             Indent = true,
             IndentChars = "\t",

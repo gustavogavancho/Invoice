@@ -8,10 +8,13 @@ namespace Invoice.Service;
 public class InvoiceService : IInvoiceService
 {
     private readonly ISerializeXmlService _serializeXmlService;
+    private readonly ISignerService _signerService;
 
-    public InvoiceService(ISerializeXmlService serializeXmlService)
+    public InvoiceService(ISerializeXmlService serializeXmlService,
+        ISignerService signerService)
     {
         _serializeXmlService = serializeXmlService;
+        _signerService = signerService;
     }
 
     public void SendInvoiceType(InvoiceRequest request)
@@ -403,5 +406,7 @@ public class InvoiceService : IInvoiceService
         var path = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + "\\XML";
 
         _serializeXmlService.SerializeXmlDocument(fileName, path, typeof(InvoiceType), invoice);
+
+        _signerService.SignXml(Path.Combine(path, fileName), "20606022779");
     }
 }
