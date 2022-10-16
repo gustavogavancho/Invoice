@@ -394,8 +394,11 @@ public class InvoiceSerializerService : IInvoiceSerializerService
 
         #endregion
 
+        var fileName = $"{request.SenderData.SenderId}-{request.InvoiceData.DocumentType}-{request.InvoiceData.Serie}{request.InvoiceData.SerialNumber.ToString("00")}-{request.InvoiceData.CorrelativeNumber.ToString("00000000")}.xml";
+        var path = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + "\\XML";
+        
         //Serialize docuemnt to XML
-        SerializeXmlDocument("InvoiceType.xml", Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + $"\\XML", typeof(InvoiceType), invoice);
+        SerializeXmlDocument(fileName, path, typeof(InvoiceType), invoice);
     }
 
     private static void SerializeXmlDocument(string fileName, string path, Type documentType, object document)
