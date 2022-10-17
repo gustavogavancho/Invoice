@@ -76,5 +76,20 @@ namespace Invoice.Repository.Tests
             //Assert
             Assert.Equal(senderSaved.SenderName, sender.SenderName);
         }
+
+        [Fact]
+        public async Task DeleteSenderTest()
+        {
+            //Arrange 
+            var fixture = new Fixture();
+            var id = Guid.Parse("CCE03168-F901-4B23-AE9C-FC031D9DC888");
+
+            //Act
+            await _senderRepository.DeleteSender(id);
+            var senderSaved = await _contextFixture.Context.Senders.FindAsync(id);
+
+            //Assert
+            Assert.Null(senderSaved);
+        }
     }
 }

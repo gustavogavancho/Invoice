@@ -25,6 +25,14 @@ public class SenderController : ControllerBase
         return StatusCode(StatusCodes.Status201Created);
     }
 
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> DeleteSender(Guid id)
+    {
+        await _senderService.DeleteSender(id);
+
+        return Ok();
+    }
+
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<SenderResponse>> GetSender(Guid id)
     {

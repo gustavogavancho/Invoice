@@ -19,6 +19,17 @@ public class SenderRepository : ISenderRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task DeleteSender(Guid id)
+    {
+        var sender = await _context.Senders.FindAsync(id);
+
+        if (sender is not null)
+        {
+            _context.Senders.Remove(sender);
+            await _context.SaveChangesAsync();
+        }
+    }
+
     public async Task<Sender> GetSender(Guid id)
     {
         var sender = await _context.Senders.FindAsync(id);

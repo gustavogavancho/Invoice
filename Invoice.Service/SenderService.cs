@@ -26,6 +26,11 @@ public class SenderService : ISenderService
         await _senderRepository.CreateSender(sender);
     }
 
+    public async Task DeleteSender(Guid id)
+    {
+        await _senderRepository.DeleteSender(id);
+    }
+
     public async Task<SenderResponse> GetSender(Guid guid)
     {
         var sender = await _senderRepository.GetSender(guid);

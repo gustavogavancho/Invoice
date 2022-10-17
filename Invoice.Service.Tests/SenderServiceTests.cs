@@ -9,11 +9,11 @@ using Moq;
 
 namespace Invoice.Service.Tests;
 
-public class SennderServiceTests
+public class SenderServiceTests
 {
     private readonly Mapper _mapper;
 
-    public SennderServiceTests()
+    public SenderServiceTests()
     {
         var mapperConfiguration = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
         _mapper = new Mapper(mapperConfiguration);
@@ -99,13 +99,27 @@ public class SennderServiceTests
         var senderRepository = new Mock<ISenderRepository>();
         senderRepository.Setup(x => x.UpdateSender(It.IsAny<Guid>(), It.IsAny<Sender>())).Verifiable();
 
-        var senderService = new SenderService(senderRepository.Object, _mapper);
-
-
         //Act
+        var senderService = new SenderService(senderRepository.Object, _mapper);
         await senderService.UpdateSender(id, senderDataRequestToUpdate);
 
         //Assert
         senderRepository.Verify(x => x.UpdateSender(It.IsAny<Guid>(), It.IsAny<Sender>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task DeleteSenderTest()
+    {
+        //Arrange 
+        var id = Guid.Parse("CCE03168-F901-4B23-AE9C-FC031D9DC888");
+        var senderRepository = new Mock<ISenderRepository>();
+
+        //Act
+        var senderService = new SenderService(senderRepository.Object, _mapper);
+
+        await senderService.DeleteSender(id);
+
+        //Assert
+        senderRepository.Verify(x => x.DeleteSender(It.IsAny<Guid>()), Times.Once);
     }
 }
