@@ -30,4 +30,23 @@ public class SenderRepository : ISenderRepository
         var senders = await _context.Senders.ToListAsync();
         return senders;
     }
+
+    public async Task UpdateSender(Guid id, Sender sender)
+    {
+        var senderDb = await _context.Senders.FindAsync(id);
+
+        if (senderDb is not null)
+        {
+            senderDb.SenderName = sender.SenderName;
+            senderDb.SenderType = sender.SenderType;
+            senderDb.Department = sender.Department;
+            senderDb.Province = sender.Province;
+            senderDb.District = sender.District;
+            senderDb.Address = sender.Address;
+            senderDb.EstablishmentCode = sender.EstablishmentCode;
+            senderDb.GeoCode = sender.GeoCode;
+        }
+
+        await _context.SaveChangesAsync();
+    }
 }

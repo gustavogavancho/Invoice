@@ -40,4 +40,12 @@ public class SenderController : ControllerBase
 
         return Ok(senderResponses);
     }
+
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> UpdateSender(Guid id, SenderDataRequest senderResponse)
+    {
+        await _senderService.UpdateSender(id, senderResponse);
+
+        return NoContent();
+    }
 }

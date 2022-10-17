@@ -43,4 +43,11 @@ public class SenderService : ISenderService
 
         return senderResponses;
     }
+
+    public async Task UpdateSender(Guid id, SenderDataRequest senderDataRequestRequest)
+    {
+        var sender = _mapper.Map<SenderDataRequest, Sender>(senderDataRequestRequest);
+
+        await _senderRepository.UpdateSender(id, sender);
+    }
 }

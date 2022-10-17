@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using AutoFixture.Kernel;
 using Invoice.API.Controllers;
 using Invoice.Entities;
 using Invoice.Service.Contracts;
@@ -6,6 +7,7 @@ using Invoice.Shared.Request;
 using Invoice.Shared.Response;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using System.Reflection;
 
 namespace Invoice.API.Tests.Controllers;
 
@@ -74,5 +76,25 @@ public class SenderControllerTests
         var response = Assert.IsType<SenderResponse>(okObjectResult.Value);
 
         Assert.Equal(response.SenderName, sender.SenderName);
+    }
+
+    [Fact]
+    public async Task UpdateSenderTest()
+    {
+        //Arrange
+        var fixture = new Fixture();
+        var id = Guid.Parse("CCE03168-F901-4B23-AE9C-FC031D9DC888");
+        var senderDataRequest = fixture.Create<SenderDataRequest>();
+        var senderService = new Mock<ISenderService>();
+        senderService.Setup(x => x.UpdateSender(id, senderDataRequest)).Verifiable();
+
+        //Act
+        var senderController = new SenderController(senderService.Object);
+        IActionResult sut = await senderController.UpdateSender(id, senderDataRequest);
+
+        //Assert
+        senderService.Verify(x => x.UpdateSender(id, senderDataRequest), Times.Once);
+        var statusCodeResult = Assert.IsType<NoContentResult>(sut);
+        Assert.Equal(204, statusCodeResult.StatusCode);
     }
 }

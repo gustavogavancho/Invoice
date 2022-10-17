@@ -8,4 +8,5 @@ public interface ISenderService
     Task CreateSender(SenderDataRequest senderRequest);
     Task<SenderResponse> GetSender(Guid guid);
     Task<List<SenderResponse>> GetSenders();
+    Task UpdateSender(Guid id, SenderDataRequest senderDataRequestRequest);
 }

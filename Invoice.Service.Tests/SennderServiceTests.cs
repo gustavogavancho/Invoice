@@ -81,10 +81,31 @@ public class SennderServiceTests
         //Act
         var senderService = new SenderService(senderRepository.Object, _mapper);
 
-        SenderResponse sut = await senderService.GetSenders(It.IsAny<Guid>());
+        SenderResponse sut = await senderService.GetSender(It.IsAny<Guid>());
 
         //Assert
         Assert.NotNull(sut);
         senderRepository.Verify(x => x.GetSender(It.IsAny<Guid>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task UpdateSenderTest()
+    {
+        //Arrange
+        var fixture = new Fixture();
+        var senderDataRequestToUpdate = fixture.Create<SenderDataRequest>();
+        var id = Guid.Parse("CCE03168-F901-4B23-AE9C-FC031D9DC888");
+
+        var senderRepository = new Mock<ISenderRepository>();
+        senderRepository.Setup(x => x.UpdateSender(It.IsAny<Guid>(), It.IsAny<Sender>())).Verifiable();
+
+        var senderService = new SenderService(senderRepository.Object, _mapper);
+
+
+        //Act
+        await senderService.UpdateSender(id, senderDataRequestToUpdate);
+
+        //Assert
+        senderRepository.Verify(x => x.UpdateSender(It.IsAny<Guid>(), It.IsAny<Sender>()), Times.Once);
     }
 }
