@@ -1,5 +1,6 @@
 ﻿using Invoice.Contracts;
 using Invoice.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Invoice.Repository;
 
@@ -16,5 +17,11 @@ public class SenderRepository : ISenderRepository
     {
         _context.Senders.Add(sender);
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<List<Sender>> GetSenders()
+    {
+        var senders = await _context.Senders.ToListAsync();
+        return senders;
     }
 }
