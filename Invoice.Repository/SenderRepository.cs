@@ -19,6 +19,12 @@ public class SenderRepository : ISenderRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task<Sender> GetSender(Guid id)
+    {
+        var sender = await _context.Senders.FindAsync(id);
+        return sender;
+    }
+
     public async Task<List<Sender>> GetSenders()
     {
         var senders = await _context.Senders.ToListAsync();

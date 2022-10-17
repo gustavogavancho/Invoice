@@ -1,5 +1,4 @@
 using AutoFixture;
-using Invoice.Contracts;
 using Invoice.Entities;
 using Invoice.Repository.Tests.ClassFixture;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +44,19 @@ namespace Invoice.Repository.Tests
 
             //Assert
             Assert.Equal(senders.Count, sut.Count());
+        }
+
+        [Fact]
+        public async Task GetSenderTest()
+        {
+            //Arrange
+            var id = Guid.Parse("CCE03168-F901-4B23-AE9C-FC031D9DC888");
+
+            //Act
+            Sender sut = await _senderRepository.GetSender(id);
+
+            //Assert
+            Assert.NotNull(sut);
         }
     }
 }

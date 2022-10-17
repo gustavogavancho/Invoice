@@ -26,6 +26,15 @@ public class SenderService : ISenderService
         await _senderRepository.CreateSender(sender);
     }
 
+    public async Task<SenderResponse> GetSender(Guid guid)
+    {
+        var sender = await _senderRepository.GetSender(guid);
+
+        var senderResponse = _mapper.Map<Sender, SenderResponse>(sender);
+
+        return senderResponse;
+    }
+
     public async Task<List<SenderResponse>> GetSenders()
     {
         var senders = await _senderRepository.GetSenders();

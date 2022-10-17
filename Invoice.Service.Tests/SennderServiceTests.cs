@@ -4,8 +4,8 @@ using Invoice.Contracts;
 using Invoice.Entities;
 using Invoice.Service.Profiles;
 using Invoice.Shared.Request;
+using Invoice.Shared.Response;
 using Moq;
-using System.Reflection;
 
 namespace Invoice.Service.Tests;
 
@@ -56,14 +56,35 @@ public class SennderServiceTests
         //Act
         var senderService = new SenderService(senderRepository.Object, _mapper);
 
-        List<Sender> sut = await senderService.GetSenders();
+        var sut = await senderService.GetSenders();
 
         //Assert
         foreach (var sender in sut)
         {
-            Assert.IsType<Sender>(sender);
+            Assert.IsType<SenderResponse>(sender);
         }
 
         Assert.Equal(3, sut.Count());
+    }
+
+    [Fact]
+    public async Task GetSenderTest()
+    {
+        //Arrange
+        var fixture = new Fixture();
+        var sender = fixture.Create<Sender>();
+
+        var senderRepository = new Mock<ISenderRepository>();
+        senderRepository.Setup(x => x.GetSender(It.IsAny<Guid>()))
+            .ReturnsAsync(sender);
+
+        //Act
+        var senderService = new SenderService(senderRepository.Object, _mapper);
+
+        SenderResponse sut = await senderService.GetSenders(It.IsAny<Guid>());
+
+        //Assert
+        Assert.NotNull(sut);
+        senderRepository.Verify(x => x.GetSender(It.IsAny<Guid>()), Times.Once);
     }
 }

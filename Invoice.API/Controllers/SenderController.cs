@@ -25,6 +25,14 @@ public class SenderController : ControllerBase
         return StatusCode(StatusCodes.Status201Created);
     }
 
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult<SenderResponse>> GetSender(Guid id)
+    {
+        var senderResponse = await _senderService.GetSender(id);
+
+        return Ok(senderResponse);
+    }
+
     [HttpGet]
     public async Task<ActionResult<List<SenderResponse>>> GetSenders()
     {

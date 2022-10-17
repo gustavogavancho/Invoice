@@ -1,8 +1,6 @@
 ﻿using AutoFixture;
-using AutoFixture.Kernel;
 using Invoice.API.Controllers;
 using Invoice.Entities;
-using Invoice.Service;
 using Invoice.Service.Contracts;
 using Invoice.Shared.Request;
 using Invoice.Shared.Response;
@@ -33,7 +31,7 @@ public class SenderControllerTests
     }
 
     [Fact]
-    public async Task GetSenders()
+    public async Task GetSendersTest()
     {
         //Arrange
         var fixture = new Fixture();
@@ -53,5 +51,28 @@ public class SenderControllerTests
         var response = Assert.IsType<List<SenderResponse>>(okObjectResult.Value);
 
         Assert.Equal(senders.FirstOrDefault().SenderName, response.FirstOrDefault().SenderName);
+    }
+
+    [Fact]
+    public async Task GetSenderTest()
+    {
+        //Arrange
+        var fixture = new Fixture();
+        var sender = fixture.Create<SenderResponse>();
+        var senderService = new Mock<ISenderService>();
+        senderService.Setup(x => x.GetSender(sender.Id)).ReturnsAsync(sender);
+
+        //Act
+        var senderController = new SenderController(senderService.Object);
+        var sut = await senderController.GetSender(sender.Id);
+
+        //Assert
+        var actionResult = Assert.IsType<ActionResult<SenderResponse>>(sut);
+
+        var okObjectResult = Assert.IsType<OkObjectResult>(actionResult.Result);
+
+        var response = Assert.IsType<SenderResponse>(okObjectResult.Value);
+
+        Assert.Equal(response.SenderName, sender.SenderName);
     }
 }
