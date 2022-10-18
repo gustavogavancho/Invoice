@@ -1,26 +1,12 @@
-using Invoice.Contracts.Repositories;
-using Invoice.Repository;
-using Invoice.Repository.Repositories;
-using Invoice.Service.BusinessServices;
-using Invoice.Service.Contracts.BusinessServices;
-using Invoice.Service.Contracts.HelperServices;
-using Invoice.Service.HelperServices;
-using Microsoft.EntityFrameworkCore;
+using Invoice.API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-builder.Services.AddScoped<IInvoiceService, InvoiceService>();
-builder.Services.AddScoped<IIssuerService, IssuerService>();
-builder.Services.AddScoped<ISerializeXmlService, SerializeXmlService>();
-builder.Services.AddScoped<ISignerService, SignerService>();
-builder.Services.AddScoped<IZipperService, ZipperService>();
-
-builder.Services.AddScoped<IIssuerRepository, IssuerRepository>();
-
-builder.Services.AddDbContext<InvoiceContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.ConfigureServices();
+builder.Services.ConfigureRepositories();
+builder.Services.ConfigureSqlContext(builder.Configuration);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
