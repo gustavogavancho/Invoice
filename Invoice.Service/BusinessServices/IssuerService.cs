@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using Invoice.Contracts;
+using Invoice.Contracts.Repositories;
 using Invoice.Entities;
-using Invoice.Service.Contracts;
+using Invoice.Service.Contracts.BusinessServices;
 using Invoice.Shared.Request;
 using Invoice.Shared.Response;
 
-namespace Invoice.Service;
+namespace Invoice.Service.BusinessServices;
 
 public class IssuerService : IIssuerService
 {

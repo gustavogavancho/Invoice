@@ -1,6 +1,6 @@
 ﻿using Invoice.Entities;
 
-namespace Invoice.Contracts;
+namespace Invoice.Contracts.Repositories;
 
 public interface IIssuerRepository
 {

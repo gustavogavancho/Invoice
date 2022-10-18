@@ -1,7 +1,10 @@
-using Invoice.Contracts;
+using Invoice.Contracts.Repositories;
 using Invoice.Repository;
-using Invoice.Service;
-using Invoice.Service.Contracts;
+using Invoice.Repository.Repositories;
+using Invoice.Service.BusinessServices;
+using Invoice.Service.Contracts.BusinessServices;
+using Invoice.Service.Contracts.HelperServices;
+using Invoice.Service.HelperServices;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

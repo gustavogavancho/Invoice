@@ -1,9 +1,10 @@
-﻿using Invoice.Service.Contracts;
+﻿using Invoice.Service.Contracts.BusinessServices;
+using Invoice.Service.Contracts.HelperServices;
 using Invoice.Shared;
 using Invoice.Shared.Request;
 using UBLSunatPE;
 
-namespace Invoice.Service;
+namespace Invoice.Service.BusinessServices;
 
 public class InvoiceService : IInvoiceService
 {
@@ -91,7 +92,7 @@ public class InvoiceService : IInvoiceService
             #endregion
 
             #region Issuer Information
-            
+
             Signature = new SignatureType[]
             {
                 new SignatureType
@@ -120,12 +121,12 @@ public class InvoiceService : IInvoiceService
                     {
                         new PartyIdentificationType
                         {
-                            ID = new IDType 
+                            ID = new IDType
                             {
                                 schemeID = request.Issuer.IssuerType, //Catalogo 6
                                 Value = request.Issuer.IssuerId.ToString(),
-                            }, 
-                            
+                            },
+
                         }
                     },
                     PartyName = new PartyNameType[] { new PartyNameType { Name = new NameType1 { Value = request.Issuer.IssuerName } } },
@@ -202,7 +203,7 @@ public class InvoiceService : IInvoiceService
                     paymentTermList.Add(new PaymentTermsType
                     {
                         ID = new IDType { Value = paymentTerm.PaymentId },
-                        PaymentMeansID = new PaymentMeansIDType [] { new PaymentMeansIDType { Value = paymentTerm.PaymentType } }
+                        PaymentMeansID = new PaymentMeansIDType[] { new PaymentMeansIDType { Value = paymentTerm.PaymentType } }
                     });
                     break;
                 case "Credito":
@@ -219,7 +220,7 @@ public class InvoiceService : IInvoiceService
                         ID = new IDType { Value = paymentTerm.PaymentId },
                         PaymentMeansID = new PaymentMeansIDType[] { new PaymentMeansIDType { Value = paymentTerm.PaymentType } },
                         Amount = new AmountType2 { currencyID = request.InvoiceData.CurrencyCode, Value = paymentTerm.Amount },
-                        PaymentDueDate = new PaymentDueDateType { Value = paymentTerm.DueDate}
+                        PaymentDueDate = new PaymentDueDateType { Value = paymentTerm.DueDate }
                     });
                     break;
                 default:
@@ -244,7 +245,7 @@ public class InvoiceService : IInvoiceService
                     TaxScheme = new TaxSchemeType //Catalog 5
                     {
                         ID = new IDType { Value = taxSubTotal.TaxCategory.TaxId },
-                        Name = new NameType1 {  Value = taxSubTotal.TaxCategory.TaxName },
+                        Name = new NameType1 { Value = taxSubTotal.TaxCategory.TaxName },
                         TaxTypeCode = new TaxTypeCodeType { Value = taxSubTotal.TaxCategory.TaxCode }
                     }
                 }
@@ -262,8 +263,8 @@ public class InvoiceService : IInvoiceService
 
         invoice.LegalMonetaryTotal = new MonetaryTotalType
         {
-            LineExtensionAmount = new LineExtensionAmountType 
-            { 
+            LineExtensionAmount = new LineExtensionAmountType
+            {
                 currencyID = request.InvoiceData.CurrencyCode,
                 Value = request.TaxSubTotal.Sum(x => x.TaxableAmount)
             },
@@ -272,7 +273,7 @@ public class InvoiceService : IInvoiceService
                 currencyID = request.InvoiceData.CurrencyCode,
                 Value = request.TotalAmount
             },
-            ChargeTotalAmount = new ChargeTotalAmountType 
+            ChargeTotalAmount = new ChargeTotalAmountType
             {
                 currencyID = request.InvoiceData.CurrencyCode,
                 Value = 0,

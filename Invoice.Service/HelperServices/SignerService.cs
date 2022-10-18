@@ -1,9 +1,11 @@
 ﻿using Invoice.Service.Contracts;
+using Invoice.Service.Contracts.BusinessServices;
+using Invoice.Service.Contracts.HelperServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
 using System.Xml;
 
-namespace Invoice.Service;
+namespace Invoice.Service.HelperServices;
 
 public class SignerService : ISignerService
 {

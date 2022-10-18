@@ -1,5 +1,6 @@
 using AutoFixture;
 using Invoice.Entities;
+using Invoice.Repository.Repositories;
 using Invoice.Repository.Tests.ClassFixture;
 using Microsoft.EntityFrameworkCore;
 

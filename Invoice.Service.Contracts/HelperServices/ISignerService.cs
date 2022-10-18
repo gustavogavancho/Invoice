@@ -1,4 +1,4 @@
-﻿namespace Invoice.Service.Contracts;
+﻿namespace Invoice.Service.Contracts.HelperServices;
 
 public interface ISignerService
 {

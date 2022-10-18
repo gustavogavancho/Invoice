@@ -1,4 +1,4 @@
-﻿using Invoice.Service.Contracts;
+﻿using Invoice.Service.Contracts.BusinessServices;
 using Invoice.Shared.Request;
 using Microsoft.AspNetCore.Mvc;
 

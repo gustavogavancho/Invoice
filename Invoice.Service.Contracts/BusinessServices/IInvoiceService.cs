@@ -1,6 +1,6 @@
 ﻿using Invoice.Shared.Request;
 
-namespace Invoice.Service.Contracts;
+namespace Invoice.Service.Contracts.BusinessServices;
 
 public interface IInvoiceService
 {

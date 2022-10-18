@@ -1,6 +1,6 @@
 ﻿using AutoFixture;
 using Invoice.API.Controllers;
-using Invoice.Service.Contracts;
+using Invoice.Service.Contracts.BusinessServices;
 using Invoice.Shared.Request;
 using Invoice.Shared.Response;
 using Microsoft.AspNetCore.Mvc;

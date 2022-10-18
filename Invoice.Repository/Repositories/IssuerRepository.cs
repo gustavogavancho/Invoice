@@ -1,8 +1,8 @@
-﻿using Invoice.Contracts;
+﻿using Invoice.Contracts.Repositories;
 using Invoice.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Invoice.Repository;
+namespace Invoice.Repository.Repositories;
 
 public class IssuerRepository : IIssuerRepository
 {

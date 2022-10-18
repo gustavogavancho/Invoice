@@ -1,8 +1,9 @@
 ﻿using Invoice.Service.Contracts;
 using System.Xml.Serialization;
 using System.Xml;
+using Invoice.Service.Contracts.HelperServices;
 
-namespace Invoice.Service;
+namespace Invoice.Service.HelperServices;
 
 public class SerializeXmlService : ISerializeXmlService
 {

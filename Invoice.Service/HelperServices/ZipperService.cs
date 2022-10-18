@@ -1,9 +1,9 @@
 ﻿using Aspose.Zip;
 using Aspose.Zip.Saving;
-using Invoice.Service.Contracts;
+using Invoice.Service.Contracts.HelperServices;
 using System.Text;
 
-namespace Invoice.Service;
+namespace Invoice.Service.HelperServices;
 
 public class ZipperService : IZipperService
 {

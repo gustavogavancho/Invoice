@@ -1,4 +1,6 @@
-﻿namespace Invoice.Service.Tests
+﻿using Invoice.Service.HelperServices;
+
+namespace Invoice.Service.Tests
 {
     public class ZipperServiceTests
     {

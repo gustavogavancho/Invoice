@@ -1,7 +1,8 @@
 ﻿using AutoFixture;
 using AutoMapper;
-using Invoice.Contracts;
+using Invoice.Contracts.Repositories;
 using Invoice.Entities;
+using Invoice.Service.BusinessServices;
 using Invoice.Service.Profiles;
 using Invoice.Shared.Request;
 using Invoice.Shared.Response;
