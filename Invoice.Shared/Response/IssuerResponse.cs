@@ -12,4 +12,6 @@ public record IssuerResponse
     public string Province { get; set; } = default!;
     public string District { get; set; } = default!;
     public string Address { get; set; } = default!;
+    public byte[]? BetaCertificate { get; set; }
+    public byte[]? ProdCertificate { get; set; }
 }
