@@ -8,7 +8,7 @@ namespace Invoice.Service
     public class InvoiceServiceTests
     {
         [Fact]
-        public void SendInvoiceTypeTest()
+        public async Task SendInvoiceTypeTest()
         {
             //Arrange
             var fixture = new Fixture();
@@ -46,7 +46,7 @@ namespace Invoice.Service
             var sut = new InvoiceService(mockSerializeXmlService.Object, mockSignerService.Object);
 
             //Act
-            sut.SendInvoiceType(request);
+            await sut.SendInvoiceType(It.IsAny<Guid>(), request);
 
             //Assert
             mockSerializeXmlService.Verify(x => x.SerializeXmlDocument(fileName, path, It.IsAny<Type>(), It.IsAny<object>()), Times.Once);

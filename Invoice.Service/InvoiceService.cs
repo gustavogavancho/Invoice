@@ -17,7 +17,7 @@ public class InvoiceService : IInvoiceService
         _signerService = signerService;
     }
 
-    public void SendInvoiceType(InvoiceRequest request)
+    public async Task SendInvoiceType(Guid id, InvoiceRequest request)
     {
         var invoice = new InvoiceType
         {
@@ -407,6 +407,6 @@ public class InvoiceService : IInvoiceService
 
         _serializeXmlService.SerializeXmlDocument(fileName, path, typeof(InvoiceType), invoice);
 
-        _signerService.SignXml(Path.Combine(path, fileName), "20606022779");
+        await _signerService.SignXml(id, Path.Combine(path, fileName), "20606022779");
     }
 }

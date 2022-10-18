@@ -2,5 +2,5 @@
 
 public interface ISignerService
 {
-    void SignXml(string file, string password);
+    Task SignXml(Guid id, string file, string password);
 }

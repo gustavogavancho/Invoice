@@ -15,10 +15,10 @@ public class InvoiceController : ControllerBase
 		_invoiceSerializerService = invoiceSerializerService;
 	}
 
-	[HttpPost("Send")]
-	public IActionResult Send(InvoiceRequest request)
+	[HttpPost("{id:guid}")]
+	public async Task<IActionResult> Send(Guid id, InvoiceRequest request)
 	{
-		_invoiceSerializerService.SendInvoiceType(request);
+		await _invoiceSerializerService.SendInvoiceType(id, request);
 
 		return Ok();
 	}

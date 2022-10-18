@@ -7,12 +7,19 @@ namespace Invoice.Service;
 
 public class SignerService : ISignerService
 {
-    public void SignXml(string file, string password)
-    {
-        try
-        {
-            string certificado = "C:\\Users\\gusta\\OneDrive\\Documentos\\Certificado Sunat\\Prueba Swiftline\\LLAMA-PE-CERTIFICADO-DEMO-20606022779.pfx";
+    private readonly IIssuerService _issuerService;
 
+    public SignerService(IIssuerService issuerService)
+    {
+        _issuerService = issuerService;
+    }
+
+    public async Task SignXml(Guid id, string file, string password)
+    {
+        var issuer = await _issuerService.GetIssuer(id);
+
+        if (issuer is not null)
+        {
             string text = File.ReadAllText(file);
             text = text.Replace(@"<ext:UBLExtension />", @"<ext:UBLExtension> <ext:ExtensionContent /></ext:UBLExtension>");
             text = text.Replace("xsi:type=", "");
@@ -24,10 +31,9 @@ public class SignerService : ISignerService
             string tipo = Path.GetFileName(file);
             string local_typoDocumento = tipo.Substring(12, 2);
             string l_xpath = "";
-            string f_certificat = certificado;
             string f_pwd = password;
 
-            X509Certificate2 MonCertificat = new X509Certificate2(f_certificat, f_pwd);
+            X509Certificate2 MonCertificat = new X509Certificate2(issuer.BetaCertificate, f_pwd);
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.PreserveWhitespace = true;
             xmlDoc.Load(file);
@@ -105,10 +111,6 @@ public class SignerService : ISignerService
             XmlNodeList nodeList = xmlDoc.GetElementsByTagName("ds:Signature");
 
             signedXml.LoadXml((XmlElement)nodeList[0]);
-        }
-        catch (Exception ex)
-        {
-
         }
     }
 }
