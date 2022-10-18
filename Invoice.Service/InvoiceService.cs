@@ -9,12 +9,15 @@ public class InvoiceService : IInvoiceService
 {
     private readonly ISerializeXmlService _serializeXmlService;
     private readonly ISignerService _signerService;
+    private readonly IZipperService _zipperService;
 
     public InvoiceService(ISerializeXmlService serializeXmlService,
-        ISignerService signerService)
+        ISignerService signerService,
+        IZipperService zipperService)
     {
         _serializeXmlService = serializeXmlService;
         _signerService = signerService;
+        _zipperService = zipperService;
     }
 
     public async Task SendInvoiceType(Guid id, InvoiceRequest request)
@@ -406,7 +409,7 @@ public class InvoiceService : IInvoiceService
         var path = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + "\\XML";
 
         _serializeXmlService.SerializeXmlDocument(fileName, path, typeof(InvoiceType), invoice);
-
         await _signerService.SignXml(id, Path.Combine(path, fileName));
+        _zipperService.ZipXml(Path.Combine(path, fileName));
     }
 }
