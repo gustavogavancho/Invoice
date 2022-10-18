@@ -5,7 +5,7 @@ namespace Invoice.Service
     public class SerializeXmlTest
     {
         [Fact]
-        public void SerializeXmlDocumentTest()
+        public void SerializeXmlService_SerializeXmlDocumentTest()
         {
             //Arrange
             var service = new SerializeXmlService();

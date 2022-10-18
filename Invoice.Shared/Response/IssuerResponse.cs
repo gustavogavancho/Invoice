@@ -13,5 +13,7 @@ public record IssuerResponse
     public string District { get; set; } = default!;
     public string Address { get; set; } = default!;
     public byte[]? BetaCertificate { get; set; }
+    public string? BetaCertificatePasword { get; set; } = default!;
     public byte[]? ProdCertificate { get; set; }
+    public string? ProdCertificatePasword { get; set; } = default!;
 }

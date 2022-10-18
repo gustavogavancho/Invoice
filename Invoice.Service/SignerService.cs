@@ -14,7 +14,7 @@ public class SignerService : ISignerService
         _issuerService = issuerService;
     }
 
-    public async Task SignXml(Guid id, string file, string password)
+    public async Task SignXml(Guid id, string file)
     {
         var issuer = await _issuerService.GetIssuer(id);
 
@@ -31,9 +31,8 @@ public class SignerService : ISignerService
             string tipo = Path.GetFileName(file);
             string local_typoDocumento = tipo.Substring(12, 2);
             string l_xpath = "";
-            string f_pwd = password;
 
-            X509Certificate2 MonCertificat = new X509Certificate2(issuer.BetaCertificate, f_pwd);
+            X509Certificate2 MonCertificat = new X509Certificate2(issuer.BetaCertificate, issuer.BetaCertificatePasword);
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.PreserveWhitespace = true;
             xmlDoc.Load(file);

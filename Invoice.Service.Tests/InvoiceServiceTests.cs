@@ -8,7 +8,7 @@ namespace Invoice.Service
     public class InvoiceServiceTests
     {
         [Fact]
-        public async Task SendInvoiceTypeTest()
+        public async Task InvoiceService_SendInvoiceTypeTest()
         {
             //Arrange
             var fixture = new Fixture();

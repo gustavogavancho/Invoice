@@ -58,6 +58,8 @@ public class IssuerRepository : IIssuerRepository
             issuerDb.GeoCode = issuer.GeoCode;
             issuerDb.BetaCertificate = issuer.BetaCertificate;
             issuerDb.ProdCertificate = issuer.ProdCertificate;
+            issuerDb.BetaCertificatePasword = issuer.BetaCertificatePasword;
+            issuerDb.ProdCertificatePasword = issuer.ProdCertificatePasword;
         }
 
         await _context.SaveChangesAsync();

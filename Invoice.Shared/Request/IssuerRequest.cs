@@ -14,5 +14,7 @@ public record IssuerRequest
     [Required] public string District { get; set; } = default!;
     [Required] public string Address { get; set; } = default!;
     public byte[]? BetaCertificate { get; set; }
+    public string? BetaCertificatePasword { get; set; } = default!;
     public byte[]? ProdCertificate { get; set; }
+    public string? ProdCertificatePasword { get; set; } = default!;
 }

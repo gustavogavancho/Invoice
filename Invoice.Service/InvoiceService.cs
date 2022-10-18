@@ -407,6 +407,6 @@ public class InvoiceService : IInvoiceService
 
         _serializeXmlService.SerializeXmlDocument(fileName, path, typeof(InvoiceType), invoice);
 
-        await _signerService.SignXml(id, Path.Combine(path, fileName), "20606022779");
+        await _signerService.SignXml(id, Path.Combine(path, fileName));
     }
 }
