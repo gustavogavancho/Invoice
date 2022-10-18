@@ -38,7 +38,7 @@ namespace Invoice.Service
             var mockSerializeXmlService = new Mock<ISerializeXmlService>();
             var mockSignerService = new Mock<ISignerService>();
 
-            var fileName = $"{request.SenderData.SenderId}-{request.InvoiceData.DocumentType}-{request.InvoiceData.Serie}{request.InvoiceData.SerialNumber.ToString("00")}-{request.InvoiceData.CorrelativeNumber.ToString("00000000")}.xml";
+            var fileName = $"{request.Issuer.IssuerId}-{request.InvoiceData.DocumentType}-{request.InvoiceData.Serie}{request.InvoiceData.SerialNumber.ToString("00")}-{request.InvoiceData.CorrelativeNumber.ToString("00000000")}.xml";
             var path = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + $"\\XML";
 
             mockSerializeXmlService.Setup(x => x.SerializeXmlDocument(fileName, path, It.IsAny<Type>(), It.IsAny<object>())).Verifiable();

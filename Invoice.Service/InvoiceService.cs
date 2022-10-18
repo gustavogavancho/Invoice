@@ -87,25 +87,25 @@ public class InvoiceService : IInvoiceService
 
             #endregion
 
-            #region Sender Information
+            #region Issuer Information
             
             Signature = new SignatureType[]
             {
                 new SignatureType
                 {
-                    ID = new IDType { Value = request.SenderData.SenderId.ToString() },
+                    ID = new IDType { Value = request.Issuer.IssuerId.ToString() },
                     SignatoryParty = new PartyType
                     {
                         PartyIdentification = new PartyIdentificationType[]
                         {
-                            new PartyIdentificationType { ID = new IDType { Value = request.SenderData.SenderId.ToString() }}
+                            new PartyIdentificationType { ID = new IDType { Value = request.Issuer.IssuerId.ToString() }}
                         },
                         PartyName = new PartyNameType[]
                         {
-                            new PartyNameType { Name = new NameType1 { Value = request.SenderData.SenderName }}
+                            new PartyNameType { Name = new NameType1 { Value = request.Issuer.IssuerName }}
                         },
                     },
-                    Note = new NoteType [] { new NoteType { Value = $"Mabe by {request.SenderData.SenderName}" } }
+                    Note = new NoteType [] { new NoteType { Value = $"Mabe by {request.Issuer.IssuerName}" } }
                 }
             },
 
@@ -119,28 +119,28 @@ public class InvoiceService : IInvoiceService
                         {
                             ID = new IDType 
                             {
-                                schemeID = request.SenderData.SenderType, //Catalogo 6
-                                Value = request.SenderData.SenderId.ToString(),
+                                schemeID = request.Issuer.IssuerType, //Catalogo 6
+                                Value = request.Issuer.IssuerId.ToString(),
                             }, 
                             
                         }
                     },
-                    PartyName = new PartyNameType[] { new PartyNameType { Name = new NameType1 { Value = request.SenderData.SenderName } } },
+                    PartyName = new PartyNameType[] { new PartyNameType { Name = new NameType1 { Value = request.Issuer.IssuerName } } },
                     PartyLegalEntity = new PartyLegalEntityType[]
                     {
                         new PartyLegalEntityType
                         {
-                            RegistrationName = new RegistrationNameType { Value = request.SenderData.SenderId.ToString() },
+                            RegistrationName = new RegistrationNameType { Value = request.Issuer.IssuerId.ToString() },
                             RegistrationAddress = new AddressType
                             {
-                                ID = new IDType { Value = request.SenderData.GeoCode },
-                                AddressTypeCode = new AddressTypeCodeType { Value = request.SenderData.EstablishmentCode }, //Default "0000",
-                                CityName = new CityNameType { Value = request.SenderData.Department },
-                                CountrySubentity = new CountrySubentityType { Value = request.SenderData.Province },
-                                District = new DistrictType { Value = request.SenderData.District },
+                                ID = new IDType { Value = request.Issuer.GeoCode },
+                                AddressTypeCode = new AddressTypeCodeType { Value = request.Issuer.EstablishmentCode }, //Default "0000",
+                                CityName = new CityNameType { Value = request.Issuer.Department },
+                                CountrySubentity = new CountrySubentityType { Value = request.Issuer.Province },
+                                District = new DistrictType { Value = request.Issuer.District },
                                 AddressLine = new AddressLineType[]
                                 {
-                                    new AddressLineType { Line = new LineType { Value = request.SenderData.Address }},
+                                    new AddressLineType { Line = new LineType { Value = request.Issuer.Address }},
                                 },
                                 Country = new CountryType { IdentificationCode = new IdentificationCodeType { Value = "PE" }} //It's always going to be PE
                             }
@@ -402,7 +402,7 @@ public class InvoiceService : IInvoiceService
 
         #endregion
 
-        var fileName = $"{request.SenderData.SenderId}-{request.InvoiceData.DocumentType}-{request.InvoiceData.Serie}{request.InvoiceData.SerialNumber.ToString("00")}-{request.InvoiceData.CorrelativeNumber.ToString("00000000")}.xml";
+        var fileName = $"{request.Issuer.IssuerId}-{request.InvoiceData.DocumentType}-{request.InvoiceData.Serie}{request.InvoiceData.SerialNumber.ToString("00")}-{request.InvoiceData.CorrelativeNumber.ToString("00000000")}.xml";
         var path = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + "\\XML";
 
         _serializeXmlService.SerializeXmlDocument(fileName, path, typeof(InvoiceType), invoice);

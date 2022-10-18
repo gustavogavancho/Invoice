@@ -9,7 +9,7 @@ public class MappingProfile : Profile
 {
 	public MappingProfile()
 	{
-		CreateMap<Sender, SenderDataRequest>().ReverseMap();
-		CreateMap<Sender, SenderResponse>().ReverseMap();
+		CreateMap<Issuer, IssuerRequest>().ReverseMap();
+		CreateMap<Issuer, IssuerResponse>().ReverseMap();
 	}
 }

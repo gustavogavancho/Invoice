@@ -1,13 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace Invoice.Shared.Response;
 
-namespace Invoice.Shared.Response;
-
-public record SenderResponse
+public record IssuerResponse
 {
     public Guid Id { get; set; }
-    public ulong SenderId { get; set; } //RUC 
-    public string SenderName { get; set; } = default!;
-    public string SenderType { get; set; } = default!; //Catalog 6
+    public ulong IssuerId { get; set; } //RUC 
+    public string IssuerName { get; set; } = default!;
+    public string IssuerType { get; set; } = default!; //Catalog 6
     public string GeoCode { get; set; } = default!; //Ubigeo
     public string EstablishmentCode { get; set; } = default!; //e. "0000"
     public string Department { get; set; } = default!;

@@ -9,11 +9,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IInvoiceService, InvoiceService>();
-builder.Services.AddScoped<ISenderService, SenderService>();
+builder.Services.AddScoped<IIssuerService, IssuerService>();
 builder.Services.AddScoped<ISerializeXmlService, SerializeXmlService>();
 builder.Services.AddScoped<ISignerService, SignerService>();
 
-builder.Services.AddScoped<ISenderRepository, SenderRepository>();
+builder.Services.AddScoped<IIssuerRepository, IssuerRepository>();
 
 builder.Services.AddDbContext<InvoiceContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
