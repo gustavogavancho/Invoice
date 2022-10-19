@@ -4,7 +4,7 @@ using Invoice.Repository.Repositories;
 using Invoice.Repository.Tests.ClassFixture;
 using Microsoft.EntityFrameworkCore;
 
-namespace Invoice.Repository.Tests;
+namespace Invoice.Repository.Tests.Repositories;
 
 public class IssuerRepositoryTests : IClassFixture<InvoiceContextClassFixture>
 {

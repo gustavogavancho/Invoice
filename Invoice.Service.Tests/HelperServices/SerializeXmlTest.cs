@@ -1,7 +1,7 @@
 ﻿using Invoice.Service.HelperServices;
 using UBLSunatPE;
 
-namespace Invoice.Service
+namespace Invoice.Service.Tests.HelperServices
 {
     public class SerializeXmlTest
     {

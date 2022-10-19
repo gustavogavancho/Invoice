@@ -8,7 +8,7 @@ using Invoice.Shared.Request;
 using Invoice.Shared.Response;
 using Moq;
 
-namespace Invoice.Service.Tests;
+namespace Invoice.Service.Tests.BusinessServices;
 
 public class IssuerServiceTests
 {

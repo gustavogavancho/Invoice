@@ -10,7 +10,6 @@
     <PackageReference Include="Aspose.Zip" Version="22.9.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="6.0.1" />
-    <PackageReference Include="UBLSunatPE" Version="1.0.5" />
   </ItemGroup>
 
   <ItemGroup>

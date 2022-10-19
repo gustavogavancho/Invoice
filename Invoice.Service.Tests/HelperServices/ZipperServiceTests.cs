@@ -1,6 +1,6 @@
 ﻿using Invoice.Service.HelperServices;
 
-namespace Invoice.Service.Tests
+namespace Invoice.Service.Tests.HelperServices
 {
     public class ZipperServiceTests
     {

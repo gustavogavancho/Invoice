@@ -18,6 +18,7 @@ public static class ServiceExtensions
         services.AddScoped<ISerializeXmlService, SerializeXmlService>();
         services.AddScoped<ISignerService, SignerService>();
         services.AddScoped<IZipperService, ZipperService>();
+        services.AddScoped<IDocumentGeneratorService, DocumentGeneratorService>();
     }
 
     public static void ConfigureRepositories(this IServiceCollection services)

@@ -4,7 +4,7 @@ using Invoice.Service.Contracts.HelperServices;
 using Invoice.Shared.Request;
 using Moq;
 
-namespace Invoice.Service
+namespace Invoice.Service.Tests.BusinessServices
 {
     public class InvoiceServiceTests
     {
