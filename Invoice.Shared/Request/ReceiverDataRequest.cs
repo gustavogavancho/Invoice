@@ -2,7 +2,7 @@
 
 namespace Invoice.Shared.Request;
 
-public record ReceiverDataRequest
+public record ReceiverRequest
 {
     [Range(10000000000, 99999999999)] public ulong ReceiverId { get; set; } //RUC 
     [Required] public string ReceiverName { get; set; } = default!;

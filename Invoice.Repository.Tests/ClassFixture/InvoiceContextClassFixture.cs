@@ -1,4 +1,5 @@
 ﻿using Invoice.Entities;
+using Invoice.Entities.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Invoice.Repository.Tests.ClassFixture;

@@ -1,4 +1,5 @@
-﻿using Invoice.Service.Contracts.BusinessServices;
+﻿using Invoice.API.ActionFilters;
+using Invoice.Service.Contracts.ServiceManagers;
 using Invoice.Shared.Request;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,17 +9,15 @@ namespace Invoice.API.Controllers;
 [ApiController]
 public class InvoiceController : ControllerBase
 {
-	private readonly IInvoiceService _invoiceSerializerService;
+	private readonly IServiceManager _service;
 
-	public InvoiceController(IInvoiceService invoiceSerializerService)
-	{
-		_invoiceSerializerService = invoiceSerializerService;
-	}
+	public InvoiceController(IServiceManager service) => _service = service;
 
 	[HttpPost("{id:guid}")]
+	[ServiceFilter(typeof(ValidationFilterAttribute))]
 	public async Task<IActionResult> Send(Guid id, InvoiceRequest request)
 	{
-		await _invoiceSerializerService.SendInvoiceType(id, request);
+		await _service.InvoiceService.SendInvoiceType(id, request, trackChanges: false);
 
 		return Ok();
 	}

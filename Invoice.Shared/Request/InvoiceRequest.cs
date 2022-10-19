@@ -7,9 +7,8 @@ public record InvoiceRequest
     [Required] public DateTime IssueDate { get; set; }
     public DateTime? DueDate { get; set; }
     [Required] public UblSchemeRequest UblScheme { get; set; } = default!;
-    [Required] public InvoiceDataRequest InvoiceData { get; set; } = default!;
-    [Required] public IssuerRequest Issuer { get; set; } = default!;
-    [Required] public ReceiverDataRequest ReceiverData { get; set; } = default!;
+    [Required] public InvoiceDetailRequest InvoiceDetail { get; set; } = default!;
+    [Required] public ReceiverRequest Receiver { get; set; } = default!;
     [Required] public IEnumerable<PaymentTermsRequest> PaymentTerms { get; set; } = default!;
     [Range(0, 9999999999999999.99)] public decimal TaxTotalAmount { get; set; }
     [Range(0, 9999999999999999.99)] public decimal TotalAmount { get; set; }

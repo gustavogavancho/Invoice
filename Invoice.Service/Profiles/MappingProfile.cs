@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Invoice.Entities;
+using Invoice.Entities.Models;
 using Invoice.Shared.Request;
 using Invoice.Shared.Response;
 

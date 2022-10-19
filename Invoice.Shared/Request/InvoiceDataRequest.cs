@@ -2,7 +2,7 @@
 
 namespace Invoice.Shared.Request;
 
-public record InvoiceDataRequest
+public record InvoiceDetailRequest
 {
     [Required, MinLength(2), MaxLength(2)] public string Serie { get; set; } = default!;
     [Range(1, 99)] public uint SerialNumber { get; set; }

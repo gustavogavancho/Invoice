@@ -1,5 +1,5 @@
 using AutoFixture;
-using Invoice.Entities;
+using Invoice.Entities.Models;
 using Invoice.Repository.Repositories;
 using Invoice.Repository.Tests.ClassFixture;
 using Microsoft.EntityFrameworkCore;
@@ -20,13 +20,15 @@ public class IssuerRepositoryTests : IClassFixture<InvoiceContextClassFixture>
     }
 
     [Fact]
-    public async Task IssuerRepository_AddIssuerTest()
+    public async Task IssuerRepository_CreateIssuerTest()
     {
         //Arrange
         var issuer = _fixture.Create<Issuer>();
 
         //Act
-        await _issuerRepository.CreateIssuer(issuer);
+        _issuerRepository.CreateIssuer(issuer);
+        await _contextFixture.Context.SaveChangesAsync();
+
         var issuerSaved = await _contextFixture.Context.Issuers.LastOrDefaultAsync();
 
         //Assert
@@ -35,44 +37,48 @@ public class IssuerRepositoryTests : IClassFixture<InvoiceContextClassFixture>
     }
 
     [Fact]
-    public async Task IssuerRepository_GetIssuersTest()
+    public async Task IssuerRepository_GetIssuersAsyncTest()
     {
         //Arrange
+        
 
         //Act
-        var sut = await _issuerRepository.GetIssuers();
-        var issuers = await _contextFixture.Context.Issuers.ToListAsync();
+        var sut = await _issuerRepository.GetIssuersAsync(false);
 
         //Assert
         Assert.NotNull(sut);
-        Assert.Equal(issuers.Count, sut.Count());
+        Assert.True(sut.Count() > 1, "Expected sut to be greater than 1");
     }
 
     [Fact]
-    public async Task IssuerRepository_GetIssuerTest()
+    public async Task IssuerRepository_GetIssuerAsyncTest()
     {
         //Arrange
         var id = Guid.Parse("CCE03168-F901-4B23-AE9C-FC031D9DC888");
 
         //Act
-        var sut = await _issuerRepository.GetIssuer(id);
+        var sut = await _issuerRepository.GetIssuerAsync(id, false);
 
         //Assert
         Assert.NotNull(sut);
     }
 
     [Fact]
-    public async Task IssuerRepository_UpdateIssuerTest()
+    public async Task IssuerRepository_UpdateTest()
     {
         //Arrange
         var issuer = _fixture.Create<Issuer>();
         var id = Guid.Parse("CCE03168-F901-4B23-AE9C-FC031D9DC888");
 
         //Act
-        await _issuerRepository.UpdateIssuer(id, issuer);
+        var issuerToUpdate = await _issuerRepository.GetIssuerAsync(id, true);
+        issuerToUpdate.IssuerName = issuer.IssuerName;
+        _issuerRepository.Update(issuerToUpdate);
+        await _contextFixture.Context.SaveChangesAsync();
         var issuerSaved = await _contextFixture.Context.Issuers.FindAsync(id);
 
         //Assert
+        Assert.NotNull(issuerSaved);
         Assert.Equal(issuerSaved.IssuerName, issuer.IssuerName);
     }
 
@@ -81,9 +87,11 @@ public class IssuerRepositoryTests : IClassFixture<InvoiceContextClassFixture>
     {
         //Arrange 
         var id = Guid.Parse("990A5761-BFEA-4572-B0FE-08DAB08EACF6");
+        var issuerToDelete = await _issuerRepository.GetIssuerAsync(id, true);
 
         //Act
-        await _issuerRepository.DeleteIssuer(id);
+        _issuerRepository.DeleteIssuer(issuerToDelete);
+        await _contextFixture.Context.SaveChangesAsync();
         var issuerSaved = await _contextFixture.Context.Issuers.FindAsync(id);
 
         //Assert

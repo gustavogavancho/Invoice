@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Invoice.Contracts.Logger;
 using Invoice.Contracts.Repositories;
-using Invoice.Entities;
+using Invoice.Entities.Exceptions;
+using Invoice.Entities.Models;
 using Invoice.Service.Contracts.BusinessServices;
 using Invoice.Shared.Request;
 using Invoice.Shared.Response;
@@ -9,50 +11,71 @@ namespace Invoice.Service.BusinessServices;
 
 public class IssuerService : IIssuerService
 {
-    private readonly IIssuerRepository _issuerRepository;
+    private readonly IRepositoryManager _repository;
+    private readonly ILoggerManager _logger;
     private readonly IMapper _mapper;
 
-    public IssuerService(IIssuerRepository issuerRepository,
+    public IssuerService(IRepositoryManager repository, 
+        ILoggerManager logger,
         IMapper mapper)
     {
-        _issuerRepository = issuerRepository;
+        _repository = repository;
+        _logger = logger;
         _mapper = mapper;
     }
 
-    public async Task CreateIssuer(IssuerRequest issuerRequest)
+    public async Task<IssuerResponse> CreateIssuerAsync(IssuerRequest issuerRequest)
     {
         var issuer = _mapper.Map<IssuerRequest, Issuer>(issuerRequest);
 
-        await _issuerRepository.CreateIssuer(issuer);
-    }
-
-    public async Task DeleteIssuer(Guid id)
-    {
-        await _issuerRepository.DeleteIssuer(id);
-    }
-
-    public async Task<IssuerResponse> GetIssuer(Guid guid)
-    {
-        var issuer = await _issuerRepository.GetIssuer(guid);
+        _repository.Issuer.CreateIssuer(issuer);
+        await _repository.SaveAsync();
 
         var issuerResponse = _mapper.Map<Issuer, IssuerResponse>(issuer);
 
         return issuerResponse;
     }
 
-    public async Task<List<IssuerResponse>> GetIssuers()
+    public async Task DeleteIssuerAsync(Guid id, bool trackChanges)
     {
-        var issuers = await _issuerRepository.GetIssuers();
+        var issuer = await GetIssuerAndCheckIfItExists(id, trackChanges);
 
-        var issuerResponses = _mapper.Map<List<Issuer>, List<IssuerResponse>>(issuers);
+        _repository.Issuer.DeleteIssuer(issuer);
+        await _repository.SaveAsync();
+    }
+
+    public async Task<IssuerResponse> GetIssuerAsync(Guid id, bool trackChanges)
+    {
+        var issuer = await GetIssuerAndCheckIfItExists(id, trackChanges);
+
+        var issuerResponse = _mapper.Map<Issuer, IssuerResponse>(issuer);
+        return issuerResponse;
+    }
+
+    public async Task<IEnumerable<IssuerResponse>> GetIssuersAsync(bool trackChanges)
+    {
+        var issuers = await _repository.Issuer.GetIssuersAsync(trackChanges);
+
+        var issuerResponses = _mapper.Map<IEnumerable<Issuer>, IEnumerable<IssuerResponse>>(issuers);
 
         return issuerResponses;
     }
 
-    public async Task UpdateIssuer(Guid id, IssuerRequest issuerRequest)
+    public async Task UpdateIssuerAsync(Guid id, IssuerRequest issuerRequest, bool trackChanges)
     {
-        var issuer = _mapper.Map<IssuerRequest, Issuer>(issuerRequest);
+        var issuer = await GetIssuerAndCheckIfItExists(id, trackChanges);
 
-        await _issuerRepository.UpdateIssuer(id, issuer);
+        _mapper.Map(issuer, issuerRequest);
+        await _repository.SaveAsync();
+    }
+
+    private async Task<Issuer> GetIssuerAndCheckIfItExists(Guid id, bool trackChanges)
+    {
+        var issuer = await _repository.Issuer.GetIssuerAsync(id, trackChanges);
+
+        if (issuer is null)
+            throw new IssuerNotFoundException(id);
+
+        return issuer;
     }
 }

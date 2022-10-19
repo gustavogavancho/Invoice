@@ -1,4 +1,6 @@
-﻿using Invoice.Service.Contracts;
+﻿using Invoice.Entities.Exceptions;
+using Invoice.Entities.Models;
+using Invoice.Service.Contracts;
 using Invoice.Service.Contracts.BusinessServices;
 using Invoice.Service.Contracts.HelperServices;
 using System.Security.Cryptography.X509Certificates;
@@ -9,18 +11,9 @@ namespace Invoice.Service.HelperServices;
 
 public class SignerService : ISignerService
 {
-    private readonly IIssuerService _issuerService;
-
-    public SignerService(IIssuerService issuerService)
+    public void SignXml(Guid id, string file, Issuer issuer)
     {
-        _issuerService = issuerService;
-    }
-
-    public async Task SignXml(Guid id, string file)
-    {
-        var issuer = await _issuerService.GetIssuer(id);
-
-        if (issuer is not null)
+        try
         {
             string text = File.ReadAllText(file);
             text = text.Replace(@"<ext:UBLExtension />", @"<ext:UBLExtension> <ext:ExtensionContent /></ext:UBLExtension>");
@@ -112,6 +105,10 @@ public class SignerService : ISignerService
             XmlNodeList nodeList = xmlDoc.GetElementsByTagName("ds:Signature");
 
             signedXml.LoadXml((XmlElement)nodeList[0]);
+        }
+        catch (Exception ex)
+        {
+            throw new SignerException(ex.Message);
         }
     }
 }

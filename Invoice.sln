@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Invoice.Service.Tests", "In
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Invoice.API.Tests", "Invoice.API.Tests\Invoice.API.Tests.csproj", "{DFC76F5E-3F4E-4BF1-8F74-E8DC18CC9E8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Invoice.Repository.Tests", "Invoice.Repository.Tests\Invoice.Repository.Tests.csproj", "{DC6574DD-DAC6-4D18-A3D4-AD230B238F93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Invoice.Repository.Tests", "Invoice.Repository.Tests\Invoice.Repository.Tests.csproj", "{DC6574DD-DAC6-4D18-A3D4-AD230B238F93}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

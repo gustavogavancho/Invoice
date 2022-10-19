@@ -1,12 +1,11 @@
-﻿using Invoice.Entities;
+﻿using Invoice.Entities.Models;
 
 namespace Invoice.Contracts.Repositories;
 
 public interface IIssuerRepository
 {
-    Task CreateIssuer(Issuer issuer);
-    Task<Issuer> GetIssuer(Guid id);
-    Task<List<Issuer>> GetIssuers();
-    Task UpdateIssuer(Guid id, Issuer issuer);
-    Task DeleteIssuer(Guid id);
+    void CreateIssuer(Issuer issuer);
+    void DeleteIssuer(Issuer issuer);
+    Task<Issuer> GetIssuerAsync(Guid id, bool trackChanges);
+    Task<IEnumerable<Issuer>> GetIssuersAsync(bool trackChanges);
 }

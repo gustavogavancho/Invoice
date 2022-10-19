@@ -1,7 +1,7 @@
-﻿using Invoice.Service.Contracts;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 using System.Xml;
 using Invoice.Service.Contracts.HelperServices;
+using Invoice.Entities.Exceptions;
 
 namespace Invoice.Service.HelperServices;
 
@@ -25,6 +25,10 @@ public class SerializeXmlService : ISerializeXmlService
             var xmlSerialized = new XmlSerializer(documentType);
 
             xmlSerialized.Serialize(xmlWriter, document);
+        }
+        catch(Exception ex)
+        {
+            throw new SerializeXmlException(ex.Message);
         }
         finally
         {

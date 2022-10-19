@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Invoice.Entities;
+namespace Invoice.Entities.Models;
 
 public class Issuer
 {

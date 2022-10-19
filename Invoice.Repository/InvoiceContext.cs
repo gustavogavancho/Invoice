@@ -1,4 +1,5 @@
-﻿using Invoice.Entities;
+﻿using Invoice.Entities.Models;
+using Invoice.Repository.Configurarion;
 using Microsoft.EntityFrameworkCore;
 
 namespace Invoice.Repository;
@@ -16,18 +17,6 @@ public class InvoiceContext : DbContext
 	{
 		base.OnModelCreating(modelBuilder);
 
-		modelBuilder.Entity<Issuer>().HasData(new Issuer
-		{
-			Id = Guid.NewGuid(),
-			IssuerId = 20606022779,
-			IssuerName = "SWIFTLINE SAC",
-			IssuerType = "6",
-			GeoCode = "220901",
-			EstablishmentCode = "0000",
-			Department = "SAN MARTIN",
-			Province = "SAN MARTIN",
-			District = "TARAPOTO",
-			Address = "PSJE. LIMATAMBO 121"
-        });
+		modelBuilder.ApplyConfiguration(new IssuerConfiguration());
 	}
 }

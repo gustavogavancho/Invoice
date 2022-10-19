@@ -1,4 +1,5 @@
-﻿using Invoice.Service.Contracts.BusinessServices;
+﻿using Invoice.API.ActionFilters;
+using Invoice.Service.Contracts.ServiceManagers;
 using Invoice.Shared.Request;
 using Invoice.Shared.Response;
 using Microsoft.AspNetCore.Mvc;
@@ -9,49 +10,47 @@ namespace Invoice.API.Controllers;
 [ApiController]
 public class IssuerController : ControllerBase
 {
-    private readonly IIssuerService _issuerService;
+    private readonly IServiceManager _service;
 
-    public IssuerController(IIssuerService issuerService)
-    {
-        _issuerService = issuerService;
-    }
+    public IssuerController(IServiceManager service) => _service = service;
 
     [HttpPost]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> CreateIssuer(IssuerRequest issuerRequest)
     {
-        await _issuerService.CreateIssuer(issuerRequest);
+        var issuerCreated = await _service.IssuerService.CreateIssuerAsync(issuerRequest);
 
-        return StatusCode(StatusCodes.Status201Created);
+        return CreatedAtRoute("IssuerById", new { id = issuerCreated.Id }, issuerCreated);
     }
 
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteIssuer(Guid id)
     {
-        await _issuerService.DeleteIssuer(id);
+        await _service.IssuerService.DeleteIssuerAsync(id, trackChanges: false);
 
-        return Ok();
+        return NoContent();
     }
 
-    [HttpGet("{id:guid}")]
+    [HttpGet("{id:guid}", Name = "IssuerById")]
     public async Task<ActionResult<IssuerResponse>> GetIssuer(Guid id)
     {
-        var issuerResponse = await _issuerService.GetIssuer(id);
-
+        var issuerResponse = await _service.IssuerService.GetIssuerAsync(id, trackChanges: false);
         return Ok(issuerResponse);
     }
 
-    [HttpGet]
+    [HttpGet(Name = "GetIssuers")]
     public async Task<ActionResult<List<IssuerResponse>>> GetIssuers()
     {
-        var issuerResponses = await _issuerService.GetIssuers();
+        var issuerResponses = await _service.IssuerService.GetIssuersAsync(trackChanges: false);
 
         return Ok(issuerResponses);
     }
 
     [HttpPut("{id:guid}")]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> UpdateIssuer(Guid id, IssuerRequest issuerRequest)
     {
-        await _issuerService.UpdateIssuer(id, issuerRequest);
+        await _service.IssuerService.UpdateIssuerAsync(id, issuerRequest, trackChanges: true);
 
         return NoContent();
     }

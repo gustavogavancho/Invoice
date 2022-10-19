@@ -1,4 +1,5 @@
-﻿using Invoice.Service.Contracts.HelperServices;
+﻿using Invoice.Entities.Models;
+using Invoice.Service.Contracts.HelperServices;
 using Invoice.Shared;
 using Invoice.Shared.Request;
 using UBLSunatPE;
@@ -7,7 +8,7 @@ namespace Invoice.Service.HelperServices;
 
 public class DocumentGeneratorService : IDocumentGeneratorService
 {
-    public InvoiceType GenerateInvoiceType(InvoiceRequest request)
+    public InvoiceType GenerateInvoiceType(InvoiceRequest request, Issuer issuer)
     {
         var invoiceType = new InvoiceType
         {
@@ -41,7 +42,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
 
             #region Serial Number
 
-            ID = new IDType { Value = $"{request.InvoiceData.Serie}{request.InvoiceData.SerialNumber.ToString("00")}-{request.InvoiceData.CorrelativeNumber}" },
+            ID = new IDType { Value = $"{request.InvoiceDetail.Serie}{request.InvoiceDetail.SerialNumber.ToString("00")}-{request.InvoiceDetail.CorrelativeNumber}" },
 
             #endregion
 
@@ -57,22 +58,22 @@ public class DocumentGeneratorService : IDocumentGeneratorService
 
             InvoiceTypeCode = new InvoiceTypeCodeType
             {
-                listID = request.InvoiceData.OperationType, //Catalog 51
-                Value = request.InvoiceData.DocumentType //Catalog 1
+                listID = request.InvoiceDetail.OperationType, //Catalog 51
+                Value = request.InvoiceDetail.DocumentType //Catalog 1
             },
 
             Note = new NoteType[]
             {
                 new NoteType
                 {
-                    languageLocaleID = request.InvoiceData.NoteTypeCode, //Catalogo 52
-                    Value = request.InvoiceData.NoteType //e. "MONTO EN SOLES"
+                    languageLocaleID = request.InvoiceDetail.NoteTypeCode, //Catalogo 52
+                    Value = request.InvoiceDetail.NoteType //e. "MONTO EN SOLES"
                 }
             },
 
             DocumentCurrencyCode = new DocumentCurrencyCodeType
             {
-                Value = request.InvoiceData.CurrencyCode, //ISO 4217 e. "PEN"
+                Value = request.InvoiceDetail.CurrencyCode, //ISO 4217 e. "PEN"
             },
 
             #endregion
@@ -83,19 +84,19 @@ public class DocumentGeneratorService : IDocumentGeneratorService
             {
                 new SignatureType
                 {
-                    ID = new IDType { Value = request.Issuer.IssuerId.ToString() },
+                    ID = new IDType { Value = issuer.IssuerId.ToString() },
                     SignatoryParty = new PartyType
                     {
                         PartyIdentification = new PartyIdentificationType[]
                         {
-                            new PartyIdentificationType { ID = new IDType { Value = request.Issuer.IssuerId.ToString() }}
+                            new PartyIdentificationType { ID = new IDType { Value = issuer.IssuerId.ToString() }}
                         },
                         PartyName = new PartyNameType[]
                         {
-                            new PartyNameType { Name = new NameType1 { Value = request.Issuer.IssuerName }}
+                            new PartyNameType { Name = new NameType1 { Value = issuer.IssuerName }}
                         },
                     },
-                    Note = new NoteType [] { new NoteType { Value = $"Mabe by {request.Issuer.IssuerName}" } }
+                    Note = new NoteType [] { new NoteType { Value = $"Mabe by {issuer.IssuerName}" } }
                 }
             },
 
@@ -109,28 +110,28 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                         {
                             ID = new IDType
                             {
-                                schemeID = request.Issuer.IssuerType, //Catalogo 6
-                                Value = request.Issuer.IssuerId.ToString(),
+                                schemeID = issuer.IssuerType, //Catalogo 6
+                                Value = issuer.IssuerId.ToString(),
                             },
 
                         }
                     },
-                    PartyName = new PartyNameType[] { new PartyNameType { Name = new NameType1 { Value = request.Issuer.IssuerName } } },
+                    PartyName = new PartyNameType[] { new PartyNameType { Name = new NameType1 { Value = issuer.IssuerName } } },
                     PartyLegalEntity = new PartyLegalEntityType[]
                     {
                         new PartyLegalEntityType
                         {
-                            RegistrationName = new RegistrationNameType { Value = request.Issuer.IssuerId.ToString() },
+                            RegistrationName = new RegistrationNameType { Value = issuer.IssuerId.ToString() },
                             RegistrationAddress = new AddressType
                             {
-                                ID = new IDType { Value = request.Issuer.GeoCode },
-                                AddressTypeCode = new AddressTypeCodeType { Value = request.Issuer.EstablishmentCode }, //Default "0000",
-                                CityName = new CityNameType { Value = request.Issuer.Department },
-                                CountrySubentity = new CountrySubentityType { Value = request.Issuer.Province },
-                                District = new DistrictType { Value = request.Issuer.District },
+                                ID = new IDType { Value = issuer.GeoCode },
+                                AddressTypeCode = new AddressTypeCodeType { Value = issuer.EstablishmentCode }, //Default "0000",
+                                CityName = new CityNameType { Value = issuer.Department },
+                                CountrySubentity = new CountrySubentityType { Value = issuer.Province },
+                                District = new DistrictType { Value = issuer.District },
                                 AddressLine = new AddressLineType[]
                                 {
-                                    new AddressLineType { Line = new LineType { Value = request.Issuer.Address }},
+                                    new AddressLineType { Line = new LineType { Value = issuer.Address }},
                                 },
                                 Country = new CountryType { IdentificationCode = new IdentificationCodeType { Value = "PE" }} //It's always going to be PE
                             }
@@ -153,8 +154,8 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                         {
                             ID = new IDType
                             {
-                                schemeID = request.ReceiverData.ReceiverType, //Catalog 6
-                                Value = request.ReceiverData.ReceiverId.ToString(),
+                                schemeID = request.Receiver.ReceiverType, //Catalog 6
+                                Value = request.Receiver.ReceiverId.ToString(),
                             }
                         }
                     },
@@ -162,12 +163,12 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                     {
                         new PartyLegalEntityType
                         {
-                            RegistrationName = new RegistrationNameType { Value = request.ReceiverData.ReceiverName },
+                            RegistrationName = new RegistrationNameType { Value = request.Receiver.ReceiverName },
                             RegistrationAddress = new AddressType
                             {
                                 AddressLine = new AddressLineType[]
                                 {
-                                    new AddressLineType { Line = new LineType { Value = request.ReceiverData.FullAddress } }
+                                    new AddressLineType { Line = new LineType { Value = request.Receiver.FullAddress } }
                                 }
                             }
                         }
@@ -197,7 +198,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                     {
                         ID = new IDType { Value = paymentTerm.PaymentId },
                         PaymentMeansID = new PaymentMeansIDType[] { new PaymentMeansIDType { Value = paymentTerm.PaymentType } },
-                        Amount = new AmountType2 { currencyID = request.InvoiceData.CurrencyCode, Value = paymentTerm.Amount },
+                        Amount = new AmountType2 { currencyID = request.InvoiceDetail.CurrencyCode, Value = paymentTerm.Amount },
                     });
                     break;
                 case string a when a.Contains("Cuota"):
@@ -205,7 +206,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                     {
                         ID = new IDType { Value = paymentTerm.PaymentId },
                         PaymentMeansID = new PaymentMeansIDType[] { new PaymentMeansIDType { Value = paymentTerm.PaymentType } },
-                        Amount = new AmountType2 { currencyID = request.InvoiceData.CurrencyCode, Value = paymentTerm.Amount },
+                        Amount = new AmountType2 { currencyID = request.InvoiceDetail.CurrencyCode, Value = paymentTerm.Amount },
                         PaymentDueDate = new PaymentDueDateType { Value = paymentTerm.DueDate }
                     });
                     break;
@@ -224,8 +225,8 @@ public class DocumentGeneratorService : IDocumentGeneratorService
         {
             taxSubTotals.Add(new TaxSubtotalType
             {
-                TaxableAmount = new TaxableAmountType { currencyID = request.InvoiceData.CurrencyCode, Value = taxSubTotal.TaxableAmount },
-                TaxAmount = new TaxAmountType { currencyID = request.InvoiceData.CurrencyCode, Value = taxSubTotal.TaxAmount },
+                TaxableAmount = new TaxableAmountType { currencyID = request.InvoiceDetail.CurrencyCode, Value = taxSubTotal.TaxableAmount },
+                TaxAmount = new TaxAmountType { currencyID = request.InvoiceDetail.CurrencyCode, Value = taxSubTotal.TaxAmount },
                 TaxCategory = new TaxCategoryType
                 {
                     TaxScheme = new TaxSchemeType //Catalog 5
@@ -242,7 +243,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
         {
             new TaxTotalType
             {
-                TaxAmount = new TaxAmountType { currencyID = request.InvoiceData.CurrencyCode, Value = request.TaxTotalAmount },
+                TaxAmount = new TaxAmountType { currencyID = request.InvoiceDetail.CurrencyCode, Value = request.TaxTotalAmount },
                 TaxSubtotal = taxSubTotals.ToArray()
             }
         };
@@ -251,32 +252,32 @@ public class DocumentGeneratorService : IDocumentGeneratorService
         {
             LineExtensionAmount = new LineExtensionAmountType
             {
-                currencyID = request.InvoiceData.CurrencyCode,
+                currencyID = request.InvoiceDetail.CurrencyCode,
                 Value = request.TaxSubTotal.Sum(x => x.TaxableAmount)
             },
             TaxInclusiveAmount = new TaxInclusiveAmountType
             {
-                currencyID = request.InvoiceData.CurrencyCode,
+                currencyID = request.InvoiceDetail.CurrencyCode,
                 Value = request.TotalAmount
             },
             ChargeTotalAmount = new ChargeTotalAmountType
             {
-                currencyID = request.InvoiceData.CurrencyCode,
+                currencyID = request.InvoiceDetail.CurrencyCode,
                 Value = 0,
             },
             PayableAmount = new PayableAmountType
             {
-                currencyID = request.InvoiceData.CurrencyCode,
+                currencyID = request.InvoiceDetail.CurrencyCode,
                 Value = request.TotalAmount
             },
             AllowanceTotalAmount = new AllowanceTotalAmountType
             {
-                currencyID = request.InvoiceData.CurrencyCode,
+                currencyID = request.InvoiceDetail.CurrencyCode,
                 Value = 0,
             },
             PrepaidAmount = new PrepaidAmountType
             {
-                currencyID = request.InvoiceData.CurrencyCode,
+                currencyID = request.InvoiceDetail.CurrencyCode,
                 Value = 0,
             }
         };
@@ -300,7 +301,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                 },
                 LineExtensionAmount = new LineExtensionAmountType
                 {
-                    currencyID = request.InvoiceData.CurrencyCode,
+                    currencyID = request.InvoiceDetail.CurrencyCode,
                     Value = detail.Quantity * detail.UnitPrice
                 },
                 PricingReference = new PricingReferenceType
@@ -311,7 +312,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                         {
                             PriceAmount = new PriceAmountType
                             {
-                                currencyID = request.InvoiceData.CurrencyCode,
+                                currencyID = request.InvoiceDetail.CurrencyCode,
                                 Value = detail.UnitPrice + detail.TaxAmount,
                             },
                             PriceTypeCode = new PriceTypeCodeType
@@ -327,7 +328,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                     {
                         TaxAmount = new TaxAmountType
                         {
-                            currencyID = request.InvoiceData.CurrencyCode,
+                            currencyID = request.InvoiceDetail.CurrencyCode,
                             Value = detail.TaxAmount * detail.Quantity
                         },
                         TaxSubtotal = new TaxSubtotalType[]
@@ -336,12 +337,12 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                             {
                                 TaxableAmount = new TaxableAmountType
                                 {
-                                    currencyID = request.InvoiceData.CurrencyCode,
+                                    currencyID = request.InvoiceDetail.CurrencyCode,
                                     Value = detail.UnitPrice * detail.Quantity,
                                 },
                                 TaxAmount = new TaxAmountType
                                 {
-                                    currencyID = request.InvoiceData.CurrencyCode,
+                                    currencyID = request.InvoiceDetail.CurrencyCode,
                                     Value = detail.TaxAmount * detail.Quantity
                                 },
                                 TaxCategory = new TaxCategoryType
@@ -383,7 +384,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                 },
                 Price = new PriceType
                 {
-                    PriceAmount = new PriceAmountType { currencyID = request.InvoiceData.CurrencyCode, Value = detail.UnitPrice }
+                    PriceAmount = new PriceAmountType { currencyID = request.InvoiceDetail.CurrencyCode, Value = detail.UnitPrice }
                 }
             });
             count++;

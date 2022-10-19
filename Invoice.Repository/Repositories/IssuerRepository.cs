@@ -1,67 +1,24 @@
 ﻿using Invoice.Contracts.Repositories;
-using Invoice.Entities;
+using Invoice.Entities.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Invoice.Repository.Repositories;
 
-public class IssuerRepository : IIssuerRepository
+public class IssuerRepository : RepositoryBase<Issuer>, IIssuerRepository
 {
-    private readonly InvoiceContext _context;
-
-    public IssuerRepository(InvoiceContext context)
+    public IssuerRepository(InvoiceContext invoiceContext) : base(invoiceContext)
     {
-        _context = context;
     }
 
-    public async Task CreateIssuer(Issuer issuer)
-    {
-        _context.Issuers.Add(issuer);
-        await _context.SaveChangesAsync();
-    }
+    public void CreateIssuer(Issuer issuer) => Create(issuer);
 
-    public async Task DeleteIssuer(Guid id)
-    {
-        var issuer = await _context.Issuers.FindAsync(id);
+    public void DeleteIssuer(Issuer issuer) => Delete(issuer);
 
-        if (issuer is not null)
-        {
-            _context.Issuers.Remove(issuer);
-            await _context.SaveChangesAsync();
-        }
-    }
+    public async Task<Issuer> GetIssuerAsync(Guid id, bool trackChanges) =>
+        await FindByCondition(x => x.Id.Equals(id), trackChanges)
+        .SingleOrDefaultAsync();
 
-    public async Task<Issuer> GetIssuer(Guid id)
-    {
-        var issuer = await _context.Issuers.FindAsync(id);
-        return issuer;
-    }
-
-    public async Task<List<Issuer>> GetIssuers()
-    {
-        var issuers = await _context.Issuers.ToListAsync();
-        return issuers;
-    }
-
-    public async Task UpdateIssuer(Guid id, Issuer issuer)
-    {
-        var issuerDb = await _context.Issuers.FindAsync(id);
-
-        if (issuerDb is not null)
-        {
-            issuerDb.IssuerName = issuer.IssuerName;
-            issuerDb.IssuerType = issuer.IssuerType;
-            issuerDb.Department = issuer.Department;
-            issuerDb.Province = issuer.Province;
-            issuerDb.District = issuer.District;
-            issuerDb.Address = issuer.Address;
-            issuerDb.EstablishmentCode = issuer.EstablishmentCode;
-            issuerDb.GeoCode = issuer.GeoCode;
-            issuerDb.BetaCertificate = issuer.BetaCertificate;
-            issuerDb.ProdCertificate = issuer.ProdCertificate;
-            issuerDb.BetaCertificatePasword = issuer.BetaCertificatePasword;
-            issuerDb.ProdCertificatePasword = issuer.ProdCertificatePasword;
-        }
-
-        await _context.SaveChangesAsync();
-    }
+    public async Task<IEnumerable<Issuer>> GetIssuersAsync(bool trackChanges) =>
+        await FindAll(trackChanges)
+        .ToListAsync();
 }

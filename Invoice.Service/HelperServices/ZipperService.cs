@@ -1,5 +1,6 @@
 ﻿using Aspose.Zip;
 using Aspose.Zip.Saving;
+using Invoice.Entities.Exceptions;
 using Invoice.Service.Contracts.HelperServices;
 using System.Text;
 
@@ -9,27 +10,34 @@ public class ZipperService : IZipperService
 {
     public void ZipXml(string file)
     {
-        string envioArchivoZip = Path.GetFileName(file).Replace(".xml", ".zip");
-
-        var path = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + $"\\XMLZipped";
-
-        if (!Directory.Exists(path))
+        try
         {
-            Directory.CreateDirectory(path);
-        }
+            string envioArchivoZip = Path.GetFileName(file).Replace(".xml", ".zip");
 
-        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            var path = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + $"\\XMLZipped";
 
-        using (FileStream zipFile = File.Open($"{path}\\{envioArchivoZip}", FileMode.Create))
-        {
-            using (FileStream source = File.Open(file, FileMode.Open, FileAccess.Read))
+            if (!Directory.Exists(path))
             {
-                using (var archive = new Archive(new ArchiveEntrySettings()))
+                Directory.CreateDirectory(path);
+            }
+
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+            using (FileStream zipFile = File.Open($"{path}\\{envioArchivoZip}", FileMode.Create))
+            {
+                using (FileStream source = File.Open(file, FileMode.Open, FileAccess.Read))
                 {
-                    archive.CreateEntry(Path.GetFileName(file), source);
-                    archive.Save(zipFile);
+                    using (var archive = new Archive(new ArchiveEntrySettings()))
+                    {
+                        archive.CreateEntry(Path.GetFileName(file), source);
+                        archive.Save(zipFile);
+                    }
                 }
             }
+        }
+        catch (Exception ex)
+        {
+            throw new ZipperException(ex.Message);
         }
     }
 }

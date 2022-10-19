@@ -1,6 +1,8 @@
-﻿namespace Invoice.Service.Contracts.HelperServices;
+﻿using Invoice.Entities.Models;
+
+namespace Invoice.Service.Contracts.HelperServices;
 
 public interface ISignerService
 {
-    Task SignXml(Guid id, string file);
+    void SignXml(Guid id, string file, Issuer issuer);
 }

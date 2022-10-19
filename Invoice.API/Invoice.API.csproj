@@ -20,4 +20,8 @@
     <ProjectReference Include="..\Invoice.Service\Invoice.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="internal_logs\" />
+  </ItemGroup>
+
 </Project>
