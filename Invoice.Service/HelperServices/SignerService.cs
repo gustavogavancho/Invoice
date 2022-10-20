@@ -1,7 +1,5 @@
 ﻿using Invoice.Entities.Exceptions;
 using Invoice.Entities.Models;
-using Invoice.Service.Contracts;
-using Invoice.Service.Contracts.BusinessServices;
 using Invoice.Service.Contracts.HelperServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;

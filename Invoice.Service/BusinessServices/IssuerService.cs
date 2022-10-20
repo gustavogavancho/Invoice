@@ -65,7 +65,7 @@ public class IssuerService : IIssuerService
     {
         var issuer = await GetIssuerAndCheckIfItExists(id, trackChanges);
 
-        _mapper.Map(issuer, issuerRequest);
+        _mapper.Map(issuerRequest, issuer);
         await _repository.SaveAsync();
     }
 
