@@ -4,6 +4,7 @@ using Invoice.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Invoice.Repository.Migrations
 {
     [DbContext(typeof(InvoiceContext))]
-    partial class InvoiceContextModelSnapshot : ModelSnapshot
+    [Migration("20221020204534_Invoice")]
+    partial class Invoice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,7 +32,7 @@ namespace Invoice.Repository.Migrations
 
                     b.Property<string>("InvoiceXml")
                         .IsRequired()
-                        .HasColumnType("xml");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("IssuerId")
                         .HasColumnType("uniqueidentifier");
@@ -105,7 +107,7 @@ namespace Invoice.Repository.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3991a1a4-1c2e-485e-8260-8dc131e002b0"),
+                            Id = new Guid("1f7df03c-a639-466a-a63a-3fa4e9c949d9"),
                             Address = "PSJE. LIMATAMBO 121",
                             Department = "SAN MARTIN",
                             District = "TARAPOTO",

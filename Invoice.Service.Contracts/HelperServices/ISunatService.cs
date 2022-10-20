@@ -2,5 +2,5 @@
 
 public interface ISunatService
 {
-    Task<byte[]> SendBill(string uri, string username, string password, string fileName, byte[] file);
+    Task SendBill(string uri, string username, string password, string fileName, string file, string cdrFile);
 }

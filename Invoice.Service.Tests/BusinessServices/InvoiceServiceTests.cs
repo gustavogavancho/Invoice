@@ -5,7 +5,6 @@ using Invoice.Contracts.Repositories;
 using Invoice.Entities.Models;
 using Invoice.Service.BusinessServices;
 using Invoice.Service.Contracts.HelperServices;
-using Invoice.Service.Contracts.ServiceManagers;
 using Invoice.Shared.Request;
 using Moq;
 
@@ -29,19 +28,21 @@ namespace Invoice.Service.Tests.BusinessServices
             var serializeXmlService = new Mock<ISerializeXmlService>();
             var signerService = new Mock<ISignerService>();
             var zipperService = new Mock<IZipperService>();
+            var sunatService = new Mock<ISunatService>();
+            var readResponseService = new Mock<IReadResponseService>();
 
             var fileName = $"{issuer.IssuerId}-{request.InvoiceDetail.DocumentType}-{request.InvoiceDetail.Serie}{request.InvoiceDetail.SerialNumber.ToString("00")}-{request.InvoiceDetail.CorrelativeNumber.ToString("00000000")}.xml";
             var path = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + $"\\XML";
 
-            var sut = new InvoiceService(repositoryManager.Object, loggerManager.Object, mapper.Object, documentGeneratorService.Object, serializeXmlService.Object, signerService.Object, zipperService.Object);
+            var sut = new InvoiceService(repositoryManager.Object, loggerManager.Object, mapper.Object, documentGeneratorService.Object, serializeXmlService.Object, signerService.Object, zipperService.Object, sunatService.Object, readResponseService.Object);
 
             //Act
             await sut.SendInvoiceType(It.IsAny<Guid>(), request, false);
 
             //Assert
-            serializeXmlService.Verify(x => x.SerializeXmlDocument(fileName, path, It.IsAny<Type>(), It.IsAny<object>()), Times.Once);
+            serializeXmlService.Verify(x => x.SerializeXmlDocument(Path.Combine(path, fileName), It.IsAny<Type>(), It.IsAny<object>()), Times.Once);
             signerService.Verify(x => x.SignXml(It.IsAny<Guid>(), Path.Combine(path, fileName), It.IsAny<Issuer>()));
-            zipperService.Verify(x => x.ZipXml(It.IsAny<string>()));
+            zipperService.Verify(x => x.ZipXml(It.IsAny<string>(), It.IsAny<string>()));
         }
     }
 }

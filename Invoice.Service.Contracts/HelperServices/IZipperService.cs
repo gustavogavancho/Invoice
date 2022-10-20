@@ -2,5 +2,5 @@
 
 public interface IZipperService
 {
-    string ZipXml(string file);
+    void ZipXml(string file, string zippedFile);
 }

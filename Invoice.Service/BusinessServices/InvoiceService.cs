@@ -20,6 +20,7 @@ public class InvoiceService : IInvoiceService
     private readonly ISignerService _signerService;
     private readonly IZipperService _zipperService;
     private readonly ISunatService _sunatService;
+    private readonly IReadResponseService _readResponseService;
 
     public InvoiceService(IRepositoryManager repository, 
         ILoggerManager logger, 
@@ -28,7 +29,8 @@ public class InvoiceService : IInvoiceService
         ISerializeXmlService serializeXmlService,
         ISignerService signerService,
         IZipperService zipperService,
-        ISunatService sunatService)
+        ISunatService sunatService,
+        IReadResponseService readResponseService)
     {
         _repository = repository;
         _logger = logger;
@@ -38,6 +40,7 @@ public class InvoiceService : IInvoiceService
         _signerService = signerService;
         _zipperService = zipperService;
         _sunatService = sunatService;
+        _readResponseService = readResponseService;
     }
 
     public async Task SendInvoiceType(Guid id, InvoiceRequest request, bool trackChanges)
@@ -46,38 +49,28 @@ public class InvoiceService : IInvoiceService
 
         var invoice = _documentGeneratorService.GenerateInvoiceType(request, issuer);
 
-        var fileName = $"{issuer.IssuerId}-{request.InvoiceDetail.DocumentType}-{request.InvoiceDetail.Serie}{request.InvoiceDetail.SerialNumber.ToString("00")}-{request.InvoiceDetail.CorrelativeNumber.ToString("00000000")}.xml";
-        var path = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + "\\XML";
-
         //Serialize to xml
-        _serializeXmlService.SerializeXmlDocument(fileName, path, typeof(InvoiceType), invoice);
+        var xmlFile = GetDocumentName(issuer, request, typeof(InvoiceRequest), "xml", "XML", false);
+        _serializeXmlService.SerializeXmlDocument(xmlFile, typeof(InvoiceType), invoice);
 
         //Sign xml
-        _signerService.SignXml(id, Path.Combine(path, fileName), issuer);
+        _signerService.SignXml(id, xmlFile, issuer);
 
         //Zip xml
-        var fileZipped = _zipperService.ZipXml(Path.Combine(path, fileName));
+        var zippedFile = GetDocumentName(issuer, request, typeof(InvoiceRequest), "zip", "ZIPPED", false);
+        _zipperService.ZipXml(xmlFile, zippedFile);
 
         //Send bill
-        string respuestArchivoZip = $"R-{issuer.IssuerId}-{request.InvoiceDetail.DocumentType}-{request.InvoiceDetail.Serie}{request.InvoiceDetail.SerialNumber.ToString("00")}-{request.InvoiceDetail.CorrelativeNumber.ToString("00000000")}.zip";
-        byte[] bitArray = await File.ReadAllBytesAsync(fileZipped);
-
-        string pathCdr = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + $"\\XMLCDR";
-
-        if (!Directory.Exists(pathCdr))
-        {
-            Directory.CreateDirectory(pathCdr);
-        }
-
-        var result = await _sunatService.SendBill("https://e-beta.sunat.gob.pe/ol-ti-itcpfegem-beta/billService",
+        var cdrFile = GetDocumentName(issuer, request, typeof(InvoiceRequest), "zip", "CDR", true);
+        await _sunatService.SendBill("https://e-beta.sunat.gob.pe/ol-ti-itcpfegem-beta/billService",
                 "20606022779MODDATOS",
                 "moddatos",
-                Path.GetFileName(fileZipped),
-                bitArray);
+                Path.GetFileName(zippedFile),
+                zippedFile,
+                cdrFile);
 
-        using FileStream fs = new FileStream($"{pathCdr}\\{respuestArchivoZip}", FileMode.Create);
-        fs.Write(result, 0, result.Length);
-        fs.Close();
+        //Read response
+        var response = _readResponseService.ReadResponse(Path.Combine(cdrFile));
     }
 
     private async Task<Issuer> GetIssuerAndCheckIfItExists(Guid id, bool trackChanges)
@@ -88,5 +81,24 @@ public class InvoiceService : IInvoiceService
             throw new IssuerNotFoundException(id);
 
         return issuer;
+    }
+
+    private static string GetDocumentName(Issuer issuer, object document, Type documentType, string extension, string path, bool response)
+    {
+        dynamic documenConverted = Convert.ChangeType(document, documentType);
+
+        var fileName = $"{issuer.IssuerId}-{documenConverted.InvoiceDetail.DocumentType}-{documenConverted.InvoiceDetail.Serie}{documenConverted.InvoiceDetail.SerialNumber.ToString("00")}-{documenConverted.InvoiceDetail.CorrelativeNumber.ToString("00000000")}.{extension}";
+
+        if (response)
+            fileName = "R-" + fileName;
+
+        var directory = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + $"\\{path}";
+
+        if (!Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        return Path.Combine(directory, fileName);
     }
 }

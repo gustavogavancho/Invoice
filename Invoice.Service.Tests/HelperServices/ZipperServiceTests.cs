@@ -15,7 +15,7 @@ namespace Invoice.Service.Tests.HelperServices
 
             //Act
             var zipperService = new ZipperService();
-            zipperService.ZipXml(Path.Combine(path, fileName));
+            zipperService.ZipXml(Path.Combine(path, fileName), Path.Combine(pathZipped, fileNameZipped));
 
             //Assert
             Assert.True(File.Exists(Path.Combine(pathZipped, fileNameZipped)));

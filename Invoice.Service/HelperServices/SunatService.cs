@@ -9,7 +9,7 @@ namespace Invoice.Service.HelperServices;
 
 public class SunatService : ISunatService
 {
-    public async Task<byte[]> SendBill(string uri, string username, string password, string fileName, byte[] file)
+    public async Task SendBill(string uri, string username, string password, string fileName, string file, string cdrFile)
     {
         var binding = new BasicHttpBinding(BasicHttpSecurityMode.TransportWithMessageCredential)
         {
@@ -28,9 +28,12 @@ public class SunatService : ISunatService
         };
 
         using var servicio = new billServiceClient(binding, new EndpointAddress(uri));
+        using FileStream fs = new FileStream(cdrFile, FileMode.Create);
 
         try
         {
+            byte[] byteFile = await File.ReadAllBytesAsync(file);
+
             ServicePointManager.Expect100Continue = false;
             ServicePointManager.CheckCertificateRevocationList = true;
 
@@ -54,9 +57,9 @@ public class SunatService : ISunatService
 
             await servicio.OpenAsync();
 
-            var sendBillResponse = await servicio.sendBillAsync(fileName, file, "0");
+            var sendBillResponse = await servicio.sendBillAsync(fileName, byteFile, "0");
 
-            return sendBillResponse.applicationResponse;
+            fs.Write(sendBillResponse.applicationResponse, 0, sendBillResponse.applicationResponse.Length);
         }
         catch (FaultException fex)
         {
@@ -65,6 +68,7 @@ public class SunatService : ISunatService
         finally
         {
             await servicio.CloseAsync();
+            fs.Close();
         }
     }
 }

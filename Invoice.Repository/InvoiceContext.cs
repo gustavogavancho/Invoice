@@ -12,6 +12,7 @@ public class InvoiceContext : DbContext
 	}
 
 	public DbSet<Issuer> Issuers { get; set; }
+	public DbSet<Entities.Models.Invoice> Invoices { get; set; }
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{

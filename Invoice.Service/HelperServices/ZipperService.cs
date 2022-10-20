@@ -8,22 +8,13 @@ namespace Invoice.Service.HelperServices;
 
 public class ZipperService : IZipperService
 {
-    public string ZipXml(string file)
+    public void ZipXml(string file, string zippedFile)
     {
         try
         {
-            string fileName = Path.GetFileName(file).Replace(".xml", ".zip");
-
-            var path = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + $"\\XMLZIPPED";
-
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-            using (FileStream zipFile = File.Open($"{path}\\{fileName}", FileMode.Create))
+            using (FileStream zipFile = File.Open(zippedFile, FileMode.Create))
             {
                 using (FileStream source = File.Open(file, FileMode.Open, FileAccess.Read))
                 {
@@ -34,8 +25,6 @@ public class ZipperService : IZipperService
                     }
                 }
             }
-
-            return Path.Combine(path, fileName);
         }
         catch (Exception ex)
         {

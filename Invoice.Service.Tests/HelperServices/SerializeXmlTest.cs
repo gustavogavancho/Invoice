@@ -21,7 +21,7 @@ namespace Invoice.Service.Tests.HelperServices
             };
 
             //Act
-            service.SerializeXmlDocument(fileName, path, documentType, document);
+            service.SerializeXmlDocument(Path.Combine(fileName, path), documentType, document);
 
             //Assert
             Assert.True(File.Exists(Path.Combine(path, fileName)));
