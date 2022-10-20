@@ -19,6 +19,7 @@ public class InvoiceService : IInvoiceService
     private readonly ISerializeXmlService _serializeXmlService;
     private readonly ISignerService _signerService;
     private readonly IZipperService _zipperService;
+    private readonly ISunatService _sunatService;
 
     public InvoiceService(IRepositoryManager repository, 
         ILoggerManager logger, 
@@ -26,7 +27,8 @@ public class InvoiceService : IInvoiceService
         IDocumentGeneratorService documentGeneratorService,
         ISerializeXmlService serializeXmlService,
         ISignerService signerService,
-        IZipperService zipperService)
+        IZipperService zipperService,
+        ISunatService sunatService)
     {
         _repository = repository;
         _logger = logger;
@@ -35,6 +37,7 @@ public class InvoiceService : IInvoiceService
         _serializeXmlService = serializeXmlService;
         _signerService = signerService;
         _zipperService = zipperService;
+        _sunatService = sunatService;
     }
 
     public async Task SendInvoiceType(Guid id, InvoiceRequest request, bool trackChanges)
@@ -46,11 +49,35 @@ public class InvoiceService : IInvoiceService
         var fileName = $"{issuer.IssuerId}-{request.InvoiceDetail.DocumentType}-{request.InvoiceDetail.Serie}{request.InvoiceDetail.SerialNumber.ToString("00")}-{request.InvoiceDetail.CorrelativeNumber.ToString("00000000")}.xml";
         var path = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + "\\XML";
 
+        //Serialize to xml
         _serializeXmlService.SerializeXmlDocument(fileName, path, typeof(InvoiceType), invoice);
 
+        //Sign xml
         _signerService.SignXml(id, Path.Combine(path, fileName), issuer);
 
-        _zipperService.ZipXml(Path.Combine(path, fileName));
+        //Zip xml
+        var fileZipped = _zipperService.ZipXml(Path.Combine(path, fileName));
+
+        //Send bill
+        string respuestArchivoZip = $"R-{issuer.IssuerId}-{request.InvoiceDetail.DocumentType}-{request.InvoiceDetail.Serie}{request.InvoiceDetail.SerialNumber.ToString("00")}-{request.InvoiceDetail.CorrelativeNumber.ToString("00000000")}.zip";
+        byte[] bitArray = await File.ReadAllBytesAsync(fileZipped);
+
+        string pathCdr = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + $"\\XMLCDR";
+
+        if (!Directory.Exists(pathCdr))
+        {
+            Directory.CreateDirectory(pathCdr);
+        }
+
+        var result = await _sunatService.SendBill("https://e-beta.sunat.gob.pe/ol-ti-itcpfegem-beta/billService",
+                "20606022779MODDATOS",
+                "moddatos",
+                Path.GetFileName(fileZipped),
+                bitArray);
+
+        using FileStream fs = new FileStream($"{pathCdr}\\{respuestArchivoZip}", FileMode.Create);
+        fs.Write(result, 0, result.Length);
+        fs.Close();
     }
 
     private async Task<Issuer> GetIssuerAndCheckIfItExists(Guid id, bool trackChanges)

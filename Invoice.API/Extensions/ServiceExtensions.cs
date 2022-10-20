@@ -28,6 +28,7 @@ public static class ServiceExtensions
         services.AddScoped<ISerializeXmlService, SerializeXmlService>();
         services.AddScoped<ISignerService, SignerService>();
         services.AddScoped<IZipperService, ZipperService>();
+        services.AddScoped<ISunatService, SunatService>();
     }
 
     public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration configuration) =>

@@ -42,7 +42,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
 
             #region Serial Number
 
-            ID = new IDType { Value = $"{request.InvoiceDetail.Serie}{request.InvoiceDetail.SerialNumber.ToString("00")}-{request.InvoiceDetail.CorrelativeNumber}" },
+            ID = new IDType { Value = $"{request.InvoiceDetail.Serie}{request.InvoiceDetail.SerialNumber.ToString("00")}-{request.InvoiceDetail.CorrelativeNumber.ToString("00000000")}" },
 
             #endregion
 

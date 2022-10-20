@@ -19,9 +19,10 @@ public class ServiceManager : IServiceManager
         IDocumentGeneratorService documentGeneratorService,
         ISerializeXmlService serializeXmlService,
         ISignerService signerService,
-        IZipperService zipperService)
+        IZipperService zipperService,
+        ISunatService sunatService)
     {
-        _invoiceService = new Lazy<IInvoiceService>(() => new InvoiceService(repositoryManager, logger, mapper, documentGeneratorService, serializeXmlService, signerService, zipperService));
+        _invoiceService = new Lazy<IInvoiceService>(() => new InvoiceService(repositoryManager, logger, mapper, documentGeneratorService, serializeXmlService, signerService, zipperService, sunatService));
         _issuerService = new Lazy<IIssuerService>(() => new IssuerService(repositoryManager, logger, mapper));
     }
 
