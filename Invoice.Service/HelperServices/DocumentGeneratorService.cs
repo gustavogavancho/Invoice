@@ -26,8 +26,8 @@ public class DocumentGeneratorService : IDocumentGeneratorService
 
             #region Ubl and Schema
 
-            UBLVersionID = new UBLVersionIDType { Value = request.UblScheme.UblVersionId },
-            CustomizationID = new CustomizationIDType { Value = request.UblScheme.CustomizationId },
+            UBLVersionID = new UBLVersionIDType { Value = request.UblVersionId },
+            CustomizationID = new CustomizationIDType { Value = request.CustomizationId },
 
             #endregion
 
@@ -231,9 +231,9 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                 {
                     TaxScheme = new TaxSchemeType //Catalog 5
                     {
-                        ID = new IDType { Value = taxSubTotal.TaxCategory.TaxId },
-                        Name = new NameType1 { Value = taxSubTotal.TaxCategory.TaxName },
-                        TaxTypeCode = new TaxTypeCodeType { Value = taxSubTotal.TaxCategory.TaxCode }
+                        ID = new IDType { Value = taxSubTotal.TaxId },
+                        Name = new NameType1 { Value = taxSubTotal.TaxName },
+                        TaxTypeCode = new TaxTypeCodeType { Value = taxSubTotal.TaxCode }
                     }
                 }
             });
