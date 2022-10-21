@@ -25,11 +25,7 @@ public static class ServiceExtensions
     public static void ConfigureHelperServices(this IServiceCollection services)
     {
         services.AddScoped<IDocumentGeneratorService, DocumentGeneratorService>();
-        services.AddScoped<ISerializeXmlService, SerializeXmlService>();
-        services.AddScoped<ISignerService, SignerService>();
-        services.AddScoped<IZipperService, ZipperService>();
         services.AddScoped<ISunatService, SunatService>();
-        services.AddScoped<IReadResponseService, ReadResponseService>();
     }
 
     public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration configuration) =>

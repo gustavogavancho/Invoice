@@ -17,7 +17,7 @@ public class InvoiceRepository : RepositoryBase<Entities.Models.Invoice>, IInvoi
         await FindByCondition(x => x.Id.Equals(id), trackChanges)
         .SingleOrDefaultAsync();
 
-    public async Task<IEnumerable<Entities.Models.Invoice>> GetInvoiceAsync(bool trackChanges) =>
+    public async Task<IEnumerable<Entities.Models.Invoice>> GetInvoicesAsync(bool trackChanges) =>
         await FindAll(trackChanges)
         .ToListAsync();
 }
