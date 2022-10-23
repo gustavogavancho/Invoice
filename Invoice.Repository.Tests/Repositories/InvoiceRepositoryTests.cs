@@ -32,7 +32,7 @@ public class InvoiceRepositoryTests : IClassFixture<InvoiceContextClassFixture>
 
         //Assert
         Assert.NotNull(invoiceSaved);
-        Assert.Equal(invoice.InvoiceXml, invoiceSaved.InvoiceXml);
+        Assert.Equal(invoice.InvoiceSendXml, invoiceSaved.InvoiceSendXml);
     }
 
     [Fact]
@@ -71,14 +71,14 @@ public class InvoiceRepositoryTests : IClassFixture<InvoiceContextClassFixture>
 
         //Act
         var invoiceToUpdate = await _invoiceRepository.GetInvoiceAsync(id, true);
-        invoiceToUpdate.InvoiceXml = issuer.InvoiceXml;
+        invoiceToUpdate.InvoiceSendXml = issuer.InvoiceSendXml;
         _invoiceRepository.Update(invoiceToUpdate);
         await _contextFixture.Context.SaveChangesAsync();
         var invoiceSaved = await _contextFixture.Context.Invoices.FindAsync(id);
 
         //Assert
         Assert.NotNull(invoiceSaved);
-        Assert.Equal(invoiceSaved.InvoiceXml, issuer.InvoiceXml);
+        Assert.Equal(invoiceSaved.InvoiceSendXml, issuer.InvoiceSendXml);
     }
 
     [Fact]

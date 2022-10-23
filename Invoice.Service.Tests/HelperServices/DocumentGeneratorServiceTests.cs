@@ -21,13 +21,13 @@ public class DocumentGeneratorServiceTests
         invoiceRequest.TaxTotalAmount = 3.6m;
         invoiceRequest.TotalAmount = 23.6m;
 
-        foreach (var item in invoiceRequest.TaxSubTotal)
+        foreach (var item in invoiceRequest.TaxSubTotals)
         {
             item.TaxableAmount = 20;
             item.TaxAmount = 3.6m;
         }
 
-        foreach (var item in invoiceRequest.ProductsDetail)
+        foreach (var item in invoiceRequest.ProductsDetails)
         {
             item.Quantity = 1;
             item.UnitPrice = 20;

@@ -4,6 +4,7 @@ using Invoice.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Invoice.Repository.Migrations
 {
     [DbContext(typeof(InvoiceContext))]
-    partial class InvoiceContextModelSnapshot : ModelSnapshot
+    [Migration("20221023165340_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,9 +30,6 @@ namespace Invoice.Repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Accepted")
-                        .HasColumnType("bit");
-
                     b.Property<string>("CustomizationId")
                         .IsRequired()
                         .HasMaxLength(3)
@@ -39,7 +38,7 @@ namespace Invoice.Repository.Migrations
                     b.Property<DateTime?>("DueDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("InvoiceSendXml")
+                    b.Property<string>("InvoiceXml")
                         .IsRequired()
                         .HasColumnType("xml");
 
@@ -48,14 +47,6 @@ namespace Invoice.Repository.Migrations
 
                     b.Property<Guid>("IssuerId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Observations")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("SunatResponse")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
 
                     b.Property<decimal>("TaxTotalAmount")
                         .HasColumnType("decimal(18,2)");
@@ -190,7 +181,7 @@ namespace Invoice.Repository.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("ff30cf89-9a7a-47e9-8361-4f02f7a4a761"),
+                            Id = new Guid("a16fa937-7bc0-43be-92a0-4134d66d37dd"),
                             Address = "PSJE. LIMATAMBO 121",
                             Department = "SAN MARTIN",
                             District = "TARAPOTO",

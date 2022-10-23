@@ -221,7 +221,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
         #region Amount and Taxes
 
         var taxSubTotals = new List<TaxSubtotalType>();
-        foreach (var taxSubTotal in request.TaxSubTotal)
+        foreach (var taxSubTotal in request.TaxSubTotals)
         {
             taxSubTotals.Add(new TaxSubtotalType
             {
@@ -253,7 +253,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
             LineExtensionAmount = new LineExtensionAmountType
             {
                 currencyID = request.InvoiceDetail.CurrencyCode,
-                Value = request.TaxSubTotal.Sum(x => x.TaxableAmount)
+                Value = request.TaxSubTotals.Sum(x => x.TaxableAmount)
             },
             TaxInclusiveAmount = new TaxInclusiveAmountType
             {
@@ -289,7 +289,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
         var invoiceLineTypes = new List<InvoiceLineType>();
         var count = 1;
 
-        foreach (var detail in request.ProductsDetail)
+        foreach (var detail in request.ProductsDetails)
         {
             invoiceLineTypes.Add(new InvoiceLineType
             {

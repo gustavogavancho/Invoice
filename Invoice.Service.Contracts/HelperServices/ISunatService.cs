@@ -9,5 +9,5 @@ public interface ISunatService
     XmlDocument SignXml(string xml, Issuer issuer, string documentType);
     byte[] ZipXml(XmlDocument xmlDoc, string name);
     Task<byte[]> SendBill(string uri, string username, string password, string fileName, byte[] byteFile, string cdrFile);
-    string[] ReadResponse(byte[] cdrByte);
+    List<string> ReadResponse(byte[] cdrByte);
 }

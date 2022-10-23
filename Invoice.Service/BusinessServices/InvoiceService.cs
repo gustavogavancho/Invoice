@@ -6,6 +6,7 @@ using Invoice.Entities.Models;
 using Invoice.Service.Contracts.BusinessServices;
 using Invoice.Service.Contracts.HelperServices;
 using Invoice.Shared.Request;
+using Invoice.Shared.Response;
 using UBLSunatPE;
 
 namespace Invoice.Service.BusinessServices;
@@ -31,7 +32,7 @@ public class InvoiceService : IInvoiceService
         _sunatService = sunatService;
     }
 
-    public async Task SendInvoiceType(Guid id, InvoiceRequest request, bool trackChanges)
+    public async Task<InvoiceResponse> SendInvoiceType(Guid id, InvoiceRequest request, bool trackChanges)
     {
         var issuer = await GetIssuerAndCheckIfItExists(id, trackChanges);
 
@@ -58,7 +59,32 @@ public class InvoiceService : IInvoiceService
                 cdrFile);
 
         //Read response
-        var response = _sunatService.ReadResponse(cdrByte);
+        var responses = _sunatService.ReadResponse(cdrByte);
+
+        //Save invoice
+        if (responses.Any(x => x.Contains("aceptada")))
+        {
+            var invoiceDb = _mapper.Map<InvoiceRequest, Invoice.Entities.Models.Invoice>(request);
+            invoiceDb.IssuerId = issuer.Id;
+            invoiceDb.InvoiceSendXml = xmlDoc.OuterXml;
+            invoiceDb.Accepted = true;
+            invoiceDb.SunatResponse = cdrByte;
+            invoiceDb.Observations = string.Join("|", responses);
+            _repository.Invoice.CreateInvoice(invoiceDb);
+            await _repository.SaveAsync();
+
+            var invoiceResponse = _mapper.Map<Entities.Models.Invoice, InvoiceResponse>(invoiceDb);
+            return invoiceResponse;
+        }
+        return null;
+    }
+
+    public async Task<InvoiceResponse> GetInvoiceAsync(Guid id, bool trackChanges)
+    {
+        var invoice = await GetInvoiceAndCheckIfItExists(id, trackChanges);
+
+        var invoiceResponse = _mapper.Map<Entities.Models.Invoice, InvoiceResponse>(invoice);
+        return invoiceResponse;
     }
 
     private async Task<Issuer> GetIssuerAndCheckIfItExists(Guid id, bool trackChanges)
@@ -69,5 +95,15 @@ public class InvoiceService : IInvoiceService
             throw new IssuerNotFoundException(id);
 
         return issuer;
+    }
+
+    private async Task<Entities.Models.Invoice> GetInvoiceAndCheckIfItExists(Guid id, bool trackChanges)
+    {
+        var invoice = await _repository.Invoice.GetInvoiceAsync(id, trackChanges);
+
+        if (invoice is null)
+            throw new IssuerNotFoundException(id);
+
+        return invoice;
     }
 }

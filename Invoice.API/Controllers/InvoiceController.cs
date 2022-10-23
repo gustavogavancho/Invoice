@@ -1,6 +1,7 @@
 ﻿using Invoice.API.ActionFilters;
 using Invoice.Service.Contracts.ServiceManagers;
 using Invoice.Shared.Request;
+using Invoice.Shared.Response;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Invoice.API.Controllers;
@@ -17,8 +18,15 @@ public class InvoiceController : ControllerBase
 	[ServiceFilter(typeof(ValidationFilterAttribute))]
 	public async Task<IActionResult> Send(Guid id, InvoiceRequest request)
 	{
-		await _service.InvoiceService.SendInvoiceType(id, request, trackChanges: false);
+		var invoiceCreated = await _service.InvoiceService.SendInvoiceType(id, request, trackChanges: false);
 
-		return Ok();
-	}
+        return CreatedAtRoute("InvoiceById", new { id = invoiceCreated.Id }, invoiceCreated);
+    }
+
+    [HttpGet("{id:guid}", Name = "InvoiceById")]
+    public async Task<ActionResult<InvoiceResponse>> GetIssuer(Guid id)
+    {
+        var issuerResponse = await _service.InvoiceService.GetInvoiceAsync(id, trackChanges: false);
+        return Ok(issuerResponse);
+    }
 }

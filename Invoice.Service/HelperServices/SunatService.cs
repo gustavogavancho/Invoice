@@ -207,18 +207,13 @@ public class SunatService : ISunatService
         }
     }
 
-    public string[] ReadResponse(byte[] cdrByte)
+    public List<string> ReadResponse(byte[] cdrByte)
     {
-        string r = "";
-        string fileEntry = "";
-        string[] datos = new string[3];
-
+        var responses = new List<string>();
         try
         {
-            Stream data = new MemoryStream(cdrByte); // The original data
-            Stream unzippedEntryStream; // Unzipped data from a file in the archive
-
-            ZipArchive archive = new ZipArchive(data);
+            using var data = new MemoryStream(cdrByte); // The original data
+            using var archive = new ZipArchive(data);
             foreach (ZipArchiveEntry entry in archive.Entries)
             {
                 if (entry.FullName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
@@ -228,15 +223,11 @@ public class SunatService : ISunatService
                     XmlNodeList xnl = xd.GetElementsByTagName("cbc:Description");
                     foreach (XmlElement item in xnl)
                     {
-                        r = item.InnerText;
+                        responses.Add(item.InnerText);
                     }
                 }
             }
-
-            datos[0] = r;
-            datos[1] = fileEntry;
-
-            return datos;
+            return responses;
         }
         catch (Exception ex)
         {
