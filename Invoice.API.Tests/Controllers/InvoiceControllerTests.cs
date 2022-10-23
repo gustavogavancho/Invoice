@@ -25,7 +25,7 @@ public class InvoiceControllerTests
         //Arrange
         var invoiceRequest = _fixture.Create<InvoiceRequest>();
         var invoiceResponse = _fixture.Create<InvoiceResponse>();
-        _service.Setup(x => x.InvoiceService.SendInvoiceType(It.IsAny<Guid>(), It.IsAny<InvoiceRequest>(), false)).ReturnsAsync(invoiceResponse);
+        _service.Setup(x => x.InvoiceService.CreateInvoiceAsync(It.IsAny<Guid>(), It.IsAny<InvoiceRequest>(), false)).ReturnsAsync(invoiceResponse);
 
         //Act
         var invoiceController = new InvoiceController(_service.Object);

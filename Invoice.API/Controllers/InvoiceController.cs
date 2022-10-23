@@ -14,11 +14,11 @@ public class InvoiceController : ControllerBase
 
 	public InvoiceController(IServiceManager service) => _service = service;
 
-	[HttpPost("{id:guid}")]
+	[HttpPost("{issuerId:guid}")]
 	[ServiceFilter(typeof(ValidationFilterAttribute))]
-	public async Task<IActionResult> CreateInvoice(Guid id, InvoiceRequest request)
+	public async Task<IActionResult> CreateInvoice(Guid issuerId, InvoiceRequest request)
 	{
-		var invoiceCreated = await _service.InvoiceService.SendInvoiceType(id, request, trackChanges: false);
+		var invoiceCreated = await _service.InvoiceService.CreateInvoiceAsync(issuerId, request, trackChanges: false);
 
         return CreatedAtRoute("InvoiceById", new { id = invoiceCreated.Id }, invoiceCreated);
     }
@@ -27,6 +27,7 @@ public class InvoiceController : ControllerBase
     public async Task<ActionResult<InvoiceResponse>> GetInvoice(Guid id)
     {
         var issuerResponse = await _service.InvoiceService.GetInvoiceAsync(id, trackChanges: false);
+
         return Ok(issuerResponse);
     }
 }

@@ -32,7 +32,7 @@ public class InvoiceService : IInvoiceService
         _sunatService = sunatService;
     }
 
-    public async Task<InvoiceResponse> SendInvoiceType(Guid id, InvoiceRequest request, bool trackChanges)
+    public async Task<InvoiceResponse> CreateInvoiceAsync(Guid id, InvoiceRequest request, bool trackChanges)
     {
         var issuer = await GetIssuerAndCheckIfItExists(id, trackChanges);
 

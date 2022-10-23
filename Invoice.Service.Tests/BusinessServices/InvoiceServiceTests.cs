@@ -1,6 +1,5 @@
 ﻿using AutoFixture;
 using AutoMapper;
-using Castle.Core.Logging;
 using Invoice.Contracts.Logger;
 using Invoice.Contracts.Repositories;
 using Invoice.Entities.Models;
@@ -35,7 +34,7 @@ namespace Invoice.Service.Tests.BusinessServices
         }
 
         [Fact]
-        public async Task InvoiceService_SendInvoiceTypeTest()
+        public async Task InvoiceService_CreateInvoiceAsyncTest()
         {
             //ArrangeS
             var request = _fixture.Create<InvoiceRequest>();
@@ -48,7 +47,7 @@ namespace Invoice.Service.Tests.BusinessServices
 
             //Act
             var invoiceService = new InvoiceService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object);
-            var sut = await invoiceService.SendInvoiceType(It.IsAny<Guid>(), request, false);
+            var sut = await invoiceService.CreateInvoiceAsync(It.IsAny<Guid>(), request, false);
 
             //Assert
             _documentGeneratorService.Verify(x => x.GenerateInvoiceType(It.IsAny<InvoiceRequest>(), It.IsAny<Issuer>()), Times.Once);
