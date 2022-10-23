@@ -105,7 +105,7 @@ public class SunatServiceTests
 
         //Assert
         Assert.NotNull(sut);
-        Assert.IsType<string[]>(sut);
+        Assert.IsType<List<string>>(sut);
         Assert.Contains("aceptada", sut[0]);
     }
 }

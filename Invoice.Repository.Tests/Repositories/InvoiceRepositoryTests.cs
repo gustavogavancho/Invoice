@@ -1,7 +1,9 @@
 ﻿using AutoFixture;
+using Invoice.Entities.Models;
 using Invoice.Repository.Repositories;
 using Invoice.Repository.Tests.ClassFixture;
 using Microsoft.EntityFrameworkCore;
+using Xunit.Sdk;
 
 namespace Invoice.Repository.Tests.Repositories;
 
@@ -23,6 +25,9 @@ public class InvoiceRepositoryTests : IClassFixture<InvoiceContextClassFixture>
     {
         //Arrange
         var invoice = _fixture.Create<Entities.Models.Invoice>();
+        invoice.PaymentTerms = new List<PaymentTerms>();
+        invoice.ProductsDetails = new List<ProductDetails>();
+        invoice.TaxSubTotals = new List<TaxSubTotal>();
 
         //Act
         _invoiceRepository.CreateInvoice(invoice);

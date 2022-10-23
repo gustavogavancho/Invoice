@@ -16,7 +16,7 @@ public class InvoiceController : ControllerBase
 
 	[HttpPost("{id:guid}")]
 	[ServiceFilter(typeof(ValidationFilterAttribute))]
-	public async Task<IActionResult> Send(Guid id, InvoiceRequest request)
+	public async Task<IActionResult> CreateInvoice(Guid id, InvoiceRequest request)
 	{
 		var invoiceCreated = await _service.InvoiceService.SendInvoiceType(id, request, trackChanges: false);
 
@@ -24,7 +24,7 @@ public class InvoiceController : ControllerBase
     }
 
     [HttpGet("{id:guid}", Name = "InvoiceById")]
-    public async Task<ActionResult<InvoiceResponse>> GetIssuer(Guid id)
+    public async Task<ActionResult<InvoiceResponse>> GetInvoice(Guid id)
     {
         var issuerResponse = await _service.InvoiceService.GetInvoiceAsync(id, trackChanges: false);
         return Ok(issuerResponse);
