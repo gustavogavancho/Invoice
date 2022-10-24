@@ -50,7 +50,6 @@ public class DocumentGeneratorService : IDocumentGeneratorService
 
             IssueDate = new IssueDateType { Value = request.IssueDate },
             IssueTime = new IssueTimeType { Value = request.IssueDate },
-            DueDate = new DueDateType { Value = request.IssueDate },
 
             #endregion
 

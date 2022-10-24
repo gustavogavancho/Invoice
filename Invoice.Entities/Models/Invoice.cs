@@ -15,7 +15,6 @@ public class Invoice
     public Issuer Issuer { get; set; } = default!;
     public Guid IssuerId { get; set; }
     [Required] public DateTime IssueDate { get; set; }
-    public DateTime? DueDate { get; set; }
     [Required, MinLength(3), MaxLength(3)] public string UblVersionId { get; set; } = default!;
     [Required, MinLength(3), MaxLength(3)] public string CustomizationId { get; set; } = default!;
     [Required] public InvoiceDetail InvoiceDetail { get; set; } = default!;
