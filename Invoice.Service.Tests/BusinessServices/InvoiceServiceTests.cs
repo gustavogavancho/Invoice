@@ -36,7 +36,7 @@ namespace Invoice.Service.Tests.BusinessServices
         [Fact]
         public async Task InvoiceService_CreateInvoiceAsyncTest()
         {
-            //ArrangeS
+            //Arrange
             var request = _fixture.Create<InvoiceRequest>();
             var issuer = _fixture.Create<Issuer>();
 
