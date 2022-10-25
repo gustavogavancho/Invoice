@@ -24,7 +24,7 @@ public class InvoiceControllerTests
     {
         //Arrange
         var invoiceRequest = _fixture.Create<InvoiceRequest>();
-        var invoiceResponse = _fixture.Create<InvoiceResponse>();
+        var invoiceResponse = _fixture.Create<DebitNoteResponse>();
         _service.Setup(x => x.InvoiceService.CreateInvoiceAsync(It.IsAny<Guid>(), It.IsAny<InvoiceRequest>(), false)).ReturnsAsync(invoiceResponse);
 
         //Act
@@ -40,7 +40,7 @@ public class InvoiceControllerTests
     public async Task InvoiceController_GetInvoiceTest()
     {
         //Arrange
-        var invoice = _fixture.Create<InvoiceResponse>();
+        var invoice = _fixture.Create<DebitNoteResponse>();
         _service.Setup(x => x.InvoiceService.GetInvoiceAsync(invoice.Id, false)).ReturnsAsync(invoice);
 
         //Act
@@ -48,9 +48,9 @@ public class InvoiceControllerTests
         var sut = await issuerController.GetInvoice(invoice.Id);
 
         //Assert
-        var actionResult = Assert.IsType<ActionResult<InvoiceResponse>>(sut);
+        var actionResult = Assert.IsType<ActionResult<DebitNoteResponse>>(sut);
         var okObjectResult = Assert.IsType<OkObjectResult>(actionResult.Result);
-        var response = Assert.IsType<InvoiceResponse>(okObjectResult.Value);
+        var response = Assert.IsType<DebitNoteResponse>(okObjectResult.Value);
         Assert.Equal(response.Observations, invoice.Observations);
     }
 }

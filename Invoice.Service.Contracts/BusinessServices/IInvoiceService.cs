@@ -5,6 +5,7 @@ namespace Invoice.Service.Contracts.BusinessServices;
 
 public interface IInvoiceService
 {
-    Task<InvoiceResponse> CreateInvoiceAsync(Guid id, InvoiceRequest request, bool trackChanges);
-    Task<InvoiceResponse> GetInvoiceAsync(Guid id, bool trackChanges);
+    Task<DebitNoteResponse> CreateInvoiceAsync(Guid id, InvoiceRequest request, bool trackChanges);
+    Task<DebitNoteResponse> CreateDebitNoteAsync(Guid id, DebitNoteRequest request, bool trackChanges);
+    Task<DebitNoteResponse> GetInvoiceAsync(Guid id, bool trackChanges);
 }

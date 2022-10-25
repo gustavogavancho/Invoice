@@ -7,4 +7,5 @@ namespace Invoice.Service.Contracts.HelperServices;
 public interface IDocumentGeneratorService
 {
     InvoiceType GenerateInvoiceType(InvoiceRequest request, Issuer issuer);
+    DebitNoteType GenerateDebitNoteType(DebitNoteRequest request, Issuer issuer);
 }

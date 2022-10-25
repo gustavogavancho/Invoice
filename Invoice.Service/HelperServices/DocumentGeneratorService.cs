@@ -85,15 +85,6 @@ public class DocumentGeneratorService : IDocumentGeneratorService
 
             #region Invoice
 
-            Note = new NoteType[]
-            {
-                new NoteType
-                {
-                    languageLocaleID = request.DebitNoteDetail.NoteTypeCode, //Catalogo 52
-                    Value = request.DebitNoteDetail.NoteType //e. "MONTO EN SOLES"
-                }
-            },
-
             DocumentCurrencyCode = new DocumentCurrencyCodeType
             {
                 Value = request.DebitNoteDetail.CurrencyCode, //ISO 4217 e. "PEN"
@@ -274,6 +265,15 @@ public class DocumentGeneratorService : IDocumentGeneratorService
         #endregion
 
         #region Products Detail
+
+        debitNoteType.RequestedMonetaryTotal = new MonetaryTotalType
+        {
+            PayableAmount = new PayableAmountType
+            {
+                currencyID = request.DebitNoteDetail.CurrencyCode,
+                Value = request.TotalAmount,
+            }
+        };
 
         var invoiceLineTypes = new List<DebitNoteLineType>();
         var count = 1;
