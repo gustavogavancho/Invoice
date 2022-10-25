@@ -73,28 +73,5 @@ namespace Invoice.Service.Tests.BusinessServices
             //Assert
             Assert.NotNull(sut);
         }
-
-        [Fact]
-        public async Task InvoiceService_CreateDebitNoteAsyncTest()
-        {
-            //Arrange
-            var request = _fixture.Create<DebitNoteRequest>();
-            var issuer = _fixture.Create<Issuer>();
-
-            _repository.Setup(x => x.Issuer.GetIssuerAsync(It.IsAny<Guid>(), false)).ReturnsAsync(issuer);
-            _sunatService.Setup(x => x.SerializeXmlDocument(typeof(DebitNoteType), It.IsAny<DebitNoteType>())).Returns(It.IsAny<string>());
-            _sunatService.Setup(x => x.SignXml(It.IsAny<String>(), It.IsAny<Issuer>(), It.IsAny<string>())).Returns(new XmlDocument());
-            _sunatService.Setup(x => x.ZipXml(It.IsAny<XmlDocument>(), It.IsAny<string>())).Returns(It.IsAny<byte[]>());
-            _sunatService.Setup(x => x.SendBill(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<string>())).ReturnsAsync(It.IsAny<byte[]>());
-            _sunatService.Setup(x => x.ReadResponse(It.IsAny<byte[]>())).Returns(new List<string> { "La Nota de Debito numero FD01-00000001, ha sido aceptada" });
-
-            //Act
-            var invoiceService = new InvoiceService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object);
-            DebitNoteResponse sut = await invoiceService.CreateDebitNoteAsync(It.IsAny<Guid>(), request, false);
-
-            //Assert
-            Assert.NotNull(sut);
-            Assert.IsType<DebitNoteResponse>(sut);
-        }
     }
 }

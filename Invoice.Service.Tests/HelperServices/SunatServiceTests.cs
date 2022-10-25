@@ -86,8 +86,6 @@ public class SunatServiceTests
                 byteZippedXml,
                 "R-20606022779-01-FA01-00000001.zip");
 
-        var check = Convert.ToBase64String(sut);
-
         //Assert
         Assert.NotNull(sut);
         Assert.IsType<byte[]>(sut);

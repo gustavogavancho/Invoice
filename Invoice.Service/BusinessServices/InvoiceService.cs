@@ -78,39 +78,6 @@ public class InvoiceService : IInvoiceService
         }
         return null;
     }
-
-    public async Task<DebitNoteResponse> CreateDebitNoteAsync(Guid id, DebitNoteRequest request, bool trackChanges)
-    {
-        var issuer = await GetIssuerAndCheckIfItExists(id, trackChanges);
-
-        var debitNote = _documentGeneratorService.GenerateDebitNoteType(request, issuer);
-
-        //Serialize to xml
-        var xmlString = _sunatService.SerializeXmlDocument(typeof(DebitNoteType), debitNote);
-
-        //Sign xml
-        var xmlDoc = _sunatService.SignXml(xmlString, issuer, request.DebitNoteDetail.DocumentType);
-
-        //Zip xml
-        var xmlFile = $"{issuer.IssuerId}-{request.DebitNoteDetail.DocumentType}-{request.DebitNoteDetail.Serie}{request.DebitNoteDetail.SerialNumber.ToString("00")}-{request.DebitNoteDetail.CorrelativeNumber.ToString("00000000")}.xml";
-        var byteZippedXml = _sunatService.ZipXml(xmlDoc, Path.GetFileName(xmlFile));
-
-        //Send bill
-        var zippedFile = xmlFile.Replace(".xml", ".zip");
-        var cdrFile = "R-" + zippedFile;
-        var cdrByte = await _sunatService.SendBill("https://e-beta.sunat.gob.pe/ol-ti-itcpfegem-beta/billService",
-                "20606022779MODDATOS",
-                "moddatos",
-                zippedFile,
-                byteZippedXml,
-                cdrFile);
-
-        //Read response
-        var responses = _sunatService.ReadResponse(cdrByte);
-
-        return new DebitNoteResponse();
-    }
-
     public async Task<DebitNoteResponse> GetInvoiceAsync(Guid id, bool trackChanges)
     {
         var invoice = await GetInvoiceAndCheckIfItExists(id, trackChanges);

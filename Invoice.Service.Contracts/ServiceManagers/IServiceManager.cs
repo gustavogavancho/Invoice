@@ -6,4 +6,5 @@ public interface IServiceManager
 {
     IInvoiceService InvoiceService { get; }
     IIssuerService IssuerService { get; }
+    IDebitNoteService DebitNoteService { get; }
 }
