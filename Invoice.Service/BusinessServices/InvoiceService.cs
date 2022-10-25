@@ -32,7 +32,7 @@ public class InvoiceService : IInvoiceService
         _sunatService = sunatService;
     }
 
-    public async Task<DebitNoteResponse> CreateInvoiceAsync(Guid id, InvoiceRequest request, bool trackChanges)
+    public async Task<InvoiceResponse> CreateInvoiceAsync(Guid id, InvoiceRequest request, bool trackChanges)
     {
         var issuer = await GetIssuerAndCheckIfItExists(id, trackChanges);
 
@@ -73,16 +73,16 @@ public class InvoiceService : IInvoiceService
             _repository.Invoice.CreateInvoice(invoiceDb);
             await _repository.SaveAsync();
 
-            var invoiceResponse = _mapper.Map<Entities.Models.Invoice, DebitNoteResponse>(invoiceDb);
+            var invoiceResponse = _mapper.Map<Entities.Models.Invoice, InvoiceResponse>(invoiceDb);
             return invoiceResponse;
         }
         return null;
     }
-    public async Task<DebitNoteResponse> GetInvoiceAsync(Guid id, bool trackChanges)
+    public async Task<InvoiceResponse> GetInvoiceAsync(Guid id, bool trackChanges)
     {
         var invoice = await GetInvoiceAndCheckIfItExists(id, trackChanges);
 
-        var invoiceResponse = _mapper.Map<Entities.Models.Invoice, DebitNoteResponse>(invoice);
+        var invoiceResponse = _mapper.Map<Entities.Models.Invoice, InvoiceResponse>(invoice);
         return invoiceResponse;
     }
 

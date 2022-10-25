@@ -24,7 +24,7 @@ public class InvoiceController : ControllerBase
     }
 
     [HttpGet("{invoiceId:guid}", Name = "InvoiceById")]
-    public async Task<ActionResult<DebitNoteResponse>> GetInvoice(Guid invoiceId)
+    public async Task<ActionResult<InvoiceResponse>> GetInvoice(Guid invoiceId)
     {
         var issuerResponse = await _service.InvoiceService.GetInvoiceAsync(invoiceId, trackChanges: false);
 

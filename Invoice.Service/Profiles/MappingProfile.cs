@@ -11,12 +11,17 @@ public class MappingProfile : Profile
 	{
 		CreateMap<Issuer, IssuerRequest>().ReverseMap();
 		CreateMap<Issuer, IssuerResponse>().ReverseMap();
+
 		CreateMap<Entities.Models.Invoice, InvoiceRequest>().ReverseMap();
-		CreateMap<Entities.Models.Invoice, DebitNoteResponse>().ReverseMap();
-		CreateMap<InvoiceDetail, InvoiceDetailRequest>().ReverseMap();
+        CreateMap<Entities.Models.Invoice, InvoiceResponse>().ReverseMap();
+        CreateMap<InvoiceDetail, InvoiceDetailRequest>().ReverseMap();
         CreateMap<PaymentTerms, PaymentTermsRequest>().ReverseMap();
-		CreateMap<ProductDetails, ProductDetailsRequest>().ReverseMap();
-		CreateMap<Receiver, ReceiverRequest>().ReverseMap();
-		CreateMap<TaxSubTotal, TaxSubTotalRequest>().ReverseMap();
+        CreateMap<ProductDetails, ProductDetailsRequest>().ReverseMap();
+        CreateMap<Receiver, ReceiverRequest>().ReverseMap();
+        CreateMap<TaxSubTotal, TaxSubTotalRequest>().ReverseMap();
+
+        CreateMap<Entities.Models.Invoice, DebitNoteRequest>().ReverseMap();
+		CreateMap<Entities.Models.Invoice, DebitNoteResponse>().ReverseMap();
+		CreateMap<InvoiceDetail, DebitNoteDetailRequest>().ReverseMap();
     }
 }

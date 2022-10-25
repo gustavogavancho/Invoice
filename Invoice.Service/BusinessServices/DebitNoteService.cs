@@ -57,7 +57,24 @@ public class DebitNoteService : IDebitNoteService
         //Read response
         var responses = _sunatService.ReadResponse(cdrByte);
 
-        return new DebitNoteResponse();
+
+        //Save debit ntoe
+        if (responses.Any(x => x.Contains("aceptada")))
+        {
+            var invoiceDb = _mapper.Map<DebitNoteRequest, Invoice.Entities.Models.Invoice>(request);
+            invoiceDb.IssuerId = issuer.Id;
+            invoiceDb.InvoiceSendXml = xmlDoc.OuterXml;
+            invoiceDb.Accepted = true;
+            invoiceDb.SunatResponse = cdrByte;
+            invoiceDb.Observations = string.Join("|", responses);
+            _repository.Invoice.CreateInvoice(invoiceDb);
+            await _repository.SaveAsync();
+
+            var invoiceResponse = _mapper.Map<Entities.Models.Invoice, DebitNoteResponse>(invoiceDb);
+            return invoiceResponse;
+        }
+
+        return null;
     }
 
     private async Task<Issuer> GetIssuerAndCheckIfItExists(Guid id, bool trackChanges)

@@ -55,7 +55,7 @@ namespace Invoice.Service.Tests.BusinessServices
 
             //Assert
             Assert.NotNull(sut);
-            Assert.IsType<DebitNoteResponse>(sut);
+            Assert.IsType<InvoiceResponse>(sut);
         }
 
         [Fact]
