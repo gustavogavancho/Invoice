@@ -6,4 +6,5 @@ namespace Invoice.Service.Contracts.BusinessServices;
 public interface IDebitNoteService
 {
     Task<DebitNoteResponse> CreateDebitNoteAsync(Guid id, DebitNoteRequest request, bool trackChanges);
+    Task<DebitNoteResponse> GetDebitNoteAsync(Guid id, bool trackChanges);
 }

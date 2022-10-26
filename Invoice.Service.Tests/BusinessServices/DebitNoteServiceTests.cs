@@ -57,4 +57,20 @@ public class DebitNoteServiceTests
         Assert.NotNull(sut);
         Assert.IsType<DebitNoteResponse>(sut);
     }
+
+    [Fact]
+    public async Task DebitNoteService_GetDebitNoteAsyncTest()
+    {
+        //Arrange
+        var issuer = _fixture.Create<Entities.Models.Invoice>();
+        var id = Guid.Parse("CCE03168-F901-4B23-AE9C-FC031D9DC888");
+        _repository.Setup(x => x.Invoice.GetInvoiceAsync(id, false)).ReturnsAsync(issuer);
+
+        //Act
+        var debitNoteService = new DebitNoteService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object);
+        DebitNoteResponse sut = await debitNoteService.GetDebitNoteAsync(id, false);
+
+        //Assert
+        Assert.NotNull(sut);
+    }
 }

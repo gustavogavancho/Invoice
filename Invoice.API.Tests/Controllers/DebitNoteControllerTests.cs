@@ -20,7 +20,7 @@ public class DebitNoteControllerTests
     }
 
     [Fact]
-    public async Task InvoiceController_CreateDebitNoteTest()
+    public async Task DebitNoteController_CreateDebitNoteTest()
     {
         //Arrange
         var debitNoteRequest = _fixture.Create<DebitNoteRequest>();
@@ -34,5 +34,23 @@ public class DebitNoteControllerTests
         //Assert
         var statusCodeResult = Assert.IsType<OkObjectResult>(sut);
         Assert.Equal(200, statusCodeResult.StatusCode);
+    }
+
+    [Fact]
+    public async Task DebitNoteController_GetInvoiceTest()
+    {
+        //Arrange
+        var debitNote = _fixture.Create<DebitNoteResponse>();
+        _service.Setup(x => x.DebitNoteService.GetDebitNoteAsync(debitNote.Id, false)).ReturnsAsync(debitNote);
+
+        //Act
+        var debitNoteController = new DebitNoteController(_service.Object);
+        ActionResult<DebitNoteResponse> sut = await debitNoteController.GetDebitNote(debitNote.Id);
+
+        //Assert
+        var actionResult = Assert.IsType<ActionResult<DebitNoteResponse>>(sut);
+        var okObjectResult = Assert.IsType<OkObjectResult>(actionResult.Result);
+        var response = Assert.IsType<DebitNoteResponse>(okObjectResult.Value);
+        Assert.Equal(response.Observations, debitNote.Observations);
     }
 }

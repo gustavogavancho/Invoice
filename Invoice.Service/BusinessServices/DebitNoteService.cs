@@ -60,27 +60,38 @@ public class DebitNoteService : IDebitNoteService
         //Save debit ntoe
         if (responses.Any(x => x.Contains("aceptada")))
         {
-            try
-            {
-                var invoiceDb = _mapper.Map<DebitNoteRequest, Invoice.Entities.Models.Invoice>(request);
-                invoiceDb.IssuerId = issuer.Id;
-                invoiceDb.InvoiceXml = xmlDoc.OuterXml;
-                invoiceDb.Accepted = true;
-                invoiceDb.SunatResponse = cdrByte;
-                invoiceDb.Observations = string.Join("|", responses);
-                _repository.Invoice.CreateInvoice(invoiceDb);
-                await _repository.SaveAsync();
+            var invoiceDb = _mapper.Map<DebitNoteRequest, Invoice.Entities.Models.Invoice>(request);
+            invoiceDb.IssuerId = issuer.Id;
+            invoiceDb.InvoiceXml = xmlDoc.OuterXml;
+            invoiceDb.Accepted = true;
+            invoiceDb.SunatResponse = cdrByte;
+            invoiceDb.Observations = string.Join("|", responses);
+            _repository.Invoice.CreateInvoice(invoiceDb);
+            await _repository.SaveAsync();
 
-                var invoiceResponse = _mapper.Map<Entities.Models.Invoice, DebitNoteResponse>(invoiceDb);
-                return invoiceResponse;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            var invoiceResponse = _mapper.Map<Entities.Models.Invoice, DebitNoteResponse>(invoiceDb);
+            return invoiceResponse;
         }
 
         return null;
+    }
+
+    public async Task<DebitNoteResponse> GetDebitNoteAsync(Guid id, bool trackChanges)
+    {
+        var debitNote = await GetInvoiceAndCheckIfItExists(id, trackChanges);
+
+        var debitNoteResponse = _mapper.Map<Entities.Models.Invoice, DebitNoteResponse>(debitNote);
+        return debitNoteResponse;
+    }
+
+    private async Task<Entities.Models.Invoice> GetInvoiceAndCheckIfItExists(Guid id, bool trackChanges)
+    {
+        var invoice = await _repository.Invoice.GetInvoiceAsync(id, trackChanges);
+
+        if (invoice is null)
+            throw new IssuerNotFoundException(id);
+
+        return invoice;
     }
 
     private async Task<Issuer> GetIssuerAndCheckIfItExists(Guid id, bool trackChanges)

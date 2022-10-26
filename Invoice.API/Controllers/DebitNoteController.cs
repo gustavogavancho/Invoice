@@ -1,6 +1,8 @@
 ﻿using Invoice.API.ActionFilters;
+using Invoice.Entities.Models;
 using Invoice.Service.Contracts.ServiceManagers;
 using Invoice.Shared.Request;
+using Invoice.Shared.Response;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Invoice.API.Controllers;
@@ -17,8 +19,16 @@ public class DebitNoteController : ControllerBase
     [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> CreateDebitNote(Guid issuerId, DebitNoteRequest request)
     {
-        var invoiceCreated = await _service.DebitNoteService.CreateDebitNoteAsync(issuerId, request, trackChanges: false);
+        var debitNoteCreated = await _service.DebitNoteService.CreateDebitNoteAsync(issuerId, request, trackChanges: false);
 
-        return Ok(invoiceCreated);
+        return CreatedAtRoute("DebitNoteById", new { id = debitNoteCreated.Id }, debitNoteCreated);
+    }
+
+    [HttpGet("{id:guid}", Name = "DebitNoteById")]
+    public async Task<ActionResult<DebitNoteResponse>> GetDebitNote(Guid id)
+    {
+        var debitNoteResponse = await _service.DebitNoteService.GetDebitNoteAsync(id, trackChanges: false);
+
+        return Ok(debitNoteResponse);
     }
 }
