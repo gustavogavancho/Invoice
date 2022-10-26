@@ -7,7 +7,7 @@ public class Invoice
 {
     public Guid Id { get; set; }
     [Column(TypeName = "xml")]
-    public string InvoiceSendXml { get; set; } = default!;
+    public string InvoiceXml { get; set; } = default!;
     public byte[] SunatResponse { get; set; } = default!;
     public bool Accepted { get; set; }
     public string Observations { get; set; } = default!;

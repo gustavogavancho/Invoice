@@ -63,7 +63,7 @@ public class DebitNoteService : IDebitNoteService
         {
             var invoiceDb = _mapper.Map<DebitNoteRequest, Invoice.Entities.Models.Invoice>(request);
             invoiceDb.IssuerId = issuer.Id;
-            invoiceDb.InvoiceSendXml = xmlDoc.OuterXml;
+            invoiceDb.InvoiceXml = xmlDoc.OuterXml;
             invoiceDb.Accepted = true;
             invoiceDb.SunatResponse = cdrByte;
             invoiceDb.Observations = string.Join("|", responses);

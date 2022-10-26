@@ -23,8 +23,8 @@ public class InvoiceController : ControllerBase
         return CreatedAtRoute("InvoiceById", new { id = invoiceCreated.Id }, invoiceCreated);
     }
 
-    [HttpGet("{invoiceId:guid}", Name = "InvoiceById")]
-    public async Task<ActionResult<InvoiceResponse>> GetInvoice(Guid invoiceId)
+    [HttpGet("{id:guid}", Name = "InvoiceById")]
+    public async Task<ActionResult<InvoiceResponse>> GetInvoice(Guid id)
     {
         var issuerResponse = await _service.InvoiceService.GetInvoiceAsync(invoiceId, trackChanges: false);
 

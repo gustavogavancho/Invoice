@@ -66,7 +66,7 @@ public class InvoiceService : IInvoiceService
         {
             var invoiceDb = _mapper.Map<InvoiceRequest, Invoice.Entities.Models.Invoice>(request);
             invoiceDb.IssuerId = issuer.Id;
-            invoiceDb.InvoiceSendXml = xmlDoc.OuterXml;
+            invoiceDb.InvoiceXml = xmlDoc.OuterXml;
             invoiceDb.Accepted = true;
             invoiceDb.SunatResponse = cdrByte;
             invoiceDb.Observations = string.Join("|", responses);
