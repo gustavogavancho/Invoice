@@ -13,7 +13,6 @@ public class InvoiceResponse
     public string Observations { get; set; } = default!;
     public Guid IssuerId { get; set; }
     public DateTime IssueDate { get; set; }
-    public DateTime? DueDate { get; set; }
     [Range(0, 9999999999999999.99)] public decimal TaxTotalAmount { get; set; }
     [Range(0, 9999999999999999.99)] public decimal TotalAmount { get; set; }
     public bool Canceled { get; set; }
