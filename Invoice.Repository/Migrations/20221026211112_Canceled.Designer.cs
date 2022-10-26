@@ -4,6 +4,7 @@ using Invoice.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Invoice.Repository.Migrations
 {
     [DbContext(typeof(InvoiceContext))]
-    partial class InvoiceContextModelSnapshot : ModelSnapshot
+    [Migration("20221026211112_Canceled")]
+    partial class Canceled
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,8 +36,8 @@ namespace Invoice.Repository.Migrations
                     b.Property<bool>("Canceled")
                         .HasColumnType("bit");
 
-                    b.Property<string>("CanceledReason")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("CanceledReason")
+                        .HasColumnType("bit");
 
                     b.Property<string>("CustomizationId")
                         .IsRequired()
@@ -191,7 +193,7 @@ namespace Invoice.Repository.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("65b38c44-c80f-4994-b7f8-45bea45aee92"),
+                            Id = new Guid("54f034c5-002a-49cf-95b2-9e8680fdd17f"),
                             Address = "PSJE. LIMATAMBO 121",
                             Department = "SAN MARTIN",
                             District = "TARAPOTO",

@@ -16,4 +16,6 @@ public class InvoiceResponse
     public DateTime? DueDate { get; set; }
     [Range(0, 9999999999999999.99)] public decimal TaxTotalAmount { get; set; }
     [Range(0, 9999999999999999.99)] public decimal TotalAmount { get; set; }
+    public bool Canceled { get; set; }
+    public string? CanceledReason { get; set; }
 }

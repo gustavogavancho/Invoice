@@ -57,21 +57,27 @@ public class DebitNoteService : IDebitNoteService
         //Read response
         var responses = _sunatService.ReadResponse(cdrByte);
 
-
         //Save debit ntoe
         if (responses.Any(x => x.Contains("aceptada")))
         {
-            var invoiceDb = _mapper.Map<DebitNoteRequest, Invoice.Entities.Models.Invoice>(request);
-            invoiceDb.IssuerId = issuer.Id;
-            invoiceDb.InvoiceXml = xmlDoc.OuterXml;
-            invoiceDb.Accepted = true;
-            invoiceDb.SunatResponse = cdrByte;
-            invoiceDb.Observations = string.Join("|", responses);
-            _repository.Invoice.CreateInvoice(invoiceDb);
-            await _repository.SaveAsync();
+            try
+            {
+                var invoiceDb = _mapper.Map<DebitNoteRequest, Invoice.Entities.Models.Invoice>(request);
+                invoiceDb.IssuerId = issuer.Id;
+                invoiceDb.InvoiceXml = xmlDoc.OuterXml;
+                invoiceDb.Accepted = true;
+                invoiceDb.SunatResponse = cdrByte;
+                invoiceDb.Observations = string.Join("|", responses);
+                _repository.Invoice.CreateInvoice(invoiceDb);
+                await _repository.SaveAsync();
 
-            var invoiceResponse = _mapper.Map<Entities.Models.Invoice, DebitNoteResponse>(invoiceDb);
-            return invoiceResponse;
+                var invoiceResponse = _mapper.Map<Entities.Models.Invoice, DebitNoteResponse>(invoiceDb);
+                return invoiceResponse;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         return null;

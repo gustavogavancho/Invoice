@@ -4,6 +4,7 @@ using Invoice.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Invoice.Repository.Migrations
 {
     [DbContext(typeof(InvoiceContext))]
-    partial class InvoiceContextModelSnapshot : ModelSnapshot
+    [Migration("20221026153917_NullValues")]
+    partial class NullValues
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,12 +32,6 @@ namespace Invoice.Repository.Migrations
 
                     b.Property<bool>("Accepted")
                         .HasColumnType("bit");
-
-                    b.Property<bool>("Canceled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("CanceledReason")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CustomizationId")
                         .IsRequired()
@@ -104,6 +100,7 @@ namespace Invoice.Repository.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NoteTypeCode")
+                        .IsRequired()
                         .HasMaxLength(4)
                         .HasColumnType("nvarchar(4)");
 
@@ -191,7 +188,7 @@ namespace Invoice.Repository.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("65b38c44-c80f-4994-b7f8-45bea45aee92"),
+                            Id = new Guid("e268e6a7-99c2-4e8b-bd6d-2ee3be8b117f"),
                             Address = "PSJE. LIMATAMBO 121",
                             Department = "SAN MARTIN",
                             District = "TARAPOTO",

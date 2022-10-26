@@ -16,7 +16,9 @@ public class MappingProfile : Profile
         CreateMap<Entities.Models.Invoice, InvoiceResponse>().ReverseMap();
         CreateMap<InvoiceDetail, InvoiceDetailRequest>().ReverseMap();
 
-        CreateMap<Entities.Models.Invoice, DebitNoteRequest>();
+        CreateMap<Entities.Models.Invoice, DebitNoteRequest>()
+            .ForMember(dest => dest.DebitNoteDetail, opt => opt.MapFrom(x => x.InvoiceDetail))
+            .ReverseMap();
         CreateMap<Entities.Models.Invoice, DebitNoteResponse>().ReverseMap();
         CreateMap<InvoiceDetail, DebitNoteDetailRequest>().ReverseMap();
 
