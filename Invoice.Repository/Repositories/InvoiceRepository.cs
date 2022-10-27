@@ -17,6 +17,10 @@ public class InvoiceRepository : RepositoryBase<Entities.Models.Invoice>, IInvoi
         await FindByCondition(x => x.Id.Equals(id), trackChanges)
         .SingleOrDefaultAsync();
 
+    public async Task<Entities.Models.Invoice> GetInvoiceBySerieAsync(string serie, uint serialNumber, uint correlativeNumber, bool trackChanges) =>
+        await FindByCondition(x => x.InvoiceDetail.Serie == serie && x.InvoiceDetail.SerialNumber == serialNumber && x.InvoiceDetail.CorrelativeNumber == correlativeNumber, trackChanges)
+        .SingleOrDefaultAsync();
+
     public async Task<IEnumerable<Entities.Models.Invoice>> GetInvoicesAsync(bool trackChanges) =>
         await FindAll(trackChanges)
         .ToListAsync();

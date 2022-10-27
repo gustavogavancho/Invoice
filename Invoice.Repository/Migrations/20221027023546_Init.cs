@@ -39,13 +39,17 @@ namespace Invoice.Repository.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     InvoiceXml = table.Column<string>(type: "xml", nullable: false),
+                    SunatResponse = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    Accepted = table.Column<bool>(type: "bit", nullable: false),
+                    Observations = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IssuerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IssueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DueDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UblVersionId = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
                     CustomizationId = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
                     TaxTotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Canceled = table.Column<bool>(type: "bit", nullable: false),
+                    CanceledReason = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -68,8 +72,8 @@ namespace Invoice.Repository.Migrations
                     CorrelativeNumber = table.Column<int>(type: "int", nullable: false),
                     OperationType = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: false),
                     DocumentType = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: false),
-                    NoteTypeCode = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: false),
-                    NoteType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NoteTypeCode = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: true),
+                    NoteType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CurrencyCode = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
                     InvoiceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -185,7 +189,7 @@ namespace Invoice.Repository.Migrations
             migrationBuilder.InsertData(
                 table: "Issuers",
                 columns: new[] { "Id", "Address", "BetaCertificate", "BetaCertificatePasword", "Department", "District", "EstablishmentCode", "GeoCode", "IssuerId", "IssuerName", "IssuerType", "ProdCertificate", "ProdCertificatePasword", "Province" },
-                values: new object[] { new Guid("a16fa937-7bc0-43be-92a0-4134d66d37dd"), "PSJE. LIMATAMBO 121", null, null, "SAN MARTIN", "TARAPOTO", "0000", "220901", 20606022779m, "SWIFTLINE SAC", "6", null, null, "SAN MARTIN" });
+                values: new object[] { new Guid("d25abf30-90e0-45d2-9191-60da05f1e495"), "PSJE. LIMATAMBO 121", null, null, "SAN MARTIN", "TARAPOTO", "0000", "220901", 20606022779m, "SWIFTLINE SAC", "6", null, null, "SAN MARTIN" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_InvoiceDetail_InvoiceId",

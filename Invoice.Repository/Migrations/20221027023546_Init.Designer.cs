@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Invoice.Repository.Migrations
 {
     [DbContext(typeof(InvoiceContext))]
-    [Migration("20221026153917_NullValues")]
-    partial class NullValues
+    [Migration("20221027023546_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,6 +32,12 @@ namespace Invoice.Repository.Migrations
 
                     b.Property<bool>("Accepted")
                         .HasColumnType("bit");
+
+                    b.Property<bool>("Canceled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("CanceledReason")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CustomizationId")
                         .IsRequired()
@@ -100,7 +106,6 @@ namespace Invoice.Repository.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NoteTypeCode")
-                        .IsRequired()
                         .HasMaxLength(4)
                         .HasColumnType("nvarchar(4)");
 
@@ -188,7 +193,7 @@ namespace Invoice.Repository.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("e268e6a7-99c2-4e8b-bd6d-2ee3be8b117f"),
+                            Id = new Guid("d25abf30-90e0-45d2-9191-60da05f1e495"),
                             Address = "PSJE. LIMATAMBO 121",
                             Department = "SAN MARTIN",
                             District = "TARAPOTO",

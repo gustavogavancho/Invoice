@@ -5,27 +5,32 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Invoice.Repository.Migrations
 {
-    public partial class CancelledReason1 : Migration
+    public partial class AddSummaryObs : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DeleteData(
                 table: "Issuers",
                 keyColumn: "Id",
-                keyValue: new Guid("54f034c5-002a-49cf-95b2-9e8680fdd17f"));
+                keyValue: new Guid("d25abf30-90e0-45d2-9191-60da05f1e495"));
 
-            migrationBuilder.AlterColumn<string>(
-                name: "CanceledReason",
+            migrationBuilder.AddColumn<bool>(
+                name: "SummaryApproved",
+                table: "Invoices",
+                type: "bit",
+                nullable: false,
+                defaultValue: false);
+
+            migrationBuilder.AddColumn<string>(
+                name: "SummaryObservations",
                 table: "Invoices",
                 type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(bool),
-                oldType: "bit");
+                nullable: true);
 
             migrationBuilder.InsertData(
                 table: "Issuers",
                 columns: new[] { "Id", "Address", "BetaCertificate", "BetaCertificatePasword", "Department", "District", "EstablishmentCode", "GeoCode", "IssuerId", "IssuerName", "IssuerType", "ProdCertificate", "ProdCertificatePasword", "Province" },
-                values: new object[] { new Guid("65b38c44-c80f-4994-b7f8-45bea45aee92"), "PSJE. LIMATAMBO 121", null, null, "SAN MARTIN", "TARAPOTO", "0000", "220901", 20606022779m, "SWIFTLINE SAC", "6", null, null, "SAN MARTIN" });
+                values: new object[] { new Guid("205563d3-e734-443b-8022-6a64619747aa"), "PSJE. LIMATAMBO 121", null, null, "SAN MARTIN", "TARAPOTO", "0000", "220901", 20606022779m, "SWIFTLINE SAC", "6", null, null, "SAN MARTIN" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -33,22 +38,20 @@ namespace Invoice.Repository.Migrations
             migrationBuilder.DeleteData(
                 table: "Issuers",
                 keyColumn: "Id",
-                keyValue: new Guid("65b38c44-c80f-4994-b7f8-45bea45aee92"));
+                keyValue: new Guid("205563d3-e734-443b-8022-6a64619747aa"));
 
-            migrationBuilder.AlterColumn<bool>(
-                name: "CanceledReason",
-                table: "Invoices",
-                type: "bit",
-                nullable: false,
-                defaultValue: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
-                oldNullable: true);
+            migrationBuilder.DropColumn(
+                name: "SummaryApproved",
+                table: "Invoices");
+
+            migrationBuilder.DropColumn(
+                name: "SummaryObservations",
+                table: "Invoices");
 
             migrationBuilder.InsertData(
                 table: "Issuers",
                 columns: new[] { "Id", "Address", "BetaCertificate", "BetaCertificatePasword", "Department", "District", "EstablishmentCode", "GeoCode", "IssuerId", "IssuerName", "IssuerType", "ProdCertificate", "ProdCertificatePasword", "Province" },
-                values: new object[] { new Guid("54f034c5-002a-49cf-95b2-9e8680fdd17f"), "PSJE. LIMATAMBO 121", null, null, "SAN MARTIN", "TARAPOTO", "0000", "220901", 20606022779m, "SWIFTLINE SAC", "6", null, null, "SAN MARTIN" });
+                values: new object[] { new Guid("d25abf30-90e0-45d2-9191-60da05f1e495"), "PSJE. LIMATAMBO 121", null, null, "SAN MARTIN", "TARAPOTO", "0000", "220901", 20606022779m, "SWIFTLINE SAC", "6", null, null, "SAN MARTIN" });
         }
     }
 }

@@ -32,6 +32,11 @@ public class DebitNoteService : IDebitNoteService
     {
         var issuer = await GetIssuerAndCheckIfItExists(id, trackChanges);
 
+        var invoice = await GetInvoiceBySerieAndCheckIfItExists(request.DebitNoteDetail.InvoiceSerie, request.DebitNoteDetail.InvoiceSerialNumber, request.DebitNoteDetail.InvoiceCorrelativeNumber, true);
+
+        if (invoice.Canceled)
+            throw new InvoiceCanceledException(request.DebitNoteDetail.InvoiceSerie, request.DebitNoteDetail.InvoiceSerialNumber, request.DebitNoteDetail.InvoiceCorrelativeNumber);
+
         var debitNote = _documentGeneratorService.GenerateDebitNoteType(request, issuer);
 
         //Serialize to xml
@@ -57,7 +62,7 @@ public class DebitNoteService : IDebitNoteService
         //Read response
         var responses = _sunatService.ReadResponse(cdrByte);
 
-        //Save debit ntoe
+        //Save debit note
         if (responses.Any(x => x.Contains("aceptada")))
         {
             var invoiceDb = _mapper.Map<DebitNoteRequest, Invoice.Entities.Models.Invoice>(request);
@@ -67,6 +72,8 @@ public class DebitNoteService : IDebitNoteService
             invoiceDb.SunatResponse = cdrByte;
             invoiceDb.Observations = string.Join("|", responses);
             _repository.Invoice.CreateInvoice(invoiceDb);
+            invoice.Canceled = true;
+            invoice.CanceledReason = responses.FirstOrDefault(x => x.Contains("aceptada"));
             await _repository.SaveAsync();
 
             var invoiceResponse = _mapper.Map<Entities.Models.Invoice, DebitNoteResponse>(invoiceDb);
@@ -89,7 +96,17 @@ public class DebitNoteService : IDebitNoteService
         var invoice = await _repository.Invoice.GetInvoiceAsync(id, trackChanges);
 
         if (invoice is null)
-            throw new IssuerNotFoundException(id);
+            throw new InvoiceNotFoundException(id);
+
+        return invoice;
+    }
+
+    private async Task<Entities.Models.Invoice> GetInvoiceBySerieAndCheckIfItExists(string serie, uint serialNumber, uint correlativeNumber, bool trackChanges)
+    {
+        var invoice = await _repository.Invoice.GetInvoiceBySerieAsync(serie, serialNumber, correlativeNumber, trackChanges);
+
+        if (invoice is null)
+            throw new InvoiceNotFoundException(serie, serialNumber, correlativeNumber);
 
         return invoice;
     }

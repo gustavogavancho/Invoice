@@ -56,6 +56,12 @@ namespace Invoice.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("SummaryApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SummaryObservations")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<byte[]>("SunatResponse")
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
@@ -191,7 +197,7 @@ namespace Invoice.Repository.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("65b38c44-c80f-4994-b7f8-45bea45aee92"),
+                            Id = new Guid("205563d3-e734-443b-8022-6a64619747aa"),
                             Address = "PSJE. LIMATAMBO 121",
                             Department = "SAN MARTIN",
                             District = "TARAPOTO",

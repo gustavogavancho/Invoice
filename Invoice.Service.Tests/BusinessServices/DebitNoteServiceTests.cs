@@ -40,8 +40,11 @@ public class DebitNoteServiceTests
         //Arrange
         var request = _fixture.Create<DebitNoteRequest>();
         var issuer = _fixture.Create<Issuer>();
+        var invoice = _fixture.Create<Entities.Models.Invoice>();
+        invoice.Canceled = false;
 
         _repository.Setup(x => x.Issuer.GetIssuerAsync(It.IsAny<Guid>(), false)).ReturnsAsync(issuer);
+        _repository.Setup(x => x.Invoice.GetInvoiceBySerieAsync(It.IsAny<string>(), It.IsAny<uint>(), It.IsAny<uint>(), true)).ReturnsAsync(invoice);
         _repository.Setup(x => x.Invoice.CreateInvoice(It.IsAny<Entities.Models.Invoice>())).Verifiable();
         _sunatService.Setup(x => x.SerializeXmlDocument(typeof(DebitNoteType), It.IsAny<DebitNoteType>())).Returns(It.IsAny<string>());
         _sunatService.Setup(x => x.SignXml(It.IsAny<String>(), It.IsAny<Issuer>(), It.IsAny<string>())).Returns(new XmlDocument());

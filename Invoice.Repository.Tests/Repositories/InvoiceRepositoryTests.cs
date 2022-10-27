@@ -68,6 +68,22 @@ public class InvoiceRepositoryTests : IClassFixture<InvoiceContextClassFixture>
     }
 
     [Fact]
+    public async Task InvoiceRepository_GetInvoiceBySerieAsyncTest()
+    {
+        //Arrange
+        var id = Guid.Parse("ECE849FE-A441-4DEC-A452-A6723A38C9D0");
+        var serie = "FA";
+        uint serialNumber = 1;
+        uint correlativeNumber = 1;
+
+        //Act
+        Entities.Models.Invoice sut = await _invoiceRepository.GetInvoiceBySerieAsync(serie, serialNumber, correlativeNumber, false);
+
+        //Assert
+        Assert.NotNull(sut);
+    }
+
+    [Fact]
     public async Task InvoiceRepository_UpdateTest()
     {
         //Arrange
