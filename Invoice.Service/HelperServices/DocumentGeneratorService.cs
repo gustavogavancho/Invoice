@@ -193,45 +193,6 @@ public class DocumentGeneratorService : IDocumentGeneratorService
             #endregion
         };
 
-        #region Payment Terms
-
-        //var paymentTermList = new List<PaymentTermsType>();
-        //foreach (var paymentTerm in request.PaymentTerms)
-        //{
-        //    switch (paymentTerm.PaymentType)
-        //    {
-        //        case "Contado":
-        //            paymentTermList.Add(new PaymentTermsType
-        //            {
-        //                ID = new IDType { Value = paymentTerm.PaymentId },
-        //                PaymentMeansID = new PaymentMeansIDType[] { new PaymentMeansIDType { Value = paymentTerm.PaymentType } }
-        //            });
-        //            break;
-        //        case "Credito":
-        //            paymentTermList.Add(new PaymentTermsType
-        //            {
-        //                ID = new IDType { Value = paymentTerm.PaymentId },
-        //                PaymentMeansID = new PaymentMeansIDType[] { new PaymentMeansIDType { Value = paymentTerm.PaymentType } },
-        //                Amount = new AmountType2 { currencyID = request.CreditNoteDetail.CurrencyCode, Value = paymentTerm.Amount },
-        //            });
-        //            break;
-        //        case string a when a.Contains("Cuota"):
-        //            paymentTermList.Add(new PaymentTermsType
-        //            {
-        //                ID = new IDType { Value = paymentTerm.PaymentId },
-        //                PaymentMeansID = new PaymentMeansIDType[] { new PaymentMeansIDType { Value = paymentTerm.PaymentType } },
-        //                Amount = new AmountType2 { currencyID = request.CreditNoteDetail.CurrencyCode, Value = paymentTerm.Amount },
-        //                PaymentDueDate = new PaymentDueDateType { Value = paymentTerm.DueDate }
-        //            });
-        //            break;
-        //        default:
-        //            break;
-        //    }
-        //}
-        //debitNoteType.PaymentTerms = paymentTermList.ToArray();
-
-        #endregion
-
         #region Amount and Taxes
 
         var taxSubTotals = new List<TaxSubtotalType>();
