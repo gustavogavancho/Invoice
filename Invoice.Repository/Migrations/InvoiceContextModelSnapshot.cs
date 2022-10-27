@@ -197,7 +197,7 @@ namespace Invoice.Repository.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("98257784-ca8f-4d08-8041-b6623dad55a1"),
+                            Id = new Guid("3aa8665c-b43c-433e-bebb-a051a6ecf439"),
                             Address = "PSJE. LIMATAMBO 121",
                             Department = "SAN MARTIN",
                             District = "TARAPOTO",

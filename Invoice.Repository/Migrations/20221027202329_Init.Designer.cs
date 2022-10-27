@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Invoice.Repository.Migrations
 {
     [DbContext(typeof(InvoiceContext))]
-    [Migration("20221027034826_AddSummaryObs")]
-    partial class AddSummaryObs
+    [Migration("20221027202329_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -58,7 +58,7 @@ namespace Invoice.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("SummaryApproved")
+                    b.Property<bool?>("SummaryApproved")
                         .HasColumnType("bit");
 
                     b.Property<string>("SummaryObservations")
@@ -199,7 +199,7 @@ namespace Invoice.Repository.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("205563d3-e734-443b-8022-6a64619747aa"),
+                            Id = new Guid("3aa8665c-b43c-433e-bebb-a051a6ecf439"),
                             Address = "PSJE. LIMATAMBO 121",
                             Department = "SAN MARTIN",
                             District = "TARAPOTO",

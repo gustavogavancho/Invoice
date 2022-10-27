@@ -9,7 +9,7 @@ namespace Invoice.Service.Tests.HelperServices;
 public class DocumentGeneratorServiceTests
 {
     [Fact]
-    public void GenerateInvoiceTypeTest()
+    public void DocumentGeneratorService_GenerateInvoiceTypeTest()
     {
         //Arrange
         var fixture = new Fixture();
@@ -47,7 +47,7 @@ public class DocumentGeneratorServiceTests
     }
 
     [Fact]
-    public void GenerateDebitNoteTypeTest()
+    public void DocumentGeneratorService_GenerateDebitNoteTypeTest()
     {
         //Arrange
         var fixture = new Fixture();
@@ -82,5 +82,43 @@ public class DocumentGeneratorServiceTests
         //Assert
         Assert.NotNull(debitNotetype);
         Assert.IsType<DebitNoteType>(debitNotetype);
+    }
+
+    [Fact]
+    public void DocumentGeneratorService_GenerateCreditNoteTypeTest()
+    {
+        //Arrange
+        var fixture = new Fixture();
+        var creditNoteRequest = fixture.Create<CreditNoteRequest>();
+        var issuer = fixture.Create<Issuer>();
+
+        #region Fix amount
+
+        creditNoteRequest.TaxTotalAmount = 3.6m;
+        creditNoteRequest.TotalAmount = 23.6m;
+
+        foreach (var item in creditNoteRequest.TaxSubTotals)
+        {
+            item.TaxableAmount = 20;
+            item.TaxAmount = 3.6m;
+        }
+
+        foreach (var item in creditNoteRequest.ProductsDetails)
+        {
+            item.Quantity = 1;
+            item.UnitPrice = 20;
+            item.TaxAmount = 3.6m;
+            item.TaxPercentage = 18;
+        }
+
+        #endregion
+
+        //Act
+        var documentGeneratorService = new DocumentGeneratorService();
+        var creditNotetype = documentGeneratorService.GenerateCreditNoteType(creditNoteRequest, issuer);
+
+        //Assert
+        Assert.NotNull(creditNotetype);
+        Assert.IsType<CreditNoteType>(creditNotetype);
     }
 }

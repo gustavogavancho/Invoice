@@ -2,7 +2,7 @@
 
 namespace Invoice.Shared.Request;
 
-public class DebitNoteDetailRequest
+public class NoteDetailRequest
 {
     [Required, MinLength(2), MaxLength(2)] public string Serie { get; set; } = default!;
     [Range(1, 99)] public uint SerialNumber { get; set; }

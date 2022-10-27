@@ -14,7 +14,7 @@ using UBLSunatPE;
 
 namespace Invoice.Service.Tests.BusinessServices;
 
-public class DebitNoteServiceTests
+public class CreditNoteServiceTests
 {
     private readonly Fixture _fixture;
     private readonly Mock<IRepositoryManager> _repository;
@@ -23,7 +23,7 @@ public class DebitNoteServiceTests
     private readonly Mock<IDocumentGeneratorService> _documentGeneratorService;
     private readonly Mock<ISunatService> _sunatService;
 
-    public DebitNoteServiceTests()
+    public CreditNoteServiceTests()
     {
         _fixture = new Fixture();
         _repository = new Mock<IRepositoryManager>();
@@ -35,10 +35,10 @@ public class DebitNoteServiceTests
     }
 
     [Fact]
-    public async Task DebitNoteService_CreateDebitNoteAsyncTest()
+    public async Task CreditNoteService_CreateCreditNoteAsyncTest()
     {
         //Arrange
-        var request = _fixture.Create<DebitNoteRequest>();
+        var request = _fixture.Create<CreditNoteRequest>();
         var issuer = _fixture.Create<Issuer>();
         var invoice = _fixture.Create<Entities.Models.Invoice>();
         invoice.Canceled = false;
@@ -53,16 +53,16 @@ public class DebitNoteServiceTests
         _sunatService.Setup(x => x.ReadResponse(It.IsAny<byte[]>())).Returns(new List<string> { "La Nota de Debito numero FD01-00000001, ha sido aceptada" });
 
         //Act
-        var debitNoteService = new DebitNoteService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object);
-        DebitNoteResponse sut = await debitNoteService.CreateDebitNoteAsync(It.IsAny<Guid>(), request, false);
+        var debitNoteService = new CreditNoteService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object);
+        var sut = await debitNoteService.CreateCreditNoteAsync(It.IsAny<Guid>(), request, false);
 
         //Assert
         Assert.NotNull(sut);
-        Assert.IsType<DebitNoteResponse>(sut);
+        Assert.IsType<CreditNoteResponse>(sut);
     }
 
     [Fact]
-    public async Task DebitNoteService_GetDebitNoteAsyncTest()
+    public async Task CreditNoteService_GetCreditNoteAsyncTest()
     {
         //Arrange
         var issuer = _fixture.Create<Entities.Models.Invoice>();
@@ -70,8 +70,8 @@ public class DebitNoteServiceTests
         _repository.Setup(x => x.Invoice.GetInvoiceAsync(id, false)).ReturnsAsync(issuer);
 
         //Act
-        var debitNoteService = new DebitNoteService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object);
-        DebitNoteResponse sut = await debitNoteService.GetDebitNoteAsync(id, false);
+        var creditNoteService = new CreditNoteService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object);
+        CreditNoteResponse sut = await creditNoteService.GetCreditNoteAsync(id, false);
 
         //Assert
         Assert.NotNull(sut);

@@ -32,12 +32,12 @@ public class DebitNoteControllerTests
         var sut = await debitNoteController.CreateDebitNote(It.IsAny<Guid>(), debitNoteRequest);
 
         //Assert
-        var statusCodeResult = Assert.IsType<OkObjectResult>(sut);
-        Assert.Equal(200, statusCodeResult.StatusCode);
+        var statusCodeResult = Assert.IsType<CreatedAtRouteResult>(sut);
+        Assert.Equal(201, statusCodeResult.StatusCode);
     }
 
     [Fact]
-    public async Task DebitNoteController_GetInvoiceTest()
+    public async Task DebitNoteController_GetDebitNoteTest()
     {
         //Arrange
         var debitNote = _fixture.Create<DebitNoteResponse>();
