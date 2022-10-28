@@ -1109,4 +1109,171 @@ public class DocumentGeneratorService : IDocumentGeneratorService
 
         return invoiceType;
     }
+
+    public SummaryDocumentsType GenerateSummaryDocumentsType(SummaryDocumentsRequest request, Issuer issuer)
+    {
+        var summaryDocumentsType = new SummaryDocumentsType
+        {
+            #region Headers
+
+            Sac = SD.XmlnsSac,
+            Ext = SD.XmlnsExt,
+            Ds = SD.XmlnsDs,
+            Cbc = SD.XmlnsCbc,
+            Cac = SD.XmlnsCac,
+
+            #endregion
+
+            #region Ubl and Schema
+
+            UBLVersionID = new UBLVersionIDType { Value = request.UblVersionId },
+            CustomizationID = new CustomizationIDType { Value = request.CustomizationId },
+
+            #endregion
+
+            #region Certificate
+
+            UBLExtensions = new UBLExtensionType[]
+            {
+                new UBLExtensionType()
+            },
+
+            #endregion
+
+            #region Serial Number
+
+            ID = new IDType { Value = $"RC-{DateTime.Now.ToString("yyyyMMdd")}-001" },
+
+            #endregion
+
+            #region Dates
+
+            ReferenceDate = new ReferenceDateType { Value = request.ReferenceDate },
+            IssueDate = new IssueDateType { Value = request.IssueDate },
+
+            #endregion
+
+            #region Issuer Information
+
+            Signature = new SignatureType[]
+            {
+                new SignatureType
+                {
+                    ID = new IDType { Value = issuer.IssuerId.ToString() },
+                    SignatoryParty = new PartyType
+                    {
+                        PartyIdentification = new PartyIdentificationType[]
+                        {
+                            new PartyIdentificationType { ID = new IDType { Value = issuer.IssuerId.ToString() }}
+                        },
+                        PartyName = new PartyNameType[]
+                        {
+                            new PartyNameType { Name = new NameType1 { Value = issuer.IssuerName }}
+                        },
+                    },
+                    Note = new NoteType [] { new NoteType { Value = $"Mabe by {issuer.IssuerName}" } }
+                }
+            },
+
+            AccountingSupplierParty = new SupplierPartyType
+            {
+                Party = new PartyType
+                {
+                    PartyIdentification = new PartyIdentificationType[]
+                    {
+                        new PartyIdentificationType
+                        {
+                            ID = new IDType
+                            {
+                                schemeID = issuer.IssuerType, //Catalogo 6
+                                Value = issuer.IssuerId.ToString(),
+                            },
+
+                        }
+                    },
+                    PartyName = new PartyNameType[] { new PartyNameType { Name = new NameType1 { Value = issuer.IssuerName } } },
+                    PartyLegalEntity = new PartyLegalEntityType[]
+                    {
+                        new PartyLegalEntityType
+                        {
+                            RegistrationName = new RegistrationNameType { Value = issuer.IssuerId.ToString() },
+                            RegistrationAddress = new AddressType
+                            {
+                                ID = new IDType { Value = issuer.GeoCode },
+                                AddressTypeCode = new AddressTypeCodeType { Value = issuer.EstablishmentCode }, //Default "0000",
+                                CityName = new CityNameType { Value = issuer.Department },
+                                CountrySubentity = new CountrySubentityType { Value = issuer.Province },
+                                District = new DistrictType { Value = issuer.District },
+                                AddressLine = new AddressLineType[]
+                                {
+                                    new AddressLineType { Line = new LineType { Value = issuer.Address }},
+                                },
+                                Country = new CountryType { IdentificationCode = new IdentificationCodeType { Value = "PE" }} //It's always going to be PE
+                            }
+                        }
+                    }
+                }
+            },
+
+            #endregion
+        };
+
+        #region Summary Documents
+
+        var summaryDocumentsTypes = new List<SummaryDocumentsLineType>();
+        var count = 1;
+
+        foreach (var summary in request.Tickets)
+        {
+            summaryDocumentsTypes.Add(new SummaryDocumentsLineType 
+            {
+                LineID = new LineIDType { Value = count.ToString() },
+                DocumentTypeCode = new DocumentTypeCodeType { Value = summary.DocumentType },
+                ID = new IDType { Value = summary.TicketId },
+                AccountingCustomerParty = new CustomerPartyType
+                {
+                    CustomerAssignedAccountID = new CustomerAssignedAccountIDType { Value = summary.ReceiverId.ToString() },
+                    AdditionalAccountID = new AdditionalAccountIDType[] { new AdditionalAccountIDType { Value = summary.ReceiverType } }
+                },
+                Status = new StatusType { ConditionCode = new ConditionCodeType { Value = summary.StatusCoditionCode } },
+                TotalAmount = new AmountType2 { currencyID = summary.CurrencyCode, Value = summary.TotalAmount },
+                BillingPayment = new PaymentType[]
+                {
+                    new PaymentType
+                    {
+                        PaidAmount = new PaidAmountType { currencyID = summary.CurrencyCode, Value = summary.PaidAmount },
+                        InstructionID = new InstructionIDType { Value = summary.InstructionId }
+                    }
+                },
+                TaxTotal = new TaxTotalType[]
+                {
+                    new TaxTotalType
+                    {
+                        TaxAmount = new TaxAmountType { currencyID = summary.CurrencyCode, Value = summary.TaxAmount },
+                        TaxSubtotal = new TaxSubtotalType[]
+                        {
+                            new TaxSubtotalType
+                            {
+                                TaxAmount = new TaxAmountType { currencyID = summary.CurrencyCode, Value = summary.TaxAmount },
+                                TaxCategory = new TaxCategoryType
+                                {
+                                    TaxScheme = new TaxSchemeType
+                                    {
+                                        ID = new IDType { Value = summary.TaxId },
+                                        Name = new NameType1 { Value = summary.TaxName },
+                                        TaxTypeCode = new TaxTypeCodeType { Value = summary.TaxCode }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            count++;
+        }
+
+        #endregion
+
+        return summaryDocumentsType;
+    }
 }

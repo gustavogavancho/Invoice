@@ -8,13 +8,21 @@ namespace Invoice.Service.Tests.HelperServices;
 
 public class DocumentGeneratorServiceTests
 {
+    private readonly Fixture _fixture;
+    private readonly DocumentGeneratorService _documentGeneratorService;
+
+    public DocumentGeneratorServiceTests()
+    {
+        _fixture = new Fixture();
+        _documentGeneratorService = new DocumentGeneratorService();
+    }
+
     [Fact]
     public void DocumentGeneratorService_GenerateInvoiceTypeTest()
     {
         //Arrange
-        var fixture = new Fixture();
-        var invoiceRequest = fixture.Create<InvoiceRequest>();
-        var issuer = fixture.Create<Issuer>();
+        var invoiceRequest = _fixture.Create<InvoiceRequest>();
+        var issuer = _fixture.Create<Issuer>();
 
         #region Fix amount
 
@@ -38,8 +46,7 @@ public class DocumentGeneratorServiceTests
         #endregion
 
         //Act
-        var documentGeneratorService = new DocumentGeneratorService();
-        var invoiceType = documentGeneratorService.GenerateInvoiceType(invoiceRequest, issuer);
+        var invoiceType = _documentGeneratorService.GenerateInvoiceType(invoiceRequest, issuer);
 
         //Asset
         Assert.NotNull(invoiceType);
@@ -50,9 +57,8 @@ public class DocumentGeneratorServiceTests
     public void DocumentGeneratorService_GenerateDebitNoteTypeTest()
     {
         //Arrange
-        var fixture = new Fixture();
-        var debitNoteRequest = fixture.Create<DebitNoteRequest>();
-        var issuer = fixture.Create<Issuer>();
+        var debitNoteRequest = _fixture.Create<DebitNoteRequest>();
+        var issuer = _fixture.Create<Issuer>();
 
         #region Fix amount
 
@@ -76,8 +82,7 @@ public class DocumentGeneratorServiceTests
         #endregion
 
         //Act
-        var documentGeneratorService = new DocumentGeneratorService();
-        var debitNotetype = documentGeneratorService.GenerateDebitNoteType(debitNoteRequest, issuer);
+        var debitNotetype = _documentGeneratorService.GenerateDebitNoteType(debitNoteRequest, issuer);
 
         //Assert
         Assert.NotNull(debitNotetype);
@@ -88,9 +93,8 @@ public class DocumentGeneratorServiceTests
     public void DocumentGeneratorService_GenerateCreditNoteTypeTest()
     {
         //Arrange
-        var fixture = new Fixture();
-        var creditNoteRequest = fixture.Create<CreditNoteRequest>();
-        var issuer = fixture.Create<Issuer>();
+        var creditNoteRequest = _fixture.Create<CreditNoteRequest>();
+        var issuer = _fixture.Create<Issuer>();
 
         #region Fix amount
 
@@ -113,12 +117,26 @@ public class DocumentGeneratorServiceTests
 
         #endregion
 
-        //Act
-        var documentGeneratorService = new DocumentGeneratorService();
-        var creditNotetype = documentGeneratorService.GenerateCreditNoteType(creditNoteRequest, issuer);
+        //ActS
+        var creditNotetype = _documentGeneratorService.GenerateCreditNoteType(creditNoteRequest, issuer);
 
         //Assert
         Assert.NotNull(creditNotetype);
         Assert.IsType<CreditNoteType>(creditNotetype);
+    }
+
+    [Fact]
+    public void DocumentGeneratorService_GenerateSummaryDocumentsTypeTest()
+    {
+        //Arrange
+        var summaryDocumentsRequest = _fixture.Create<SummaryDocumentsRequest>();
+        var issuer = _fixture.Create<Issuer>();
+
+        //Act
+        var summaryDocuments = _documentGeneratorService.GenerateSummaryDocumentsType(summaryDocumentsRequest, issuer);
+
+        //Asser
+        Assert.NotNull(summaryDocuments);
+        Assert.IsType<SummaryDocumentsType>(summaryDocuments);
     }
 }
