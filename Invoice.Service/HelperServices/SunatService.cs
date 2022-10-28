@@ -145,7 +145,7 @@ public class SunatService : ISunatService
         }
     }
 
-    public async Task<byte[]> SendBill(string uri, string username, string password, string fileName, byte[] byteFile, string cdrFile)
+    public async Task<byte[]> SendBill(string uri, string username, string password, string fileName, byte[] byteFile)
     {
         var binding = new BasicHttpBinding(BasicHttpSecurityMode.TransportWithMessageCredential)
         {
@@ -193,6 +193,65 @@ public class SunatService : ISunatService
             var sendBillResponse = await servicio.sendBillAsync(fileName, byteFile, "0");
 
             return sendBillResponse.applicationResponse;
+        }
+        catch (FaultException fex)
+        {
+            throw new SunatException(fex.Message);
+        }
+        finally
+        {
+            await servicio.CloseAsync();
+        }
+    }
+
+    public async Task<string> SendSummary(string uri, string username, string password, string fileName, byte[] byteFile)
+    {
+        var binding = new BasicHttpBinding(BasicHttpSecurityMode.TransportWithMessageCredential)
+        {
+            Security =
+                {
+                    Transport =
+                    {
+                        ClientCredentialType = HttpClientCredentialType.None,
+                        ProxyCredentialType = HttpProxyCredentialType.None,
+                    },
+                    Message =
+                    {
+                        ClientCredentialType = BasicHttpMessageCredentialType.UserName,
+                    }
+                }
+        };
+
+        using var servicio = new billServiceClient(binding, new EndpointAddress(uri));
+
+        try
+        {
+            ServicePointManager.Expect100Continue = false;
+            ServicePointManager.CheckCertificateRevocationList = true;
+
+            servicio.ClientCredentials.UserName.UserName = username;
+            servicio.ClientCredentials.UserName.Password = password;
+
+            var customBinding = new CustomBinding(binding);
+
+            var elements = customBinding.Elements;
+            int i = -1;
+
+            for (i = 0; i < elements.Count; i++)
+            {
+                if (typeof(MessageEncodingBindingElement).IsAssignableFrom(elements[i].GetType()))
+                    break;
+            }
+            var mebe = (MessageEncodingBindingElement)elements[i];
+            elements[i] = new CustomMessageEncodingBindingElement(mebe);
+
+            servicio.Endpoint.Binding = new CustomBinding(elements);
+
+            await servicio.OpenAsync();
+
+            var sendSummaryResponse = await servicio.sendSummaryAsync(fileName, byteFile, "0");
+
+            return sendSummaryResponse.ticket;
         }
         catch (FaultException fex)
         {

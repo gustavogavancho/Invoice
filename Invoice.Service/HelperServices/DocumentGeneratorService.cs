@@ -1142,7 +1142,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
 
             #region Serial Number
 
-            ID = new IDType { Value = $"RC-{DateTime.Now.ToString("yyyyMMdd")}-001" },
+            ID = new IDType { Value = $"RC-{DateTime.Now.ToString("yyyyMMdd")}-{request.SummaryDocumentsId.ToString("00000")}" },
 
             #endregion
 
@@ -1177,39 +1177,41 @@ public class DocumentGeneratorService : IDocumentGeneratorService
 
             AccountingSupplierParty = new SupplierPartyType
             {
+                CustomerAssignedAccountID = new CustomerAssignedAccountIDType { Value = issuer.IssuerId.ToString() },
+                AdditionalAccountID = new AdditionalAccountIDType[] { new AdditionalAccountIDType { Value = issuer.IssuerType } },
                 Party = new PartyType
                 {
-                    PartyIdentification = new PartyIdentificationType[]
-                    {
-                        new PartyIdentificationType
-                        {
-                            ID = new IDType
-                            {
-                                schemeID = issuer.IssuerType, //Catalogo 6
-                                Value = issuer.IssuerId.ToString(),
-                            },
+                    //PartyIdentification = new PartyIdentificationType[]
+                    //{
+                    //    new PartyIdentificationType
+                    //    {
+                    //        ID = new IDType
+                    //        {
+                    //            schemeID = issuer.IssuerType, //Catalogo 6
+                    //            Value = issuer.IssuerId.ToString(),
+                    //        },
 
-                        }
-                    },
-                    PartyName = new PartyNameType[] { new PartyNameType { Name = new NameType1 { Value = issuer.IssuerName } } },
+                    //    }
+                    //},
+                    //PartyName = new PartyNameType[] { new PartyNameType { Name = new NameType1 { Value = issuer.IssuerName } } },
                     PartyLegalEntity = new PartyLegalEntityType[]
                     {
                         new PartyLegalEntityType
                         {
                             RegistrationName = new RegistrationNameType { Value = issuer.IssuerId.ToString() },
-                            RegistrationAddress = new AddressType
-                            {
-                                ID = new IDType { Value = issuer.GeoCode },
-                                AddressTypeCode = new AddressTypeCodeType { Value = issuer.EstablishmentCode }, //Default "0000",
-                                CityName = new CityNameType { Value = issuer.Department },
-                                CountrySubentity = new CountrySubentityType { Value = issuer.Province },
-                                District = new DistrictType { Value = issuer.District },
-                                AddressLine = new AddressLineType[]
-                                {
-                                    new AddressLineType { Line = new LineType { Value = issuer.Address }},
-                                },
-                                Country = new CountryType { IdentificationCode = new IdentificationCodeType { Value = "PE" }} //It's always going to be PE
-                            }
+                            //RegistrationAddress = new AddressType
+                            //{
+                            //    ID = new IDType { Value = issuer.GeoCode },
+                            //    AddressTypeCode = new AddressTypeCodeType { Value = issuer.EstablishmentCode }, //Default "0000",
+                            //    CityName = new CityNameType { Value = issuer.Department },
+                            //    CountrySubentity = new CountrySubentityType { Value = issuer.Province },
+                            //    District = new DistrictType { Value = issuer.District },
+                            //    AddressLine = new AddressLineType[]
+                            //    {
+                            //        new AddressLineType { Line = new LineType { Value = issuer.Address }},
+                            //    },
+                            //    Country = new CountryType { IdentificationCode = new IdentificationCodeType { Value = "PE" }} //It's always going to be PE
+                            //}
                         }
                     }
                 }
@@ -1271,6 +1273,8 @@ public class DocumentGeneratorService : IDocumentGeneratorService
             });
             count++;
         }
+
+        summaryDocumentsType.SummaryDocumentsLine = summaryDocumentsTypes.ToArray();
 
         #endregion
 

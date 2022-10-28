@@ -83,8 +83,7 @@ public class SunatServiceTests
                 "20606022779MODDATOS",
                 "moddatos",
                 "20606022779-01-FA01-00000001.zip",
-                byteZippedXml,
-                "R-20606022779-01-FA01-00000001.zip");
+                byteZippedXml);
 
         //Assert
         Assert.NotNull(sut);

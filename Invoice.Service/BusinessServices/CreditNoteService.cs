@@ -51,13 +51,11 @@ public class CreditNoteService : ICreditNoteService
 
         //Send bill
         var zippedFile = xmlFile.Replace(".xml", ".zip");
-        var cdrFile = "R-" + zippedFile;
         var cdrByte = await _sunatService.SendBill("https://e-beta.sunat.gob.pe/ol-ti-itcpfegem-beta/billService",
                 "20606022779MODDATOS",
                 "moddatos",
                 zippedFile,
-                byteZippedXml,
-                cdrFile);
+                byteZippedXml);
 
         //Read response
         var responses = _sunatService.ReadResponse(cdrByte);

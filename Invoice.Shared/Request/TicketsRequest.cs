@@ -5,7 +5,7 @@ namespace Invoice.Shared.Request;
 public class TicketsRequest
 {
     [Required, MinLength(2), MaxLength(2)] public string DocumentType { get; set; } = default!; //Catalog 1
-    [Required, MinLength(13), MaxLength(13)] public string TicketId { get; set; } = default!; //Catalog 1
+    [Required, MinLength(13), MaxLength(13)] public string TicketId { get; set; } = default!; 
     public ulong ReceiverId { get; set; } //RUC - DNI
     [Required, MinLength(1), MaxLength(1)] public string ReceiverType { get; set; } = default!; //Catalog 6
     [Required, MinLength(1), MaxLength(1)] public string StatusCoditionCode { get; set; } = default!; //Catalog 19

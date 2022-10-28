@@ -14,6 +14,7 @@ public class ServiceManager : IServiceManager
     private readonly Lazy<IIssuerService> _issuerService;
     private readonly Lazy<IDebitNoteService> _debitNoteService;
     private readonly Lazy<ICreditNoteService> _creditNoteService;
+    private readonly Lazy<ISummaryDocumentsService> _summaryDocumentsService;
 
     public ServiceManager(IRepositoryManager repositoryManager,
         ILoggerManager logger,
@@ -24,6 +25,7 @@ public class ServiceManager : IServiceManager
         _invoiceService = new Lazy<IInvoiceService>(() => new InvoiceService(repositoryManager, logger, mapper, documentGeneratorService, sunatService));
         _debitNoteService = new Lazy<IDebitNoteService>(() => new DebitNoteService(repositoryManager, logger, mapper, documentGeneratorService, sunatService));
         _creditNoteService = new Lazy<ICreditNoteService>(() => new CreditNoteService(repositoryManager, logger, mapper, documentGeneratorService, sunatService));
+        _summaryDocumentsService = new Lazy<ISummaryDocumentsService>(() => new SummaryDocumentsService(repositoryManager, logger, mapper, documentGeneratorService, sunatService));
         _issuerService = new Lazy<IIssuerService>(() => new IssuerService(repositoryManager, logger, mapper));
     }
 
@@ -31,5 +33,5 @@ public class ServiceManager : IServiceManager
     public IIssuerService IssuerService => _issuerService.Value;
     public IDebitNoteService DebitNoteService => _debitNoteService.Value;
     public ICreditNoteService CreditNoteService => _creditNoteService.Value;
-
+    public ISummaryDocumentsService SummaryDocumentsService => _summaryDocumentsService.Value;
 }
