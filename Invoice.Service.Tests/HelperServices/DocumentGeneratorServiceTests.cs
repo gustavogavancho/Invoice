@@ -131,9 +131,10 @@ public class DocumentGeneratorServiceTests
         //Arrange
         var summaryDocumentsRequest = _fixture.Create<SummaryDocumentsRequest>();
         var issuer = _fixture.Create<Issuer>();
+        var invoices = _fixture.Create<IEnumerable<Entities.Models.Invoice>>();
 
         //Act
-        var summaryDocuments = _documentGeneratorService.GenerateSummaryDocumentsType(summaryDocumentsRequest, issuer);
+        var summaryDocuments = _documentGeneratorService.GenerateSummaryDocumentsType(summaryDocumentsRequest, issuer, invoices);
 
         //Asser
         Assert.NotNull(summaryDocuments);

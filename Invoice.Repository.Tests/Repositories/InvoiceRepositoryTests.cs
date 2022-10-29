@@ -3,7 +3,6 @@ using Invoice.Entities.Models;
 using Invoice.Repository.Repositories;
 using Invoice.Repository.Tests.ClassFixture;
 using Microsoft.EntityFrameworkCore;
-using Xunit.Sdk;
 
 namespace Invoice.Repository.Tests.Repositories;
 
@@ -71,13 +70,25 @@ public class InvoiceRepositoryTests : IClassFixture<InvoiceContextClassFixture>
     public async Task InvoiceRepository_GetInvoiceBySerieAsyncTest()
     {
         //Arrange
-        var id = Guid.Parse("ECE849FE-A441-4DEC-A452-A6723A38C9D0");
         var serie = "FA";
         uint serialNumber = 1;
         uint correlativeNumber = 1;
 
         //Act
-        Entities.Models.Invoice sut = await _invoiceRepository.GetInvoiceBySerieAsync(serie, serialNumber, correlativeNumber, false);
+        var sut = await _invoiceRepository.GetInvoiceBySerieAsync(serie, serialNumber, correlativeNumber, false);
+
+        //Assert
+        Assert.NotNull(sut);
+    }
+
+    [Fact]
+    public async Task InvoiceRepository_GetInvoicesByIssueDateAsyncTest()
+    {
+        //Arrange
+        var issueDate = new DateTime(2022, 01, 13);
+
+        //Act
+        var sut = await _invoiceRepository.GetInvoicesByIssueDateAsync(issueDate, false);
 
         //Assert
         Assert.NotNull(sut);

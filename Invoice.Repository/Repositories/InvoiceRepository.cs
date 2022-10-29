@@ -1,5 +1,6 @@
 ﻿using Invoice.Contracts.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Invoice.Repository.Repositories;
 
@@ -20,6 +21,15 @@ public class InvoiceRepository : RepositoryBase<Entities.Models.Invoice>, IInvoi
     public async Task<Entities.Models.Invoice> GetInvoiceBySerieAsync(string serie, uint serialNumber, uint correlativeNumber, bool trackChanges) =>
         await FindByCondition(x => x.InvoiceDetail.Serie == serie && x.InvoiceDetail.SerialNumber == serialNumber && x.InvoiceDetail.CorrelativeNumber == correlativeNumber, trackChanges)
         .SingleOrDefaultAsync();
+
+    public async Task<IEnumerable<Entities.Models.Invoice>> GetInvoicesByIssueDateAsync(DateTime issueDate, bool trackChanges) =>
+        await FindByCondition(x => x.IssueDate.Date == issueDate.Date && 
+        x.InvoiceDetail.DocumentType == "03" &&
+        x.SummarySended == null, trackChanges)
+        .Include(x => x.InvoiceDetail)
+        .Include(x => x.Receiver)
+        .Include(x => x.TaxSubTotals)
+        .ToListAsync();
 
     public async Task<IEnumerable<Entities.Models.Invoice>> GetInvoicesAsync(bool trackChanges) =>
         await FindAll(trackChanges)

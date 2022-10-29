@@ -8,7 +8,12 @@ public class InvoiceNotFoundException : NotFoundException
     {
     }
 
-    public InvoiceNotFoundException(Guid id) : base($"The issuer with id: {id} doesn't exist in the database.")
+    public InvoiceNotFoundException(Guid id) : base($"The invoice with id: {id} doesn't exist in the database.")
     {
+    }
+
+    public InvoiceNotFoundException(DateTime issueDate) : base($"The inoices with date {issueDate.ToShortDateString()} doesn't exist in the database.")
+    {
+
     }
 }

@@ -1110,7 +1110,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
         return invoiceType;
     }
 
-    public SummaryDocumentsType GenerateSummaryDocumentsType(SummaryDocumentsRequest request, Issuer issuer)
+    public SummaryDocumentsType GenerateSummaryDocumentsType(SummaryDocumentsRequest request, Issuer issuer, IEnumerable<Entities.Models.Invoice> tickets)
     {
         var summaryDocumentsType = new SummaryDocumentsType
         {
@@ -1142,7 +1142,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
 
             #region Serial Number
 
-            ID = new IDType { Value = $"RC-{DateTime.Now.ToString("yyyyMMdd")}-{request.SummaryDocumentsId.ToString("00000")}" },
+            ID = new IDType { Value = $"RC-{request.IssueDate.ToString("yyyyMMdd")}-{request.SummaryDocumentsId.ToString("00000")}" },
 
             #endregion
 
@@ -1181,38 +1181,9 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                 AdditionalAccountID = new AdditionalAccountIDType[] { new AdditionalAccountIDType { Value = issuer.IssuerType } },
                 Party = new PartyType
                 {
-                    //PartyIdentification = new PartyIdentificationType[]
-                    //{
-                    //    new PartyIdentificationType
-                    //    {
-                    //        ID = new IDType
-                    //        {
-                    //            schemeID = issuer.IssuerType, //Catalogo 6
-                    //            Value = issuer.IssuerId.ToString(),
-                    //        },
-
-                    //    }
-                    //},
-                    //PartyName = new PartyNameType[] { new PartyNameType { Name = new NameType1 { Value = issuer.IssuerName } } },
                     PartyLegalEntity = new PartyLegalEntityType[]
                     {
-                        new PartyLegalEntityType
-                        {
-                            RegistrationName = new RegistrationNameType { Value = issuer.IssuerId.ToString() },
-                            //RegistrationAddress = new AddressType
-                            //{
-                            //    ID = new IDType { Value = issuer.GeoCode },
-                            //    AddressTypeCode = new AddressTypeCodeType { Value = issuer.EstablishmentCode }, //Default "0000",
-                            //    CityName = new CityNameType { Value = issuer.Department },
-                            //    CountrySubentity = new CountrySubentityType { Value = issuer.Province },
-                            //    District = new DistrictType { Value = issuer.District },
-                            //    AddressLine = new AddressLineType[]
-                            //    {
-                            //        new AddressLineType { Line = new LineType { Value = issuer.Address }},
-                            //    },
-                            //    Country = new CountryType { IdentificationCode = new IdentificationCodeType { Value = "PE" }} //It's always going to be PE
-                            //}
-                        }
+                        new PartyLegalEntityType { RegistrationName = new RegistrationNameType { Value = issuer.IssuerId.ToString() } }
                     }
                 }
             },
@@ -1223,54 +1194,93 @@ public class DocumentGeneratorService : IDocumentGeneratorService
         #region Summary Documents
 
         var summaryDocumentsTypes = new List<SummaryDocumentsLineType>();
+        var billingPayments = new List<PaymentType>();
+        var taxSubTotal = new List<TaxTotalType>();
         var count = 1;
 
-        foreach (var summary in request.Tickets)
+        foreach (var ticket in tickets)
         {
-            summaryDocumentsTypes.Add(new SummaryDocumentsLineType 
+            var summaryDocumentsLineType = new SummaryDocumentsLineType
             {
                 LineID = new LineIDType { Value = count.ToString() },
-                DocumentTypeCode = new DocumentTypeCodeType { Value = summary.DocumentType },
-                ID = new IDType { Value = summary.TicketId },
+                DocumentTypeCode = new DocumentTypeCodeType { Value = ticket.InvoiceDetail.DocumentType },
+                ID = new IDType { Value = $"{ticket.InvoiceDetail.Serie}{ticket.InvoiceDetail.SerialNumber.ToString("00")}-{ticket.InvoiceDetail.CorrelativeNumber.ToString("00000000")}" },
                 AccountingCustomerParty = new CustomerPartyType
                 {
-                    CustomerAssignedAccountID = new CustomerAssignedAccountIDType { Value = summary.ReceiverId.ToString() },
-                    AdditionalAccountID = new AdditionalAccountIDType[] { new AdditionalAccountIDType { Value = summary.ReceiverType } }
+                    CustomerAssignedAccountID = new CustomerAssignedAccountIDType { Value = ticket.Receiver.ReceiverId.ToString() },
+                    AdditionalAccountID = new AdditionalAccountIDType[] { new AdditionalAccountIDType { Value = ticket.Receiver.ReceiverType } }
                 },
-                Status = new StatusType { ConditionCode = new ConditionCodeType { Value = summary.StatusCoditionCode } },
-                TotalAmount = new AmountType2 { currencyID = summary.CurrencyCode, Value = summary.TotalAmount },
-                BillingPayment = new PaymentType[]
+                Status = new StatusType { ConditionCode = new ConditionCodeType { Value = ticket.Canceled ? "3" : "1" } },
+                TotalAmount = new AmountType2 { currencyID = ticket.InvoiceDetail.CurrencyCode, Value = ticket.TotalAmount },
+                //BillingPayment = new PaymentType[]
+                //{
+                //    new PaymentType
+                //    {
+                //        PaidAmount = new PaidAmountType { currencyID =  ticket.InvoiceDetail.CurrencyCode, Value = ticket.TaxSubTotals, summary.PaidAmount },
+                //        InstructionID = new InstructionIDType { Value = summary.InstructionId }
+                //    }
+                //},
+
+                //TaxTotal = new TaxTotalType[]
+                //{
+                //    new TaxTotalType
+                //    {
+                //        TaxAmount = new TaxAmountType { currencyID = summary.CurrencyCode, Value = summary.TaxAmount },
+                //        TaxSubtotal = new TaxSubtotalType[]
+                //        {
+                //            new TaxSubtotalType
+                //            {
+                //                TaxAmount = new TaxAmountType { currencyID = summary.CurrencyCode, Value = summary.TaxAmount },
+                //                TaxCategory = new TaxCategoryType
+                //                {
+                //                    TaxScheme = new TaxSchemeType
+                //                    {
+                //                        ID = new IDType { Value = summary.TaxId },
+                //                        Name = new NameType1 { Value = summary.TaxName },
+                //                        TaxTypeCode = new TaxTypeCodeType { Value = summary.TaxCode }
+                //                    }
+                //                }
+                //            }
+                //        }
+                //    }
+                //}
+            };
+
+
+            foreach (var subTotal in ticket.TaxSubTotals)
+            {
+                billingPayments.Add(new PaymentType
                 {
-                    new PaymentType
-                    {
-                        PaidAmount = new PaidAmountType { currencyID = summary.CurrencyCode, Value = summary.PaidAmount },
-                        InstructionID = new InstructionIDType { Value = summary.InstructionId }
-                    }
-                },
-                TaxTotal = new TaxTotalType[]
+                    PaidAmount = new PaidAmountType { currencyID = ticket.InvoiceDetail.CurrencyCode, Value = subTotal.TaxableAmount },
+                    InstructionID = new InstructionIDType { Value = subTotal.TaxId == "1000" ? "01" : "02" }
+                });
+
+                taxSubTotal.Add(new TaxTotalType
                 {
-                    new TaxTotalType
+                    TaxAmount = new TaxAmountType { currencyID = ticket.InvoiceDetail.CurrencyCode, Value = subTotal.TaxAmount },
+                    TaxSubtotal = new TaxSubtotalType[]
                     {
-                        TaxAmount = new TaxAmountType { currencyID = summary.CurrencyCode, Value = summary.TaxAmount },
-                        TaxSubtotal = new TaxSubtotalType[]
+                        new TaxSubtotalType
                         {
-                            new TaxSubtotalType
+                            TaxAmount = new TaxAmountType { currencyID = ticket.InvoiceDetail.CurrencyCode, Value = subTotal.TaxAmount },
+                            TaxCategory = new TaxCategoryType
                             {
-                                TaxAmount = new TaxAmountType { currencyID = summary.CurrencyCode, Value = summary.TaxAmount },
-                                TaxCategory = new TaxCategoryType
+                                TaxScheme = new TaxSchemeType
                                 {
-                                    TaxScheme = new TaxSchemeType
-                                    {
-                                        ID = new IDType { Value = summary.TaxId },
-                                        Name = new NameType1 { Value = summary.TaxName },
-                                        TaxTypeCode = new TaxTypeCodeType { Value = summary.TaxCode }
-                                    }
+                                    ID = new IDType { Value = subTotal.TaxId },
+                                    Name = new NameType1 { Value = subTotal.TaxName },
+                                    TaxTypeCode = new TaxTypeCodeType { Value = subTotal.TaxCode }
                                 }
                             }
                         }
                     }
-                }
-            });
+                });
+            }
+
+            summaryDocumentsLineType.BillingPayment = billingPayments.ToArray();
+            summaryDocumentsLineType.TaxTotal = taxSubTotal.ToArray();
+
+            summaryDocumentsTypes.Add(summaryDocumentsLineType);
             count++;
         }
 

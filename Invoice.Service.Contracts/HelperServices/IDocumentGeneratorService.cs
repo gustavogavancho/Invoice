@@ -9,5 +9,5 @@ public interface IDocumentGeneratorService
     InvoiceType GenerateInvoiceType(InvoiceRequest request, Issuer issuer);
     DebitNoteType GenerateDebitNoteType(DebitNoteRequest request, Issuer issuer);
     CreditNoteType GenerateCreditNoteType(CreditNoteRequest request, Issuer issuer);
-    SummaryDocumentsType GenerateSummaryDocumentsType(SummaryDocumentsRequest request, Issuer issuer);
+    SummaryDocumentsType GenerateSummaryDocumentsType(SummaryDocumentsRequest request, Issuer issuer, IEnumerable<Entities.Models.Invoice> tickets);
 }

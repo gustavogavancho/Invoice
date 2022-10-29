@@ -17,7 +17,7 @@ public class SummaryDocumentsController : ControllerBase
     [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> CreateSummaryDocuments(Guid issuerId, SummaryDocumentsRequest request)
     {
-        var summaryDocumentsCreated = await _service.SummaryDocumentsService.CreateSummaryDocumentsAsync(issuerId, request, trackChanges: false);
+        var summaryDocumentsCreated = await _service.SummaryDocumentsService.CreateSummaryDocumentsAsync(issuerId, request, trackChanges: true);
 
         return Ok(summaryDocumentsCreated);
     }

@@ -32,7 +32,9 @@ public class SummaryDocumentsService : ISummaryDocumentsService
     {
         var issuer = await GetIssuerAndCheckIfItExists(id, trackChanges);
 
-        var summaryDocuments = _documentGeneratorService.GenerateSummaryDocumentsType(request, issuer);
+        var tickets = await GetInvoicesByIssueDateAndCheckIfItExists(request.ReferenceDate, trackChanges);
+
+        var summaryDocuments = _documentGeneratorService.GenerateSummaryDocumentsType(request, issuer, tickets);
 
         //Serialize to xml
         var xmlString = _sunatService.SerializeXmlDocument(typeof(SummaryDocumentsType), summaryDocuments);
@@ -46,19 +48,48 @@ public class SummaryDocumentsService : ISummaryDocumentsService
 
         //Send bill
         var zippedFile = xmlFile.Replace(".xml", ".zip");
-        var cdrByte = await _sunatService.SendSummary("https://e-beta.sunat.gob.pe/ol-ti-itcpfegem-beta/billService",
+
+        var ticketNumber = await _sunatService.SendSummary("https://e-beta.sunat.gob.pe/ol-ti-itcpfegem-beta/billService",
                 "20606022779MODDATOS",
                 "moddatos",
                 zippedFile,
                 byteZippedXml);
 
-        return new SummaryDocumentsResponse();
+        if (ticketNumber != null)
+        {
+            foreach (var ticket in tickets)
+            {
+                ticket.SummarySended = true;
+                ticket.SummaryObservations = ticketNumber;
+            }
 
+            await _repository.SaveAsync();
+
+            var summaryDocumentsResponse = new SummaryDocumentsResponse
+            {
+                SummarySended = true,
+                Ticket = ticketNumber
+            };
+
+            return summaryDocumentsResponse;
+        }
+
+        return null;
     }
 
     public async Task<SummaryDocumentsResponse> GetSummaryDocumentsAsync(Guid id, bool trackChanges)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<IEnumerable<Entities.Models.Invoice>> GetInvoicesByIssueDateAndCheckIfItExists(DateTime issueDate, bool trackChanges)
+    {
+        var invoices = await _repository.Invoice.GetInvoicesByIssueDateAsync(issueDate, trackChanges);
+
+        if (!invoices.Any())
+            throw new InvoiceNotFoundException(issueDate);
+
+        return invoices;
     }
 
     public async Task<InvoiceResponse> GetInvoiceAsync(Guid id, bool trackChanges)
