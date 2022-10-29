@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Invoice.Repository.Migrations
 {
     [DbContext(typeof(InvoiceContext))]
-    [Migration("20221027202329_Init")]
+    [Migration("20221029221605_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -58,11 +58,12 @@ namespace Invoice.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("SummaryApproved")
-                        .HasColumnType("bit");
+                    b.Property<string>("SummaryDocumentsXml")
+                        .IsRequired()
+                        .HasColumnType("xml");
 
-                    b.Property<string>("SummaryObservations")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool?>("SummaryStatus")
+                        .HasColumnType("bit");
 
                     b.Property<byte[]>("SunatResponse")
                         .IsRequired()
@@ -70,6 +71,9 @@ namespace Invoice.Repository.Migrations
 
                     b.Property<decimal>("TaxTotalAmount")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Ticket")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TotalAmount")
                         .HasColumnType("decimal(18,2)");
@@ -199,7 +203,7 @@ namespace Invoice.Repository.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3aa8665c-b43c-433e-bebb-a051a6ecf439"),
+                            Id = new Guid("748a9922-30c8-48eb-b883-1a30cccba8a5"),
                             Address = "PSJE. LIMATAMBO 121",
                             Department = "SAN MARTIN",
                             District = "TARAPOTO",
@@ -379,6 +383,27 @@ namespace Invoice.Repository.Migrations
                     b.HasIndex("InvoiceId");
 
                     b.ToTable("TaxSubTotal");
+                });
+
+            modelBuilder.Entity("Invoice.Entities.Models.Ticket", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("IssueDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("TicketNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tickets");
                 });
 
             modelBuilder.Entity("Invoice.Entities.Models.Invoice", b =>

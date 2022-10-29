@@ -59,8 +59,8 @@ public class SummaryDocumentsService : ISummaryDocumentsService
         {
             foreach (var ticket in tickets)
             {
-                ticket.SummarySended = true;
-                ticket.SummaryObservations = ticketNumber;
+                ticket.SummaryStatus = false;
+                ticket.Ticket = ticketNumber;
             }
 
             await _repository.SaveAsync();
@@ -75,11 +75,6 @@ public class SummaryDocumentsService : ISummaryDocumentsService
         }
 
         return null;
-    }
-
-    public async Task<SummaryDocumentsResponse> GetSummaryDocumentsAsync(Guid id, bool trackChanges)
-    {
-        throw new NotImplementedException();
     }
 
     public async Task<IEnumerable<Entities.Models.Invoice>> GetInvoicesByIssueDateAndCheckIfItExists(DateTime issueDate, bool trackChanges)

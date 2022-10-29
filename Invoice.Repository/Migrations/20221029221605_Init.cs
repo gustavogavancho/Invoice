@@ -34,6 +34,20 @@ namespace Invoice.Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Tickets",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TicketNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IssueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tickets", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Invoices",
                 columns: table => new
                 {
@@ -48,8 +62,9 @@ namespace Invoice.Repository.Migrations
                     CustomizationId = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
                     TaxTotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    SummaryApproved = table.Column<bool>(type: "bit", nullable: true),
-                    SummaryObservations = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SummaryStatus = table.Column<bool>(type: "bit", nullable: true),
+                    Ticket = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SummaryDocumentsXml = table.Column<string>(type: "xml", nullable: false),
                     Canceled = table.Column<bool>(type: "bit", nullable: false),
                     CanceledReason = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -191,7 +206,7 @@ namespace Invoice.Repository.Migrations
             migrationBuilder.InsertData(
                 table: "Issuers",
                 columns: new[] { "Id", "Address", "BetaCertificate", "BetaCertificatePasword", "Department", "District", "EstablishmentCode", "GeoCode", "IssuerId", "IssuerName", "IssuerType", "ProdCertificate", "ProdCertificatePasword", "Province" },
-                values: new object[] { new Guid("3aa8665c-b43c-433e-bebb-a051a6ecf439"), "PSJE. LIMATAMBO 121", null, null, "SAN MARTIN", "TARAPOTO", "0000", "220901", 20606022779m, "SWIFTLINE SAC", "6", null, null, "SAN MARTIN" });
+                values: new object[] { new Guid("748a9922-30c8-48eb-b883-1a30cccba8a5"), "PSJE. LIMATAMBO 121", null, null, "SAN MARTIN", "TARAPOTO", "0000", "220901", 20606022779m, "SWIFTLINE SAC", "6", null, null, "SAN MARTIN" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_InvoiceDetail_InvoiceId",
@@ -242,6 +257,9 @@ namespace Invoice.Repository.Migrations
 
             migrationBuilder.DropTable(
                 name: "TaxSubTotal");
+
+            migrationBuilder.DropTable(
+                name: "Tickets");
 
             migrationBuilder.DropTable(
                 name: "Invoices");

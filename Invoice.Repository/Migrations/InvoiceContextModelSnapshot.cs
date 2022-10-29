@@ -56,10 +56,11 @@ namespace Invoice.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SummaryObservations")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("SummaryDocumentsXml")
+                        .IsRequired()
+                        .HasColumnType("xml");
 
-                    b.Property<bool?>("SummarySended")
+                    b.Property<bool?>("SummaryStatus")
                         .HasColumnType("bit");
 
                     b.Property<byte[]>("SunatResponse")
@@ -68,6 +69,9 @@ namespace Invoice.Repository.Migrations
 
                     b.Property<decimal>("TaxTotalAmount")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Ticket")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TotalAmount")
                         .HasColumnType("decimal(18,2)");
@@ -197,7 +201,7 @@ namespace Invoice.Repository.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("c3393306-85df-4876-bafc-b05a98b09f2d"),
+                            Id = new Guid("748a9922-30c8-48eb-b883-1a30cccba8a5"),
                             Address = "PSJE. LIMATAMBO 121",
                             Department = "SAN MARTIN",
                             District = "TARAPOTO",
@@ -377,6 +381,27 @@ namespace Invoice.Repository.Migrations
                     b.HasIndex("InvoiceId");
 
                     b.ToTable("TaxSubTotal");
+                });
+
+            modelBuilder.Entity("Invoice.Entities.Models.Ticket", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("IssueDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("TicketNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tickets");
                 });
 
             modelBuilder.Entity("Invoice.Entities.Models.Invoice", b =>

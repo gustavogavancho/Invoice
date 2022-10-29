@@ -23,8 +23,10 @@ public class Invoice
     [Range(0, 9999999999999999.99)] public decimal TotalAmount { get; set; }
     [Required] public IEnumerable<TaxSubTotal> TaxSubTotals { get; set; } = default!;
     [Required] public IEnumerable<ProductDetails> ProductsDetails { get; set; } = default!;
-    public bool? SummarySended { get; set; }
-    public string? SummaryObservations { get; set; }
+    public bool? SummaryStatus { get; set; }
+    public string? Ticket { get; set; }
+    [Column(TypeName = "xml")]
+    public string SummaryDocumentsXml { get; set; } = default!;
     public bool Canceled { get; set; }
     public string? CanceledReason { get; set; }
 }
