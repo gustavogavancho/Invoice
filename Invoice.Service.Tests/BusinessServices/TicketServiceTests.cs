@@ -45,4 +45,25 @@ public class TicketServiceTests
         //Assert
         Assert.NotNull(sut);
     }
+
+    [Fact]
+    public async Task TicketService_GetTicketStatusAsyncTest()
+    {
+        //Arrange
+        var ticket = _fixture.Create<Ticket>();
+        var statusResponse = new Tuple<string, byte[]>("0", new byte[3]);
+
+        var invoices = _fixture.Create<IEnumerable<Entities.Models.Invoice>>();
+        var ticketNumber = "1234567";
+        _repository.Setup(x => x.Ticket.GetTicketAsync(ticketNumber, false)).ReturnsAsync(ticket);
+        _repository.Setup(x => x.Invoice.GetInvoicesByIssueDateAsync(It.IsAny<DateTime>(), true)).ReturnsAsync(invoices);
+        _sunatService.Setup(x => x.GetStatus(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(statusResponse);
+
+        //Act
+        var ticketService = new TicketService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object);
+        var sut = await ticketService.GetTicketStatusAsync(ticketNumber, false);
+
+        //Assert
+        Assert.NotNull(sut);
+    }
 }

@@ -35,4 +35,22 @@ public class TicketControllerTests
         var response = Assert.IsType<TicketResponse>(okObjectResult.Value);
         Assert.Equal(response.TicketNumber, ticket.TicketNumber);
     }
+
+    [Fact]
+    public async Task TicketController_GetTicketStatusTest()
+    {
+        //Arrange
+        var ticket = _fixture.Create<TicketResponse>();
+        _service.Setup(x => x.TicketService.GetTicketStatusAsync(ticket.TicketNumber, true)).ReturnsAsync(ticket);
+
+        //Act
+        var ticketController = new TicketController(_service.Object);
+        ActionResult<TicketResponse> sut = await ticketController.GetTicketStatus(ticket.TicketNumber);
+
+        //Assert
+        var actionResult = Assert.IsType<ActionResult<TicketResponse>>(sut);
+        var okObjectResult = Assert.IsType<OkObjectResult>(actionResult.Result);
+        var response = Assert.IsType<TicketResponse>(okObjectResult.Value);
+        Assert.Equal(response.TicketNumber, ticket.TicketNumber);
+    }
 }

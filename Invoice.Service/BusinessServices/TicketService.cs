@@ -39,6 +39,36 @@ public class TicketService : ITicketService
         return ticketResponse;
     }
 
+    public async Task<TicketResponse> GetTicketStatusAsync(string ticketNumber, bool trackChanges)
+    {
+        var ticket = await GetTciketAndCheckIfItExists(ticketNumber, trackChanges);
+
+        var ticketStatusResponse = await _sunatService.GetStatus("https://e-beta.sunat.gob.pe/ol-ti-itcpfegem-beta/billService",
+                "20606022779MODDATOS",
+                "moddatos",
+                ticket.TicketNumber);
+
+        ticket.StatusCode = ticketStatusResponse.Item1;
+        ticket.StatusContent = ticketStatusResponse.Item2;
+
+        if (ticket.StatusCode == "0")
+        {
+            ticket.Status = true;
+
+            var invoices = await _repository.Invoice.GetInvoicesByIssueDateAsync(ticket.IssueDate, true);
+            foreach (var invoice in invoices)
+            {
+                invoice.SummaryStatus = true;
+            }
+        }
+
+        await _repository.SaveAsync();
+
+        var ticketResponse = _mapper.Map<Ticket, TicketResponse>(ticket);
+
+        return ticketResponse;
+    }
+
     private async Task<Ticket> GetTciketAndCheckIfItExists(string ticketNumber, bool trackChanges)
     {
         var ticket = await _repository.Ticket.GetTicketAsync(ticketNumber, trackChanges);

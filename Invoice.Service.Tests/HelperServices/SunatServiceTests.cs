@@ -110,6 +110,23 @@ public class SunatServiceTests
     }
 
     [Fact]
+    public async Task SunatService_GetStatusTest()
+    {
+        //Arrange
+        var ticketNumber = "1667101787029";
+
+        //Act
+        var sut = await _sunatService.GetStatus("https://e-beta.sunat.gob.pe/ol-ti-itcpfegem-beta/billService",
+                "20606022779MODDATOS",
+                "moddatos",
+                ticketNumber);
+
+        //Assert
+        Assert.NotNull(sut);
+        Assert.IsType<Tuple<string, byte[]>>(sut);
+    }
+
+    [Fact]
     public void SunatService_ReadResponseTest()
     {
         //Arrange

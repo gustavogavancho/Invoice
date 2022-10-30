@@ -197,6 +197,32 @@ public class SunatService : ISunatService
         }
     }
 
+    public async Task<Tuple<string, byte[]>> GetStatus(string uri, string username, string password, string ticketNumber)
+    {
+        BasicHttpBinding binding = HttpBasicBinding();
+
+        using var servicio = new billServiceClient(binding, new EndpointAddress(uri));
+
+        try
+        {
+            GettingServiceReady(username, password, binding, servicio);
+
+            await servicio.OpenAsync();
+
+            var status = await servicio.getStatusAsync(ticketNumber);
+
+            return new Tuple<string, byte[]>(status.status.statusCode, status.status.content);
+        }
+        catch (FaultException fex)
+        {
+            throw new SunatException(fex.Message);
+        }
+        finally
+        {
+            await servicio.CloseAsync();
+        }
+    }
+
     private static void GettingServiceReady(string username, string password, BasicHttpBinding binding, billServiceClient servicio)
     {
         ServicePointManager.Expect100Continue = false;

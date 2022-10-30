@@ -10,5 +10,6 @@ public interface ISunatService
     byte[] ZipXml(XmlDocument xmlDoc, string name);
     Task<byte[]> SendBill(string uri, string username, string password, string fileName, byte[] byteFile);
     Task<string> SendSummary(string uri, string username, string password, string fileName, byte[] byteFile);
+    Task<Tuple<string, byte[]>> GetStatus(string uri, string username, string password, string ticketNumber);
     List<string> ReadResponse(byte[] cdrByte);
 }

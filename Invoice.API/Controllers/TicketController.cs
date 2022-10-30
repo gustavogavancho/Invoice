@@ -12,10 +12,18 @@ public class TicketController : ControllerBase
 
     public TicketController(IServiceManager service) => _service = service;
 
-    [HttpGet("{ticketNumber}", Name = "TicketByNumber")]
+    [HttpGet("{ticketNumber}")]
     public async Task<ActionResult<TicketResponse>> GetTicket(string ticketNumber)
     {
         var ticketResponse = await _service.TicketService.GetTicketAsync(ticketNumber, trackChanges: false);
+
+        return Ok(ticketResponse);
+    }
+
+    [HttpGet("Status/{ticketNumber}")]
+    public async Task<ActionResult<TicketResponse>> GetTicketStatus(string ticketNumber)
+    {
+        var ticketResponse = await _service.TicketService.GetTicketStatusAsync(ticketNumber, trackChanges: true);
 
         return Ok(ticketResponse);
     }
