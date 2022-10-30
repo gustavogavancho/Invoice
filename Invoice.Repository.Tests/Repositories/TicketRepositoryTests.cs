@@ -30,7 +30,7 @@ public class TicketRepositoryTests : IClassFixture<InvoiceContextClassFixture>
         _ticketRepository.CreateTicket(ticket);
         await _contextFixture.Context.SaveChangesAsync();
 
-        var ticketSaved = await _contextFixture.Context.Tickets.LastOrDefaultAsync();
+        var ticketSaved = await _contextFixture.Context.Tickets.LastOrDefaultAsync(x => x.TicketNumber == ticket.TicketNumber);
 
         //Assert
         Assert.NotNull(ticketSaved);
