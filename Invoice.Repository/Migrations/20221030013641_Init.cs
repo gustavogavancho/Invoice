@@ -40,7 +40,8 @@ namespace Invoice.Repository.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TicketNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IssueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<bool>(type: "bit", nullable: false)
+                    Status = table.Column<bool>(type: "bit", nullable: false),
+                    SummaryDocumentsXml = table.Column<string>(type: "xml", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -64,7 +65,6 @@ namespace Invoice.Repository.Migrations
                     TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     SummaryStatus = table.Column<bool>(type: "bit", nullable: true),
                     Ticket = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SummaryDocumentsXml = table.Column<string>(type: "xml", nullable: false),
                     Canceled = table.Column<bool>(type: "bit", nullable: false),
                     CanceledReason = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -206,7 +206,7 @@ namespace Invoice.Repository.Migrations
             migrationBuilder.InsertData(
                 table: "Issuers",
                 columns: new[] { "Id", "Address", "BetaCertificate", "BetaCertificatePasword", "Department", "District", "EstablishmentCode", "GeoCode", "IssuerId", "IssuerName", "IssuerType", "ProdCertificate", "ProdCertificatePasword", "Province" },
-                values: new object[] { new Guid("748a9922-30c8-48eb-b883-1a30cccba8a5"), "PSJE. LIMATAMBO 121", null, null, "SAN MARTIN", "TARAPOTO", "0000", "220901", 20606022779m, "SWIFTLINE SAC", "6", null, null, "SAN MARTIN" });
+                values: new object[] { new Guid("b5171682-c775-45a7-89cd-b735b77a6b35"), "PSJE. LIMATAMBO 121", null, null, "SAN MARTIN", "TARAPOTO", "0000", "220901", 20606022779m, "SWIFTLINE SAC", "6", null, null, "SAN MARTIN" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_InvoiceDetail_InvoiceId",

@@ -56,10 +56,6 @@ namespace Invoice.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SummaryDocumentsXml")
-                        .IsRequired()
-                        .HasColumnType("xml");
-
                     b.Property<bool?>("SummaryStatus")
                         .HasColumnType("bit");
 
@@ -201,7 +197,7 @@ namespace Invoice.Repository.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("748a9922-30c8-48eb-b883-1a30cccba8a5"),
+                            Id = new Guid("b5171682-c775-45a7-89cd-b735b77a6b35"),
                             Address = "PSJE. LIMATAMBO 121",
                             Department = "SAN MARTIN",
                             District = "TARAPOTO",
@@ -394,6 +390,10 @@ namespace Invoice.Repository.Migrations
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
+
+                    b.Property<string>("SummaryDocumentsXml")
+                        .IsRequired()
+                        .HasColumnType("xml");
 
                     b.Property<string>("TicketNumber")
                         .IsRequired()

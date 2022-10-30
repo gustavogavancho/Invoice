@@ -25,8 +25,6 @@ public class Invoice
     [Required] public IEnumerable<ProductDetails> ProductsDetails { get; set; } = default!;
     public bool? SummaryStatus { get; set; }
     public string? Ticket { get; set; }
-    [Column(TypeName = "xml")]
-    public string SummaryDocumentsXml { get; set; } = default!;
     public bool Canceled { get; set; }
     public string? CanceledReason { get; set; }
 }

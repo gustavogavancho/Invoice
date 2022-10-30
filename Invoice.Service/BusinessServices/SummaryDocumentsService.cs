@@ -63,6 +63,14 @@ public class SummaryDocumentsService : ISummaryDocumentsService
                 ticket.Ticket = ticketNumber;
             }
 
+            _repository.Ticket.CreateTicket(new Ticket 
+            {
+                IssueDate = request.IssueDate,
+                Status = false,
+                TicketNumber = ticketNumber,
+                SummaryDocumentsXml = xmlDoc.OuterXml
+            });
+
             await _repository.SaveAsync();
 
             var summaryDocumentsResponse = new SummaryDocumentsResponse

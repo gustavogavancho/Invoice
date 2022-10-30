@@ -1,4 +1,6 @@
-﻿namespace Invoice.Entities.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Invoice.Entities.Models;
 
 public class Ticket
 {
@@ -6,4 +8,6 @@ public class Ticket
     public string TicketNumber { get; set; } = default!;
     public DateTime IssueDate { get; set; }
     public bool Status { get; set; }
+    [Column(TypeName = "xml")]
+    public string SummaryDocumentsXml { get; set; } = default!;
 }
