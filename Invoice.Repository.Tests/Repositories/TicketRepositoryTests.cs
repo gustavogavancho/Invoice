@@ -1,5 +1,4 @@
 ﻿using AutoFixture;
-using Invoice.Contracts.Repositories;
 using Invoice.Entities.Models;
 using Invoice.Repository.Repositories;
 using Invoice.Repository.Tests.ClassFixture;
@@ -55,10 +54,10 @@ public class TicketRepositoryTests : IClassFixture<InvoiceContextClassFixture>
     public async Task TicketRepository_GetTicketAsyncTest()
     {
         //Arrange
-        var id = Guid.Parse("C83AD961-E0C9-47AF-A3B5-5573BE4C00FE");
+        var ticketNumber = "1234567";
 
         //Act
-        var sut = await _ticketRepository.GetTicketAsync(id, false);
+        var sut = await _ticketRepository.GetTicketAsync(ticketNumber, false);
 
         //Assert
         Assert.NotNull(sut);
@@ -69,14 +68,14 @@ public class TicketRepositoryTests : IClassFixture<InvoiceContextClassFixture>
     {
         //Arrange
         var ticket = _fixture.Create<Ticket>();
-        var id = Guid.Parse("C83AD961-E0C9-47AF-A3B5-5573BE4C00FE");
+        var ticketNumber = "1234567";
 
         //Act
-        var ticketToUpdate = await _ticketRepository.GetTicketAsync(id, true);
+        var ticketToUpdate = await _ticketRepository.GetTicketAsync(ticketNumber, true);
         ticketToUpdate.TicketNumber = ticket.TicketNumber;
         _ticketRepository.Update(ticketToUpdate);
         await _contextFixture.Context.SaveChangesAsync();
-        var ticketSaved = await _contextFixture.Context.Tickets.FindAsync(id);
+        var ticketSaved = await _contextFixture.Context.Tickets.FirstOrDefaultAsync(x => x.TicketNumber == ticket.TicketNumber);
 
         //Assert
         Assert.NotNull(ticketSaved);
@@ -87,13 +86,13 @@ public class TicketRepositoryTests : IClassFixture<InvoiceContextClassFixture>
     public async Task TicketRepository_DeleteTicketTest()
     {
         //Arrange 
-        var id = Guid.Parse("F14DD13B-A0DC-42D4-A560-D2AAB067C9E6");
-        var ticketToDelete = await _ticketRepository.GetTicketAsync(id, true);
+        var ticketNumber = "1234567";
+        var ticketToDelete = await _ticketRepository.GetTicketAsync(ticketNumber, true);
 
         //Act
         _ticketRepository.DeleteTicket(ticketToDelete);
         await _contextFixture.Context.SaveChangesAsync();
-        var ticketSaved = await _contextFixture.Context.Tickets.FindAsync(id);
+        var ticketSaved = await _contextFixture.Context.Tickets.FindAsync(ticketToDelete.Id);
 
         //Assert
         Assert.Null(ticketSaved);

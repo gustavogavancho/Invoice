@@ -14,9 +14,9 @@ public class TicketRepository : RepositoryBase<Ticket>, ITicketRepository
 
     public void DeleteTicket(Ticket ticket) => Delete(ticket);
 
-    public async Task<Ticket> GetTicketAsync(Guid id, bool trackChanges) =>
-        await FindByCondition(x => x.Id.Equals(id), trackChanges)
-        .SingleOrDefaultAsync();
+    public async Task<Ticket> GetTicketAsync(string ticketNumber, bool trackChanges) =>
+        await FindByCondition(x => x.TicketNumber.Equals(ticketNumber), trackChanges)
+        .FirstOrDefaultAsync();
 
     public async Task<IEnumerable<Ticket>> GetTicketsAsync(bool trackChanges) =>
         await FindAll(trackChanges)

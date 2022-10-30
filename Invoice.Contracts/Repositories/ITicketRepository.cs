@@ -6,6 +6,6 @@ public interface ITicketRepository
 {
     void CreateTicket(Ticket ticket);
     void DeleteTicket(Ticket ticket);
-    Task<Ticket> GetTicketAsync(Guid id, bool trackChanges);
+    Task<Ticket> GetTicketAsync(string ticketNumber, bool trackChanges);
     Task<IEnumerable<Ticket>> GetTicketsAsync(bool trackChanges);
 }

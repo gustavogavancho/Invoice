@@ -1,0 +1,51 @@
+﻿using AutoMapper;
+using Invoice.Contracts.Logger;
+using Invoice.Contracts.Repositories;
+using Invoice.Entities.Exceptions;
+using Invoice.Entities.Models;
+using Invoice.Service.Contracts.BusinessServices;
+using Invoice.Service.Contracts.HelperServices;
+using Invoice.Shared.Response;
+
+namespace Invoice.Service.BusinessServices;
+
+public class TicketService : ITicketService
+{
+    private readonly IRepositoryManager _repository;
+    private readonly ILoggerManager _logger;
+    private readonly IMapper _mapper;
+    private readonly IDocumentGeneratorService _documentGeneratorService;
+    private readonly ISunatService _sunatService;
+
+    public TicketService(IRepositoryManager repository,
+        ILoggerManager logger,
+        IMapper mapper,
+        IDocumentGeneratorService documentGeneratorService,
+        ISunatService sunatService)
+    {
+        _repository = repository;
+        _logger = logger;
+        _mapper = mapper;
+        _documentGeneratorService = documentGeneratorService;
+        _sunatService = sunatService;
+    }
+
+    public async Task<TicketResponse> GetTicketAsync(string ticketNumber, bool trackChanges)
+    {
+        var ticket = await GetTciketAndCheckIfItExists(ticketNumber, trackChanges);
+
+        var ticketResponse = _mapper.Map<Ticket, TicketResponse>(ticket);
+
+        return ticketResponse;
+    }
+
+    private async Task<Ticket> GetTciketAndCheckIfItExists(string ticketNumber, bool trackChanges)
+    {
+        var ticket = await _repository.Ticket.GetTicketAsync(ticketNumber, trackChanges);
+
+        if (ticket is null)
+            throw new TicketNotFoundException(ticketNumber);
+
+        return ticket;
+    }
+}

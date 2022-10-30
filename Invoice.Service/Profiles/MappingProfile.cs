@@ -9,6 +9,8 @@ public class MappingProfile : Profile
 {
 	public MappingProfile()
 	{
+        CreateMap<Ticket, TicketResponse>().ReverseMap();
+
 		CreateMap<Issuer, IssuerRequest>().ReverseMap();
 		CreateMap<Issuer, IssuerResponse>().ReverseMap();
 
