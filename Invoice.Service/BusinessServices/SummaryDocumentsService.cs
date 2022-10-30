@@ -46,6 +46,8 @@ public class SummaryDocumentsService : ISummaryDocumentsService
         var xmlFile = $"{issuer.IssuerId}-{summaryDocuments.ID.Value}.xml";
         var byteZippedXml = _sunatService.ZipXml(xmlDoc, Path.GetFileName(xmlFile));
 
+        var zippedBase64 = Convert.ToBase64String(byteZippedXml);
+
         //Send bill
         var zippedFile = xmlFile.Replace(".xml", ".zip");
 
