@@ -140,4 +140,19 @@ public class DocumentGeneratorServiceTests
         Assert.NotNull(summaryDocuments);
         Assert.IsType<SummaryDocumentsType>(summaryDocuments);
     }
+
+    [Fact]
+    public void DocumentGeneratorService_GenerateVoidedDocumentsTypeTest()
+    {
+        //Arrange
+        var voidedDocumentsRequest = _fixture.Create<VoidedDocumentsRequest>();
+        var issuer = _fixture.Create<Issuer>();
+
+        //Act
+        var voidedDocuments = _documentGeneratorService.GenerateVoidedDocumentsType(voidedDocumentsRequest, issuer);
+
+        //Asser
+        Assert.NotNull(voidedDocuments);
+        Assert.IsType<VoidedDocumentsType>(voidedDocuments);
+    }
 }

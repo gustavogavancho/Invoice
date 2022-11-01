@@ -1212,38 +1212,6 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                 },
                 Status = new StatusType { ConditionCode = new ConditionCodeType { Value = ticket.Canceled ? "3" : "1" } },
                 TotalAmount = new AmountType2 { currencyID = ticket.InvoiceDetail.CurrencyCode, Value = ticket.TotalAmount },
-                //BillingPayment = new PaymentType[]
-                //{
-                //    new PaymentType
-                //    {
-                //        PaidAmount = new PaidAmountType { currencyID =  ticket.InvoiceDetail.CurrencyCode, Value = ticket.TaxSubTotals, summary.PaidAmount },
-                //        InstructionID = new InstructionIDType { Value = summary.InstructionId }
-                //    }
-                //},
-
-                //TaxTotal = new TaxTotalType[]
-                //{
-                //    new TaxTotalType
-                //    {
-                //        TaxAmount = new TaxAmountType { currencyID = summary.CurrencyCode, Value = summary.TaxAmount },
-                //        TaxSubtotal = new TaxSubtotalType[]
-                //        {
-                //            new TaxSubtotalType
-                //            {
-                //                TaxAmount = new TaxAmountType { currencyID = summary.CurrencyCode, Value = summary.TaxAmount },
-                //                TaxCategory = new TaxCategoryType
-                //                {
-                //                    TaxScheme = new TaxSchemeType
-                //                    {
-                //                        ID = new IDType { Value = summary.TaxId },
-                //                        Name = new NameType1 { Value = summary.TaxName },
-                //                        TaxTypeCode = new TaxTypeCodeType { Value = summary.TaxCode }
-                //                    }
-                //                }
-                //            }
-                //        }
-                //    }
-                //}
             };
 
 
@@ -1289,5 +1257,110 @@ public class DocumentGeneratorService : IDocumentGeneratorService
         #endregion
 
         return summaryDocumentsType;
+    }
+
+    public VoidedDocumentsType GenerateVoidedDocumentsType(VoidedDocumentsRequest request, Issuer issuer)
+    {
+        var voidedDocumentsType = new VoidedDocumentsType
+        {
+            #region Headers
+
+            Cac = SD.XmlnsCac,
+            Cbc = SD.XmlnsCbc,
+            Ds = SD.XmlnsDs,
+            Ext = SD.XmlnsExt,
+            Sac = SD.XmlnsSac,
+
+            #endregion
+
+            #region Ubl and Schema
+
+            UBLVersionID = new UBLVersionIDType { Value = request.UblVersionId },
+            CustomizationID = new CustomizationIDType { Value = request.CustomizationId },
+
+            #endregion
+
+            #region Certificate
+
+            UBLExtensions = new UBLExtensionType[]
+            {
+                new UBLExtensionType()
+            },
+
+            #endregion
+
+            #region Serial Number
+
+            ID = new IDType { Value = $"RA-{request.IssueDate.ToString("yyyyMMdd")}-{request.VoidedDocumentsId.ToString("000")}" },
+
+            #endregion
+
+            #region Dates
+
+            ReferenceDate = new ReferenceDateType { Value = request.ReferenceDate },
+            IssueDate = new IssueDateType { Value = request.IssueDate },
+
+            #endregion
+
+            #region Issuer Information
+
+            Signature = new SignatureType[]
+            {
+                new SignatureType
+                {
+                    ID = new IDType { Value = issuer.IssuerId.ToString() },
+                    SignatoryParty = new PartyType
+                    {
+                        PartyIdentification = new PartyIdentificationType[]
+                        {
+                            new PartyIdentificationType { ID = new IDType { Value = issuer.IssuerId.ToString() }}
+                        },
+                        PartyName = new PartyNameType[]
+                        {
+                            new PartyNameType { Name = new NameType1 { Value = issuer.IssuerName }}
+                        },
+                    },
+                    Note = new NoteType [] { new NoteType { Value = $"Mabe by {issuer.IssuerName}" } }
+                }
+            },
+
+            AccountingSupplierParty = new SupplierPartyType
+            {
+                CustomerAssignedAccountID = new CustomerAssignedAccountIDType { Value = issuer.IssuerId.ToString() },
+                AdditionalAccountID = new AdditionalAccountIDType[] { new AdditionalAccountIDType { Value = issuer.IssuerType } },
+                Party = new PartyType
+                {
+                    PartyLegalEntity = new PartyLegalEntityType[]
+                    {
+                        new PartyLegalEntityType { RegistrationName = new RegistrationNameType { Value = issuer.IssuerId.ToString() } }
+                    }
+                }
+            },
+
+            #endregion
+        };
+
+        #region Voided Documents
+
+        var voidedDocumentsLineTypes = new List<VoidedDocumentsLineType>();
+        var count = 1;
+
+        foreach (var documentToVoid in request.DocumentsToVoid)
+        {
+            voidedDocumentsLineTypes.Add(new VoidedDocumentsLineType
+            {
+                LineID = new LineIDType { Value = count.ToString() },
+                DocumentTypeCode = new DocumentTypeCodeType { Value = documentToVoid.DocumentType },
+                DocumentSerialID = new IdentifierType3 { Value = $"{documentToVoid.Serie}{documentToVoid.SerialNumber.ToString("00")}"},
+                DocumentNumberID = new IdentifierType3 { Value = $"{documentToVoid.CorrelativeNumber.ToString("00000000")}"}
+            });
+            count++;
+        }
+
+        voidedDocumentsType.VoidedDocumentsLine = voidedDocumentsLineTypes.ToArray();
+
+        #endregion
+
+        return voidedDocumentsType;
     }
 }
