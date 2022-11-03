@@ -60,7 +60,7 @@ public class SummaryDocumentsService : ISummaryDocumentsService
         {
             foreach (var ticket in tickets)
             {
-                ticket.DocumentStatus = false;
+                ticket.SummaryDocumentStatus = false;
                 ticket.Ticket = ticketNumber;
             }
 

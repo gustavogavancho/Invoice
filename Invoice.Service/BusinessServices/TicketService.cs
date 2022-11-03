@@ -61,7 +61,7 @@ public class TicketService : ITicketService
             var invoices = await _repository.Invoice.GetTicketsByIssueDateAsync(ticket.IssueDate, false, true);
             foreach (var invoice in invoices)
             {
-                invoice.DocumentStatus = true;
+                invoice.SummaryDocumentStatus = true;
             }
         }
 

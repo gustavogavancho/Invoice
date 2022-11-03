@@ -15,8 +15,8 @@ public class CreditNoteResponse
     public DateTime IssueDate { get; set; }
     [Range(0, 9999999999999999.99)] public decimal TaxTotalAmount { get; set; }
     [Range(0, 9999999999999999.99)] public decimal TotalAmount { get; set; }
-    public bool? SummaryApproved { get; set; }
-    public string? SummaryObservations { get; set; }
+    public bool? SummaryDocumentStatus { get; set; }
+    public string? Ticket { get; set; }
     public bool Canceled { get; set; }
     public string? CanceledReason { get; set; }
 }

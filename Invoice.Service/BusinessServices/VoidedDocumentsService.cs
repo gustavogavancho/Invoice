@@ -62,6 +62,7 @@ public class VoidedDocumentsService : IVoidedDocumentsService
             {
                 invoice.Canceled = true;
                 invoice.Ticket = ticketNumber;
+                invoice.CanceledReason = "Voided document";
             }
 
             _repository.Ticket.CreateTicket(new Ticket
