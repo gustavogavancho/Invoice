@@ -55,10 +55,14 @@ public class TicketService : ITicketService
         {
             ticket.Status = true;
 
-            var invoices = await _repository.Invoice.GetInvoicesByIssueDateAsync(ticket.IssueDate, true);
+            //Read response
+            var responses = _sunatService.ReadResponse(ticket.StatusContent);
+
+            var invoices = await _repository.Invoice.GetTicketsByIssueDateAsync(ticket.IssueDate, false, true);
             foreach (var invoice in invoices)
             {
                 invoice.SummaryStatus = true;
+                invoice.CanceledReason = string.Join("|", responses);
             }
         }
 

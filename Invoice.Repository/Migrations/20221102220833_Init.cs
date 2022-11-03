@@ -38,10 +38,13 @@ namespace Invoice.Repository.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TicketType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TicketNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IssueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
-                    SummaryDocumentsXml = table.Column<string>(type: "xml", nullable: false)
+                    DocumentsXml = table.Column<string>(type: "xml", nullable: false),
+                    StatusCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StatusContent = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -206,7 +209,7 @@ namespace Invoice.Repository.Migrations
             migrationBuilder.InsertData(
                 table: "Issuers",
                 columns: new[] { "Id", "Address", "BetaCertificate", "BetaCertificatePasword", "Department", "District", "EstablishmentCode", "GeoCode", "IssuerId", "IssuerName", "IssuerType", "ProdCertificate", "ProdCertificatePasword", "Province" },
-                values: new object[] { new Guid("b5171682-c775-45a7-89cd-b735b77a6b35"), "PSJE. LIMATAMBO 121", null, null, "SAN MARTIN", "TARAPOTO", "0000", "220901", 20606022779m, "SWIFTLINE SAC", "6", null, null, "SAN MARTIN" });
+                values: new object[] { new Guid("56d13920-612d-42c9-a51a-ec1e74ddf9f1"), "PSJE. LIMATAMBO 121", null, null, "SAN MARTIN", "TARAPOTO", "0000", "220901", 20606022779m, "SWIFTLINE SAC", "6", null, null, "SAN MARTIN" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_InvoiceDetail_InvoiceId",

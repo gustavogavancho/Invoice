@@ -61,7 +61,7 @@ public class SummaryDocumentsServiceTests
         #endregion
 
         _repository.Setup(x => x.Issuer.GetIssuerAsync(It.IsAny<Guid>(), false)).ReturnsAsync(issuer);
-        _repository.Setup(x => x.Invoice.GetInvoicesByIssueDateAsync(new DateTime(2022, 10, 30), false)).ReturnsAsync(invoices);
+        _repository.Setup(x => x.Invoice.GetTicketsByIssueDateAsync(new DateTime(2022, 10, 30), null, false)).ReturnsAsync(invoices);
         _repository.Setup(x => x.Ticket.CreateTicket(It.IsAny<Ticket>())).Verifiable();
         _documentGeneratorService.Setup(x => x.GenerateSummaryDocumentsType(It.IsAny<SummaryDocumentsRequest>(), It.IsAny<Issuer>(), It.IsAny<IEnumerable<Entities.Models.Invoice>>())).Returns(summaryDocuments);
         _sunatService.Setup(x => x.SerializeXmlDocument(typeof(DebitNoteType), It.IsAny<DebitNoteType>())).Returns(It.IsAny<string>());

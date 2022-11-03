@@ -8,6 +8,11 @@ public class InvoiceNotFoundException : NotFoundException
     {
     }
 
+    public InvoiceNotFoundException(IEnumerable<string> series) : base ($"The invoices with series: {string.Join("|", series)} doesn't exist in the database.") 
+    {
+
+    }
+
     public InvoiceNotFoundException(Guid id) : base($"The invoice with id: {id} doesn't exist in the database.")
     {
     }

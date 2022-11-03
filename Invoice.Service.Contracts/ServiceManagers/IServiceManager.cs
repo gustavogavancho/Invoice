@@ -10,4 +10,5 @@ public interface IServiceManager
     ICreditNoteService CreditNoteService { get; }
     ITicketService TicketService { get; }
     ISummaryDocumentsService SummaryDocumentsService { get; }
+    IVoidedDocumentsService VoidedDocumentsService { get; }
 }

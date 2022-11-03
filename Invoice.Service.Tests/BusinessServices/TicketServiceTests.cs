@@ -56,7 +56,7 @@ public class TicketServiceTests
         var invoices = _fixture.Create<IEnumerable<Entities.Models.Invoice>>();
         var ticketNumber = "1234567";
         _repository.Setup(x => x.Ticket.GetTicketAsync(ticketNumber, false)).ReturnsAsync(ticket);
-        _repository.Setup(x => x.Invoice.GetInvoicesByIssueDateAsync(It.IsAny<DateTime>(), true)).ReturnsAsync(invoices);
+        _repository.Setup(x => x.Invoice.GetTicketsByIssueDateAsync(It.IsAny<DateTime>(), false, true)).ReturnsAsync(invoices);
         _sunatService.Setup(x => x.GetStatus(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(statusResponse);
 
         //Act

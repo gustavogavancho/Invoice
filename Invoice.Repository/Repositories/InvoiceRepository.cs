@@ -22,10 +22,10 @@ public class InvoiceRepository : RepositoryBase<Entities.Models.Invoice>, IInvoi
         await FindByCondition(x => x.InvoiceDetail.Serie == serie && x.InvoiceDetail.SerialNumber == serialNumber && x.InvoiceDetail.CorrelativeNumber == correlativeNumber, trackChanges)
         .SingleOrDefaultAsync();
 
-    public async Task<IEnumerable<Entities.Models.Invoice>> GetInvoicesByIssueDateAsync(DateTime issueDate, bool trackChanges) =>
+    public async Task<IEnumerable<Entities.Models.Invoice>> GetTicketsByIssueDateAsync(DateTime issueDate, bool? summaryStatus, bool trackChanges) =>
         await FindByCondition(x => x.IssueDate.Date == issueDate.Date && 
         x.InvoiceDetail.DocumentType == "03" &&
-        x.SummaryStatus == null, trackChanges)
+        x.SummaryStatus == summaryStatus, trackChanges)
         .Include(x => x.InvoiceDetail)
         .Include(x => x.Receiver)
         .Include(x => x.TaxSubTotals)

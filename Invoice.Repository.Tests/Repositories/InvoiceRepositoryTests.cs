@@ -88,7 +88,7 @@ public class InvoiceRepositoryTests : IClassFixture<InvoiceContextClassFixture>
         var issueDate = new DateTime(2022, 01, 13);
 
         //Act
-        var sut = await _invoiceRepository.GetInvoicesByIssueDateAsync(issueDate, false);
+        var sut = await _invoiceRepository.GetTicketsByIssueDateAsync(issueDate, null, false);
 
         //Assert
         Assert.NotNull(sut);

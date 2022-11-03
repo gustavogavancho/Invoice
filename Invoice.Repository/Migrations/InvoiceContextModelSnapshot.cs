@@ -197,7 +197,7 @@ namespace Invoice.Repository.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("faf6e0dd-65d3-447b-83c7-422b557713cb"),
+                            Id = new Guid("56d13920-612d-42c9-a51a-ec1e74ddf9f1"),
                             Address = "PSJE. LIMATAMBO 121",
                             Department = "SAN MARTIN",
                             District = "TARAPOTO",
@@ -385,6 +385,10 @@ namespace Invoice.Repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("DocumentsXml")
+                        .IsRequired()
+                        .HasColumnType("xml");
+
                     b.Property<DateTime>("IssueDate")
                         .HasColumnType("datetime2");
 
@@ -392,18 +396,16 @@ namespace Invoice.Repository.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("StatusCode")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("StatusContent")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<string>("SummaryDocumentsXml")
-                        .IsRequired()
-                        .HasColumnType("xml");
-
                     b.Property<string>("TicketNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TicketType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

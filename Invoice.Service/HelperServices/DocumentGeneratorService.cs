@@ -1194,7 +1194,6 @@ public class DocumentGeneratorService : IDocumentGeneratorService
         #region Summary Documents
 
         var summaryDocumentsTypes = new List<SummaryDocumentsLineType>();
-        var billingPayments = new List<PaymentType>();
         var taxSubTotal = new List<TaxTotalType>();
         var count = 1;
 
@@ -1214,7 +1213,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                 TotalAmount = new AmountType2 { currencyID = ticket.InvoiceDetail.CurrencyCode, Value = ticket.TotalAmount },
             };
 
-
+            var billingPayments = new List<PaymentType>();
             foreach (var subTotal in ticket.TaxSubTotals)
             {
                 billingPayments.Add(new PaymentType
@@ -1352,7 +1351,8 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                 LineID = new LineIDType { Value = count.ToString() },
                 DocumentTypeCode = new DocumentTypeCodeType { Value = documentToVoid.DocumentType },
                 DocumentSerialID = new IdentifierType3 { Value = $"{documentToVoid.Serie}{documentToVoid.SerialNumber.ToString("00")}"},
-                DocumentNumberID = new IdentifierType3 { Value = $"{documentToVoid.CorrelativeNumber.ToString("00000000")}"}
+                DocumentNumberID = new IdentifierType3 { Value = $"{documentToVoid.CorrelativeNumber.ToString("00000000")}"},
+                VoidReasonDescription = new TextType3 { Value = documentToVoid.VoidReason }
             });
             count++;
         }

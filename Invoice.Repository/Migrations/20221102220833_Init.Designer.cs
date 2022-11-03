@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Invoice.Repository.Migrations
 {
     [DbContext(typeof(InvoiceContext))]
-    [Migration("20221030013641_Init")]
+    [Migration("20221102220833_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -199,7 +199,7 @@ namespace Invoice.Repository.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("b5171682-c775-45a7-89cd-b735b77a6b35"),
+                            Id = new Guid("56d13920-612d-42c9-a51a-ec1e74ddf9f1"),
                             Address = "PSJE. LIMATAMBO 121",
                             Department = "SAN MARTIN",
                             District = "TARAPOTO",
@@ -387,17 +387,27 @@ namespace Invoice.Repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("DocumentsXml")
+                        .IsRequired()
+                        .HasColumnType("xml");
+
                     b.Property<DateTime>("IssueDate")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
-                    b.Property<string>("SummaryDocumentsXml")
-                        .IsRequired()
-                        .HasColumnType("xml");
+                    b.Property<string>("StatusCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("StatusContent")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("TicketNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TicketType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

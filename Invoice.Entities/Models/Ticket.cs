@@ -5,11 +5,12 @@ namespace Invoice.Entities.Models;
 public class Ticket
 {
     public Guid Id { get; set; }
+    public string TicketType { get; set; } = default!;
     public string TicketNumber { get; set; } = default!;
     public DateTime IssueDate { get; set; }
     public bool Status { get; set; }
     [Column(TypeName = "xml")]
-    public string SummaryDocumentsXml { get; set; } = default!;
-    public string StatusCode { get; set; } = default!;
-    public byte[] StatusContent { get; set; } = default!;
+    public string DocumentsXml { get; set; } = default!;
+    public string? StatusCode { get; set; }
+    public byte[]? StatusContent { get; set; } 
 }

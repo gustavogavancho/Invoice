@@ -32,8 +32,9 @@ public class SummaryDocumentsService : ISummaryDocumentsService
     {
         var issuer = await GetIssuerAndCheckIfItExists(id, trackChanges);
 
-        var tickets = await GetInvoicesByIssueDateAndCheckIfItExists(request.ReferenceDate, trackChanges);
+        var tickets = await GetInvoicesByIssueDateAndCheckIfItExists(request.ReferenceDate, null, trackChanges);
 
+        //Generate xml
         var summaryDocuments = _documentGeneratorService.GenerateSummaryDocumentsType(request, issuer, tickets);
 
         //Serialize to xml
@@ -66,15 +67,17 @@ public class SummaryDocumentsService : ISummaryDocumentsService
             _repository.Ticket.CreateTicket(new Ticket 
             {
                 IssueDate = request.IssueDate,
+                TicketType = "Summary",
                 Status = false,
                 TicketNumber = ticketNumber,
-                SummaryDocumentsXml = xmlDoc.OuterXml
+                DocumentsXml = xmlDoc.OuterXml
             });
 
             await _repository.SaveAsync();
 
             var summaryDocumentsResponse = new SummaryDocumentsResponse
             {
+                TicketType = "Summary",
                 SummarySended = true,
                 Ticket = ticketNumber
             };
@@ -85,9 +88,9 @@ public class SummaryDocumentsService : ISummaryDocumentsService
         return null;
     }
 
-    public async Task<IEnumerable<Entities.Models.Invoice>> GetInvoicesByIssueDateAndCheckIfItExists(DateTime issueDate, bool trackChanges)
+    public async Task<IEnumerable<Entities.Models.Invoice>> GetInvoicesByIssueDateAndCheckIfItExists(DateTime issueDate, bool? summaryStatus, bool trackChanges)
     {
-        var invoices = await _repository.Invoice.GetInvoicesByIssueDateAsync(issueDate, trackChanges);
+        var invoices = await _repository.Invoice.GetTicketsByIssueDateAsync(issueDate, summaryStatus, trackChanges);
 
         if (!invoices.Any())
             throw new InvoiceNotFoundException(issueDate);
