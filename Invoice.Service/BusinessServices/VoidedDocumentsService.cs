@@ -68,7 +68,6 @@ public class VoidedDocumentsService : IVoidedDocumentsService
             {
                 IssueDate = request.IssueDate,
                 TicketType = "Voided",
-                Status = false,
                 TicketNumber = ticketNumber,
                 DocumentsXml = xmlDoc.OuterXml
             });

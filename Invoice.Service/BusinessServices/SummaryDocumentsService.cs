@@ -60,7 +60,7 @@ public class SummaryDocumentsService : ISummaryDocumentsService
         {
             foreach (var ticket in tickets)
             {
-                ticket.SummaryStatus = false;
+                ticket.DocumentStatus = false;
                 ticket.Ticket = ticketNumber;
             }
 
@@ -68,7 +68,6 @@ public class SummaryDocumentsService : ISummaryDocumentsService
             {
                 IssueDate = request.IssueDate,
                 TicketType = "Summary",
-                Status = false,
                 TicketNumber = ticketNumber,
                 DocumentsXml = xmlDoc.OuterXml
             });

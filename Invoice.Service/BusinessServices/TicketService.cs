@@ -53,16 +53,15 @@ public class TicketService : ITicketService
 
         if (ticket.StatusCode == "0")
         {
-            ticket.Status = true;
-
             //Read response
             var responses = _sunatService.ReadResponse(ticket.StatusContent);
+
+            ticket.TicketResponse = String.Join("|", responses);
 
             var invoices = await _repository.Invoice.GetTicketsByIssueDateAsync(ticket.IssueDate, false, true);
             foreach (var invoice in invoices)
             {
-                invoice.SummaryStatus = true;
-                invoice.CanceledReason = string.Join("|", responses);
+                invoice.DocumentStatus = true;
             }
         }
 

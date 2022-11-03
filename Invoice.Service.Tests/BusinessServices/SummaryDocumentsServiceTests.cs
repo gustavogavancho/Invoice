@@ -54,7 +54,7 @@ public class SummaryDocumentsServiceTests
         {
             invoice.Canceled = false;
             invoice.InvoiceDetail.DocumentType = "03";
-            invoice.SummaryStatus = null;
+            invoice.DocumentStatus = null;
             invoice.IssueDate = new DateTime(2022, 10, 30);
         }
 

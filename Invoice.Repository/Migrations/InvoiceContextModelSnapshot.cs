@@ -42,6 +42,9 @@ namespace Invoice.Repository.Migrations
                         .HasMaxLength(3)
                         .HasColumnType("nvarchar(3)");
 
+                    b.Property<bool?>("DocumentStatus")
+                        .HasColumnType("bit");
+
                     b.Property<string>("InvoiceXml")
                         .IsRequired()
                         .HasColumnType("xml");
@@ -55,9 +58,6 @@ namespace Invoice.Repository.Migrations
                     b.Property<string>("Observations")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool?>("SummaryStatus")
-                        .HasColumnType("bit");
 
                     b.Property<byte[]>("SunatResponse")
                         .IsRequired()
@@ -197,7 +197,7 @@ namespace Invoice.Repository.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("56d13920-612d-42c9-a51a-ec1e74ddf9f1"),
+                            Id = new Guid("ebaaf4c3-845e-4450-9bc1-834cf1bb754d"),
                             Address = "PSJE. LIMATAMBO 121",
                             Department = "SAN MARTIN",
                             District = "TARAPOTO",
@@ -392,9 +392,6 @@ namespace Invoice.Repository.Migrations
                     b.Property<DateTime>("IssueDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
-
                     b.Property<string>("StatusCode")
                         .HasColumnType("nvarchar(max)");
 
@@ -403,6 +400,9 @@ namespace Invoice.Repository.Migrations
 
                     b.Property<string>("TicketNumber")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TicketResponse")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TicketType")

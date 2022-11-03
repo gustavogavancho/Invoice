@@ -40,8 +40,8 @@ namespace Invoice.Repository.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TicketType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TicketNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TicketResponse = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IssueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<bool>(type: "bit", nullable: false),
                     DocumentsXml = table.Column<string>(type: "xml", nullable: false),
                     StatusCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StatusContent = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
@@ -66,7 +66,7 @@ namespace Invoice.Repository.Migrations
                     CustomizationId = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
                     TaxTotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    SummaryStatus = table.Column<bool>(type: "bit", nullable: true),
+                    DocumentStatus = table.Column<bool>(type: "bit", nullable: true),
                     Ticket = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Canceled = table.Column<bool>(type: "bit", nullable: false),
                     CanceledReason = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -209,7 +209,7 @@ namespace Invoice.Repository.Migrations
             migrationBuilder.InsertData(
                 table: "Issuers",
                 columns: new[] { "Id", "Address", "BetaCertificate", "BetaCertificatePasword", "Department", "District", "EstablishmentCode", "GeoCode", "IssuerId", "IssuerName", "IssuerType", "ProdCertificate", "ProdCertificatePasword", "Province" },
-                values: new object[] { new Guid("56d13920-612d-42c9-a51a-ec1e74ddf9f1"), "PSJE. LIMATAMBO 121", null, null, "SAN MARTIN", "TARAPOTO", "0000", "220901", 20606022779m, "SWIFTLINE SAC", "6", null, null, "SAN MARTIN" });
+                values: new object[] { new Guid("ebaaf4c3-845e-4450-9bc1-834cf1bb754d"), "PSJE. LIMATAMBO 121", null, null, "SAN MARTIN", "TARAPOTO", "0000", "220901", 20606022779m, "SWIFTLINE SAC", "6", null, null, "SAN MARTIN" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_InvoiceDetail_InvoiceId",

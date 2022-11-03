@@ -8,7 +8,7 @@ public class TicketResponse
     public DateTime IssueDate { get; set; }
     public bool Status { get; set; }
     [Column(TypeName = "xml")]
-    public string SummaryDocumentsXml { get; set; } = default!;
+    public string DocumentsXml { get; set; } = default!;
     public string StatusCode { get; set; } = default!;
     public byte[] StatusContent { get; set; } = default!;
 }

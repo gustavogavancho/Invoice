@@ -25,7 +25,7 @@ public class InvoiceRepository : RepositoryBase<Entities.Models.Invoice>, IInvoi
     public async Task<IEnumerable<Entities.Models.Invoice>> GetTicketsByIssueDateAsync(DateTime issueDate, bool? summaryStatus, bool trackChanges) =>
         await FindByCondition(x => x.IssueDate.Date == issueDate.Date && 
         x.InvoiceDetail.DocumentType == "03" &&
-        x.SummaryStatus == summaryStatus, trackChanges)
+        x.DocumentStatus == summaryStatus, trackChanges)
         .Include(x => x.InvoiceDetail)
         .Include(x => x.Receiver)
         .Include(x => x.TaxSubTotals)

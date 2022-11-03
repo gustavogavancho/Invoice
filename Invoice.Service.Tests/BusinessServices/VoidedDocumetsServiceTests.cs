@@ -41,7 +41,7 @@ public class VoidedDocumetsServiceTests
         var request = _fixture.Create<VoidedDocumentsRequest>();
         var issuer = _fixture.Create<Issuer>();
 
-        _repository.Setup(x => x.Issuer.GetIssuerAsync(It.IsAny<Guid>(), false)).ReturnsAsync(issuer);
+        _repository.Setup(x => x.Issuer.GetIssuerAsync(It.IsAny<Guid>(), true)).ReturnsAsync(issuer);
         _repository.Setup(x => x.Invoice.CreateInvoice(It.IsAny<Entities.Models.Invoice>())).Verifiable();
         _sunatService.Setup(x => x.SerializeXmlDocument(typeof(InvoiceType), It.IsAny<InvoiceType>())).Returns(It.IsAny<string>());
         _sunatService.Setup(x => x.SignXml(It.IsAny<String>(), It.IsAny<Issuer>(), It.IsAny<string>())).Returns(new XmlDocument());
@@ -51,7 +51,7 @@ public class VoidedDocumetsServiceTests
 
         //Act
         var voidedDocumentsService = new VoidedDocumentsService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object);
-        var sut = await voidedDocumentsService.CreateVoidedDocumentsAsync(It.IsAny<Guid>(), request, false);
+        var sut = await voidedDocumentsService.CreateVoidedDocumentsAsync(It.IsAny<Guid>(), request, true);
 
         //Assert
         Assert.NotNull(sut);
