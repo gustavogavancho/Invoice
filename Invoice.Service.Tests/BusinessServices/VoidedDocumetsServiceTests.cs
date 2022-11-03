@@ -40,13 +40,21 @@ public class VoidedDocumetsServiceTests
         //Arrange
         var request = _fixture.Create<VoidedDocumentsRequest>();
         var issuer = _fixture.Create<Issuer>();
+        var invoice = _fixture.Create<Entities.Models.Invoice>();
+        invoice.Canceled = false;
+        var voidedDocuments = new VoidedDocumentsType
+        {
+            ID = new IDType { Value = $"RC-{request.IssueDate.ToString("yyyyMMdd")}-{request.VoidedDocumentsId.ToString("00000")}" }
+        };
 
         _repository.Setup(x => x.Issuer.GetIssuerAsync(It.IsAny<Guid>(), true)).ReturnsAsync(issuer);
-        _repository.Setup(x => x.Invoice.CreateInvoice(It.IsAny<Entities.Models.Invoice>())).Verifiable();
+        _repository.Setup(x => x.Ticket.CreateTicket(It.IsAny<Ticket>())).Verifiable();
+        _repository.Setup(x => x.Invoice.GetInvoiceBySerieAsync(It.IsAny<string>(), It.IsAny<uint>(), It.IsAny<uint>(), true)).ReturnsAsync(invoice);
+        _documentGeneratorService.Setup(x => x.GenerateVoidedDocumentsType(It.IsAny<VoidedDocumentsRequest>(), It.IsAny<Issuer>())).Returns(voidedDocuments);
         _sunatService.Setup(x => x.SerializeXmlDocument(typeof(InvoiceType), It.IsAny<InvoiceType>())).Returns(It.IsAny<string>());
         _sunatService.Setup(x => x.SignXml(It.IsAny<String>(), It.IsAny<Issuer>(), It.IsAny<string>())).Returns(new XmlDocument());
         _sunatService.Setup(x => x.ZipXml(It.IsAny<XmlDocument>(), It.IsAny<string>())).Returns(It.IsAny<byte[]>());
-        _sunatService.Setup(x => x.SendBill(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<byte[]>())).ReturnsAsync(It.IsAny<byte[]>());
+        _sunatService.Setup(x => x.SendSummary(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<byte[]>())).ReturnsAsync("1234567");
         _sunatService.Setup(x => x.ReadResponse(It.IsAny<byte[]>())).Returns(new List<string> { "La Factura numero FA01-00000001, ha sido aceptada" });
 
         //Act
@@ -55,6 +63,6 @@ public class VoidedDocumetsServiceTests
 
         //Assert
         Assert.NotNull(sut);
-        Assert.IsType<InvoiceResponse>(sut);
+        Assert.IsType<VoidedDocumentsResponse>(sut);
     }
 }
