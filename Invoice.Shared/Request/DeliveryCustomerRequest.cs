@@ -2,7 +2,7 @@
 
 namespace Invoice.Shared.Request;
 
-public class DeliveryCustomerRequest
+public record DeliveryCustomerRequest
 {
     public ulong DeliveryCustomerId { get; set; } //RUC 
     [Required] public string DeliveryCustomerName { get; set; } = default!;

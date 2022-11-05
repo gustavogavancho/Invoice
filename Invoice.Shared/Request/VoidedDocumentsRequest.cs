@@ -2,7 +2,7 @@
 
 namespace Invoice.Shared.Request;
 
-public class VoidedDocumentsRequest
+public record VoidedDocumentsRequest
 {
     [Range(0, 999)] public int VoidedDocumentsId { get; set; }
     [Required] public DateTime IssueDate { get; set; }

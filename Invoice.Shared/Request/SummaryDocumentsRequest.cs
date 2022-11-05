@@ -2,7 +2,7 @@
 
 namespace Invoice.Shared.Request;
 
-public class SummaryDocumentsRequest
+public record SummaryDocumentsRequest
 {
     [Range(0, 99999)]public int SummaryDocumentsId { get; set; }
     [Required] public DateTime IssueDate { get; set; }

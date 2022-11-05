@@ -2,7 +2,7 @@
 
 namespace Invoice.Shared.Request;
 
-public class DebitNoteRequest
+public record DebitNoteRequest
 {
     [Required] public DateTime IssueDate { get; set; }
     [Required, MinLength(3), MaxLength(3)] public string UblVersionId { get; set; } = default!;

@@ -8,6 +8,7 @@ public interface IServiceManager
     IIssuerService IssuerService { get; }
     IDebitNoteService DebitNoteService { get; }
     ICreditNoteService CreditNoteService { get; }
+    IDespatchAdviceService DespatchAdviceService { get; }
     ITicketService TicketService { get; }
     ISummaryDocumentsService SummaryDocumentsService { get; }
     IVoidedDocumentsService VoidedDocumentsService { get; }

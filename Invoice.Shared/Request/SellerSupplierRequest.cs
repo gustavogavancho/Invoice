@@ -2,7 +2,7 @@
 
 namespace Invoice.Shared.Request;
 
-public class SellerSupplierRequest
+public record SellerSupplierRequest
 {
     public ulong SellerSupplierId { get; set; } //RUC 
     [Required] public string SellerSupplierName { get; set; } = default!;

@@ -2,7 +2,7 @@
 
 namespace Invoice.Shared.Request;
 
-public class DespatchAdviceDetailRequest
+public record DespatchAdviceDetailRequest
 {
     [Required, MinLength(2), MaxLength(2)] public string Serie { get; set; } = default!;
     [Range(1, 99)] public uint SerialNumber { get; set; }
@@ -12,5 +12,4 @@ public class DespatchAdviceDetailRequest
     [Required, MinLength(2), MaxLength(2)] public string DocumentReferenceType { get; set; } = default!; //Catalog 1
 
     [Required] public string NoteType { get; set; } = default!; //e. "MONTO EN SOLES"
-    [Required, MinLength(3), MaxLength(3)] public string CurrencyCode { get; set; } = default!; //ISO 4217 e. "PEN"
 }

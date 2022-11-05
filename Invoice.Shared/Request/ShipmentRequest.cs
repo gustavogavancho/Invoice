@@ -2,7 +2,7 @@
 
 namespace Invoice.Shared.Request;
 
-public class ShipmentRequest
+public record ShipmentRequest
 {
     public int IdNumber { get; set; }
     [Required, MinLength(2), MaxLength(2)] public string HandlingCode { get; set; } = default!;
@@ -12,8 +12,8 @@ public class ShipmentRequest
     public decimal TotalTransportHandlingUnitQuantity { get; set; } = default!;
     public bool SplitConsignmentIndicator { get; set; }
     public DateTime TransitPeriod { get; set; }
-    [Required, MinLength(1), MaxLength(2)] public string CarrierPartyType { get; set; } = default!;
-    public int CarrierPartyId { get; set; }
+    [Required, MinLength(1), MaxLength(1)] public string CarrierPartyType { get; set; } = default!;
+    public long CarrierPartyId { get; set; }
     [Required] public string CarrierPartyName { get; set; } = default!;
     [Required] public string TransportLicensePlate { get; set; } = default!;
     [Required, MinLength(1), MaxLength(1)] public string DriverIdType { get; set; } = default!;

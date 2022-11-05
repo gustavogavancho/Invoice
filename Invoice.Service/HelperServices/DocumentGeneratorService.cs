@@ -1337,7 +1337,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                 },
                 Item = new ItemType
                 {
-                    Description = new DescriptionType[] { new DescriptionType() { Value = detail.Description } },
+                    Name = new NameType1 { Value = detail.Description },
                     SellersItemIdentification = new ItemIdentificationType { ID = new IDType { Value = detail.SellerItemIdentification } },
                     CommodityClassification = new CommodityClassificationType[]
                     {
