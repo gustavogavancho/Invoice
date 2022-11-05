@@ -155,4 +155,23 @@ public class DocumentGeneratorServiceTests
         Assert.NotNull(voidedDocuments);
         Assert.IsType<VoidedDocumentsType>(voidedDocuments);
     }
+
+    [Fact]
+    public void DocumentGeneratorService_GenerateDespatchAdviceTypeTest()
+    {
+        //Arrange
+        var despatchAdviceRequest = _fixture.Create<DespatchAdviceRequest>();
+        var issuer = _fixture.Create<Issuer>();
+
+        #region Fix amount
+
+        #endregion
+
+        //Act
+        var despatchAdviceType = _documentGeneratorService.GenerateDespatchAdviceType(despatchAdviceRequest, issuer);
+
+        //Asset
+        Assert.NotNull(despatchAdviceType);
+        Assert.IsType<DespatchAdviceType>(despatchAdviceType);
+    }
 }
