@@ -23,9 +23,9 @@ public class CreditNoteControllerTests
     public async Task CreditNoteController_CreateCreditNoteTest()
     {
         //Arrange
-        var creditNoteRequest = _fixture.Create<CreditNoteRequest>();
+        var creditNoteRequest = _fixture.Create<NoteRequest>();
         var creditNoteResponse = _fixture.Create<InvoiceResponse>();
-        _service.Setup(x => x.CreditNoteService.CreateCreditNoteAsync(It.IsAny<Guid>(), It.IsAny<CreditNoteRequest>(), false)).ReturnsAsync(creditNoteResponse);
+        _service.Setup(x => x.CreditNoteService.CreateCreditNoteAsync(It.IsAny<Guid>(), It.IsAny<NoteRequest>(), false)).ReturnsAsync(creditNoteResponse);
 
         //Act
         var creditNoteController = new CreditNoteController(_service.Object);

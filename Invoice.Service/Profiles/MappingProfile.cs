@@ -20,12 +20,12 @@ public class MappingProfile : Profile
         CreateMap<Entities.Models.Invoice, InvoiceResponse>().ReverseMap();
         CreateMap<InvoiceDetail, InvoiceDetailRequest>().ReverseMap();
 
-        CreateMap<Entities.Models.Invoice, DebitNoteRequest>()
-            .ForMember(dest => dest.DebitNoteDetail, src => src.MapFrom(x => x.InvoiceDetail))
+        CreateMap<Entities.Models.Invoice, NoteRequest>()
+            .ForMember(dest => dest.NoteDetail, src => src.MapFrom(x => x.InvoiceDetail))
             .ReverseMap();
 
-        CreateMap<Entities.Models.Invoice, CreditNoteRequest>()
-            .ForMember(dest => dest.CreditNoteDetail, src => src.MapFrom(x => x.InvoiceDetail))
+        CreateMap<Entities.Models.Invoice, NoteRequest>()
+            .ForMember(dest => dest.NoteDetail, src => src.MapFrom(x => x.InvoiceDetail))
             .ReverseMap();
 
         CreateMap<InvoiceDetail, NoteDetailRequest>().ReverseMap();

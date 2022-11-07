@@ -28,14 +28,14 @@ public class DebitNoteService : IDebitNoteService
         _sunatService = sunatService;
     }
 
-    public async Task<InvoiceResponse> CreateDebitNoteAsync(Guid id, DebitNoteRequest request, bool trackChanges)
+    public async Task<InvoiceResponse> CreateDebitNoteAsync(Guid id, NoteRequest request, bool trackChanges)
     {
         var issuer = await GetIssuerAndCheckIfItExists(id, trackChanges);
 
-        var invoice = await GetInvoiceBySerieAndCheckIfItExists(request.DebitNoteDetail.InvoiceSerie, request.DebitNoteDetail.InvoiceSerialNumber, request.DebitNoteDetail.InvoiceCorrelativeNumber, true);
+        var invoice = await GetInvoiceBySerieAndCheckIfItExists(request.NoteDetail.InvoiceSerie, request.NoteDetail.InvoiceSerialNumber, request.NoteDetail.InvoiceCorrelativeNumber, true);
 
         if (invoice.Canceled)
-            throw new InvoiceCanceledException(request.DebitNoteDetail.InvoiceSerie, request.DebitNoteDetail.InvoiceSerialNumber, request.DebitNoteDetail.InvoiceCorrelativeNumber);
+            throw new InvoiceCanceledException(request.NoteDetail.InvoiceSerie, request.NoteDetail.InvoiceSerialNumber, request.NoteDetail.InvoiceCorrelativeNumber);
 
         var debitNote = _documentGeneratorService.GenerateDebitNoteType(request, issuer);
 
@@ -43,10 +43,10 @@ public class DebitNoteService : IDebitNoteService
         var xmlString = _sunatService.SerializeXmlDocument(typeof(DebitNoteType), debitNote);
 
         //Sign xml
-        var xmlDoc = _sunatService.SignXml(xmlString, issuer, request.DebitNoteDetail.DocumentType);
+        var xmlDoc = _sunatService.SignXml(xmlString, issuer, request.NoteDetail.DocumentType);
 
         //Zip xml
-        var xmlFile = $"{issuer.IssuerId}-{request.DebitNoteDetail.DocumentType}-{request.DebitNoteDetail.Serie}{request.DebitNoteDetail.SerialNumber.ToString("00")}-{request.DebitNoteDetail.CorrelativeNumber.ToString("00000000")}.xml";
+        var xmlFile = $"{issuer.IssuerId}-{request.NoteDetail.DocumentType}-{request.NoteDetail.Serie}{request.NoteDetail.SerialNumber.ToString("00")}-{request.NoteDetail.CorrelativeNumber.ToString("00000000")}.xml";
         var byteZippedXml = _sunatService.ZipXml(xmlDoc, Path.GetFileName(xmlFile));
 
         //Send bill
@@ -63,7 +63,7 @@ public class DebitNoteService : IDebitNoteService
         //Save debit note
         if (responses.Any(x => x.Contains("aceptada")))
         {
-            var invoiceDb = _mapper.Map<DebitNoteRequest, Invoice.Entities.Models.Invoice>(request);
+            var invoiceDb = _mapper.Map<NoteRequest, Invoice.Entities.Models.Invoice>(request);
             invoiceDb.IssuerId = issuer.Id;
             invoiceDb.InvoiceXml = xmlDoc.OuterXml;
             invoiceDb.Accepted = true;

@@ -23,9 +23,9 @@ public class DebitNoteControllerTests
     public async Task DebitNoteController_CreateDebitNoteTest()
     {
         //Arrange
-        var debitNoteRequest = _fixture.Create<DebitNoteRequest>();
+        var debitNoteRequest = _fixture.Create<NoteRequest>();
         var debitNoteResponse = _fixture.Create<InvoiceResponse>();
-        _service.Setup(x => x.DebitNoteService.CreateDebitNoteAsync(It.IsAny<Guid>(), It.IsAny<DebitNoteRequest>(), false)).ReturnsAsync(debitNoteResponse);
+        _service.Setup(x => x.DebitNoteService.CreateDebitNoteAsync(It.IsAny<Guid>(), It.IsAny<NoteRequest>(), false)).ReturnsAsync(debitNoteResponse);
 
         //Act
         var debitNoteController = new DebitNoteController(_service.Object);

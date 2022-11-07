@@ -38,7 +38,7 @@ public class CreditNoteServiceTests
     public async Task CreditNoteService_CreateCreditNoteAsyncTest()
     {
         //Arrange
-        var request = _fixture.Create<CreditNoteRequest>();
+        var request = _fixture.Create<NoteRequest>();
         var issuer = _fixture.Create<Issuer>();
         var invoice = _fixture.Create<Entities.Models.Invoice>();
         invoice.Canceled = false;

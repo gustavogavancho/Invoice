@@ -17,7 +17,7 @@ public class DebitNoteController : ControllerBase
 
     [HttpPost("{issuerId:guid}")]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
-    public async Task<IActionResult> CreateDebitNote(Guid issuerId, DebitNoteRequest request)
+    public async Task<IActionResult> CreateDebitNote(Guid issuerId, NoteRequest request)
     {
         var debitNoteCreated = await _service.DebitNoteService.CreateDebitNoteAsync(issuerId, request, trackChanges: false);
 

@@ -38,7 +38,7 @@ public class DebitNoteServiceTests
     public async Task DebitNoteService_CreateDebitNoteAsyncTest()
     {
         //Arrange
-        var request = _fixture.Create<DebitNoteRequest>();
+        var request = _fixture.Create<NoteRequest>();
         var issuer = _fixture.Create<Issuer>();
         var invoice = _fixture.Create<Entities.Models.Invoice>();
         invoice.Canceled = false;

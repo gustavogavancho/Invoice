@@ -57,7 +57,7 @@ public class DocumentGeneratorServiceTests
     public void DocumentGeneratorService_GenerateDebitNoteTypeTest()
     {
         //Arrange
-        var debitNoteRequest = _fixture.Create<DebitNoteRequest>();
+        var debitNoteRequest = _fixture.Create<NoteRequest>();
         var issuer = _fixture.Create<Issuer>();
 
         #region Fix amount
@@ -93,7 +93,7 @@ public class DocumentGeneratorServiceTests
     public void DocumentGeneratorService_GenerateCreditNoteTypeTest()
     {
         //Arrange
-        var creditNoteRequest = _fixture.Create<CreditNoteRequest>();
+        var creditNoteRequest = _fixture.Create<NoteRequest>();
         var issuer = _fixture.Create<Issuer>();
 
         #region Fix amount

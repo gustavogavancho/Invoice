@@ -395,7 +395,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
         return invoiceType;
     }
 
-    public CreditNoteType GenerateCreditNoteType(CreditNoteRequest request, Issuer issuer)
+    public CreditNoteType GenerateCreditNoteType(NoteRequest request, Issuer issuer)
     {
         var debitNoteType = new CreditNoteType
         {
@@ -429,7 +429,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
 
             #region Serial Number
 
-            ID = new IDType { Value = $"{request.CreditNoteDetail.Serie}{request.CreditNoteDetail.SerialNumber.ToString("00")}-{request.CreditNoteDetail.CorrelativeNumber.ToString("00000000")}" },
+            ID = new IDType { Value = $"{request.NoteDetail.Serie}{request.NoteDetail.SerialNumber.ToString("00")}-{request.NoteDetail.CorrelativeNumber.ToString("00000000")}" },
 
             #endregion
 
@@ -446,9 +446,9 @@ public class DocumentGeneratorService : IDocumentGeneratorService
             {
                 new ResponseType
                 {
-                    ReferenceID = new ReferenceIDType { Value = $"{request.CreditNoteDetail.InvoiceSerie}{request.CreditNoteDetail.InvoiceSerialNumber.ToString("00")}-{request.CreditNoteDetail.InvoiceCorrelativeNumber.ToString("00000000")}" },
-                    ResponseCode = new ResponseCodeType { Value = request.CreditNoteDetail.ResponseCode },
-                    Description = new DescriptionType[] { new DescriptionType {  Value = request.CreditNoteDetail.ResponseCodeDescription } }
+                    ReferenceID = new ReferenceIDType { Value = $"{request.NoteDetail.InvoiceSerie}{request.NoteDetail.InvoiceSerialNumber.ToString("00")}-{request.NoteDetail.InvoiceCorrelativeNumber.ToString("00000000")}" },
+                    ResponseCode = new ResponseCodeType { Value = request.NoteDetail.ResponseCode },
+                    Description = new DescriptionType[] { new DescriptionType {  Value = request.NoteDetail.ResponseCodeDescription } }
                 }
             },
 
@@ -462,8 +462,8 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                 {
                     InvoiceDocumentReference = new DocumentReferenceType
                     {
-                        ID = new IDType { Value = $"{request.CreditNoteDetail.InvoiceSerie}{request.CreditNoteDetail.InvoiceSerialNumber.ToString("00")}-{request.CreditNoteDetail.InvoiceCorrelativeNumber.ToString("00000000")}" },
-                        DocumentTypeCode = new DocumentTypeCodeType { Value = request.CreditNoteDetail.InvoiceDocumentType }
+                        ID = new IDType { Value = $"{request.NoteDetail.InvoiceSerie}{request.NoteDetail.InvoiceSerialNumber.ToString("00")}-{request.NoteDetail.InvoiceCorrelativeNumber.ToString("00000000")}" },
+                        DocumentTypeCode = new DocumentTypeCodeType { Value = request.NoteDetail.InvoiceDocumentType }
                     }
                 }
             },
@@ -474,7 +474,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
 
             DocumentCurrencyCode = new DocumentCurrencyCodeType
             {
-                Value = request.CreditNoteDetail.CurrencyCode, //ISO 4217 e. "PEN"
+                Value = request.NoteDetail.CurrencyCode, //ISO 4217 e. "PEN"
             },
 
             #endregion
@@ -587,8 +587,8 @@ public class DocumentGeneratorService : IDocumentGeneratorService
         {
             taxSubTotals.Add(new TaxSubtotalType
             {
-                TaxableAmount = new TaxableAmountType { currencyID = request.CreditNoteDetail.CurrencyCode, Value = taxSubTotal.TaxableAmount },
-                TaxAmount = new TaxAmountType { currencyID = request.CreditNoteDetail.CurrencyCode, Value = taxSubTotal.TaxAmount },
+                TaxableAmount = new TaxableAmountType { currencyID = request.NoteDetail.CurrencyCode, Value = taxSubTotal.TaxableAmount },
+                TaxAmount = new TaxAmountType { currencyID = request.NoteDetail.CurrencyCode, Value = taxSubTotal.TaxAmount },
                 TaxCategory = new TaxCategoryType
                 {
                     TaxScheme = new TaxSchemeType //Catalog 5
@@ -605,7 +605,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
         {
             new TaxTotalType
             {
-                TaxAmount = new TaxAmountType { currencyID = request.CreditNoteDetail.CurrencyCode, Value = request.TaxTotalAmount },
+                TaxAmount = new TaxAmountType { currencyID = request.NoteDetail.CurrencyCode, Value = request.TaxTotalAmount },
                 TaxSubtotal = taxSubTotals.ToArray()
             }
         };
@@ -618,7 +618,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
         {
             PayableAmount = new PayableAmountType
             {
-                currencyID = request.CreditNoteDetail.CurrencyCode,
+                currencyID = request.NoteDetail.CurrencyCode,
                 Value = request.TotalAmount,
             }
         };
@@ -638,7 +638,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                 },
                 LineExtensionAmount = new LineExtensionAmountType
                 {
-                    currencyID = request.CreditNoteDetail.CurrencyCode,
+                    currencyID = request.NoteDetail.CurrencyCode,
                     Value = detail.Quantity * detail.UnitPrice
                 },
                 PricingReference = new PricingReferenceType
@@ -649,7 +649,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                         {
                             PriceAmount = new PriceAmountType
                             {
-                                currencyID = request.CreditNoteDetail.CurrencyCode,
+                                currencyID = request.NoteDetail.CurrencyCode,
                                 Value = detail.UnitPrice + detail.TaxAmount,
                             },
                             PriceTypeCode = new PriceTypeCodeType
@@ -665,7 +665,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                     {
                         TaxAmount = new TaxAmountType
                         {
-                            currencyID = request.CreditNoteDetail.CurrencyCode,
+                            currencyID = request.NoteDetail.CurrencyCode,
                             Value = detail.TaxAmount * detail.Quantity
                         },
                         TaxSubtotal = new TaxSubtotalType[]
@@ -674,12 +674,12 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                             {
                                 TaxableAmount = new TaxableAmountType
                                 {
-                                    currencyID = request.CreditNoteDetail.CurrencyCode,
+                                    currencyID = request.NoteDetail.CurrencyCode,
                                     Value = detail.UnitPrice * detail.Quantity,
                                 },
                                 TaxAmount = new TaxAmountType
                                 {
-                                    currencyID = request.CreditNoteDetail.CurrencyCode,
+                                    currencyID = request.NoteDetail.CurrencyCode,
                                     Value = detail.TaxAmount * detail.Quantity
                                 },
                                 TaxCategory = new TaxCategoryType
@@ -721,7 +721,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                 },
                 Price = new PriceType
                 {
-                    PriceAmount = new PriceAmountType { currencyID = request.CreditNoteDetail.CurrencyCode, Value = detail.UnitPrice }
+                    PriceAmount = new PriceAmountType { currencyID = request.NoteDetail.CurrencyCode, Value = detail.UnitPrice }
                 }
             });
             count++;
@@ -733,7 +733,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
         return debitNoteType;
     }
 
-    public DebitNoteType GenerateDebitNoteType(DebitNoteRequest request, Issuer issuer)
+    public DebitNoteType GenerateDebitNoteType(NoteRequest request, Issuer issuer)
     {
         var debitNoteType = new DebitNoteType
         {
@@ -767,7 +767,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
 
             #region Serial Number
 
-            ID = new IDType { Value = $"{request.DebitNoteDetail.Serie}{request.DebitNoteDetail.SerialNumber.ToString("00")}-{request.DebitNoteDetail.CorrelativeNumber.ToString("00000000")}" },
+            ID = new IDType { Value = $"{request.NoteDetail.Serie}{request.NoteDetail.SerialNumber.ToString("00")}-{request.NoteDetail.CorrelativeNumber.ToString("00000000")}" },
 
             #endregion
 
@@ -784,9 +784,9 @@ public class DocumentGeneratorService : IDocumentGeneratorService
             {
                 new ResponseType
                 {
-                    ReferenceID = new ReferenceIDType { Value = $"{request.DebitNoteDetail.InvoiceSerie}{request.DebitNoteDetail.InvoiceSerialNumber.ToString("00")}-{request.DebitNoteDetail.InvoiceCorrelativeNumber.ToString("00000000")}" },
-                    ResponseCode = new ResponseCodeType { Value = request.DebitNoteDetail.ResponseCode },
-                    Description = new DescriptionType[] { new DescriptionType {  Value = request.DebitNoteDetail.ResponseCodeDescription } }
+                    ReferenceID = new ReferenceIDType { Value = $"{request.NoteDetail.InvoiceSerie}{request.NoteDetail.InvoiceSerialNumber.ToString("00")}-{request.NoteDetail.InvoiceCorrelativeNumber.ToString("00000000")}" },
+                    ResponseCode = new ResponseCodeType { Value = request.NoteDetail.ResponseCode },
+                    Description = new DescriptionType[] { new DescriptionType {  Value = request.NoteDetail.ResponseCodeDescription } }
                 }
             },
 
@@ -800,8 +800,8 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                 {
                     InvoiceDocumentReference = new DocumentReferenceType
                     {
-                        ID = new IDType { Value = $"{request.DebitNoteDetail.InvoiceSerie}{request.DebitNoteDetail.InvoiceSerialNumber.ToString("00")}-{request.DebitNoteDetail.InvoiceCorrelativeNumber.ToString("00000000")}" },
-                        DocumentTypeCode = new DocumentTypeCodeType { Value = request.DebitNoteDetail.InvoiceDocumentType }
+                        ID = new IDType { Value = $"{request.NoteDetail.InvoiceSerie}{request.NoteDetail.InvoiceSerialNumber.ToString("00")}-{request.NoteDetail.InvoiceCorrelativeNumber.ToString("00000000")}" },
+                        DocumentTypeCode = new DocumentTypeCodeType { Value = request.NoteDetail.InvoiceDocumentType }
                     }
                 }
             },
@@ -812,7 +812,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
 
             DocumentCurrencyCode = new DocumentCurrencyCodeType
             {
-                Value = request.DebitNoteDetail.CurrencyCode, //ISO 4217 e. "PEN"
+                Value = request.NoteDetail.CurrencyCode, //ISO 4217 e. "PEN"
             },
 
             #endregion
@@ -937,7 +937,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                     {
                         ID = new IDType { Value = paymentTerm.PaymentId },
                         PaymentMeansID = new PaymentMeansIDType[] { new PaymentMeansIDType { Value = paymentTerm.PaymentType } },
-                        Amount = new AmountType2 { currencyID = request.DebitNoteDetail.CurrencyCode, Value = paymentTerm.Amount },
+                        Amount = new AmountType2 { currencyID = request.NoteDetail.CurrencyCode, Value = paymentTerm.Amount },
                     });
                     break;
                 case string a when a.Contains("Cuota"):
@@ -945,7 +945,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                     {
                         ID = new IDType { Value = paymentTerm.PaymentId },
                         PaymentMeansID = new PaymentMeansIDType[] { new PaymentMeansIDType { Value = paymentTerm.PaymentType } },
-                        Amount = new AmountType2 { currencyID = request.DebitNoteDetail.CurrencyCode, Value = paymentTerm.Amount },
+                        Amount = new AmountType2 { currencyID = request.NoteDetail.CurrencyCode, Value = paymentTerm.Amount },
                         PaymentDueDate = new PaymentDueDateType { Value = paymentTerm.DueDate }
                     });
                     break;
@@ -964,8 +964,8 @@ public class DocumentGeneratorService : IDocumentGeneratorService
         {
             taxSubTotals.Add(new TaxSubtotalType
             {
-                TaxableAmount = new TaxableAmountType { currencyID = request.DebitNoteDetail.CurrencyCode, Value = taxSubTotal.TaxableAmount },
-                TaxAmount = new TaxAmountType { currencyID = request.DebitNoteDetail.CurrencyCode, Value = taxSubTotal.TaxAmount },
+                TaxableAmount = new TaxableAmountType { currencyID = request.NoteDetail.CurrencyCode, Value = taxSubTotal.TaxableAmount },
+                TaxAmount = new TaxAmountType { currencyID = request.NoteDetail.CurrencyCode, Value = taxSubTotal.TaxAmount },
                 TaxCategory = new TaxCategoryType
                 {
                     TaxScheme = new TaxSchemeType //Catalog 5
@@ -982,7 +982,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
         {
             new TaxTotalType
             {
-                TaxAmount = new TaxAmountType { currencyID = request.DebitNoteDetail.CurrencyCode, Value = request.TaxTotalAmount },
+                TaxAmount = new TaxAmountType { currencyID = request.NoteDetail.CurrencyCode, Value = request.TaxTotalAmount },
                 TaxSubtotal = taxSubTotals.ToArray()
             }
         };
@@ -995,7 +995,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
         {
             PayableAmount = new PayableAmountType
             {
-                currencyID = request.DebitNoteDetail.CurrencyCode,
+                currencyID = request.NoteDetail.CurrencyCode,
                 Value = request.TotalAmount,
             }
         };
@@ -1015,7 +1015,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                 },
                 LineExtensionAmount = new LineExtensionAmountType
                 {
-                    currencyID = request.DebitNoteDetail.CurrencyCode,
+                    currencyID = request.NoteDetail.CurrencyCode,
                     Value = detail.Quantity * detail.UnitPrice
                 },
                 PricingReference = new PricingReferenceType
@@ -1026,7 +1026,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                         {
                             PriceAmount = new PriceAmountType
                             {
-                                currencyID = request.DebitNoteDetail.CurrencyCode,
+                                currencyID = request.NoteDetail.CurrencyCode,
                                 Value = detail.UnitPrice + detail.TaxAmount,
                             },
                             PriceTypeCode = new PriceTypeCodeType
@@ -1042,7 +1042,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                     {
                         TaxAmount = new TaxAmountType
                         {
-                            currencyID = request.DebitNoteDetail.CurrencyCode,
+                            currencyID = request.NoteDetail.CurrencyCode,
                             Value = detail.TaxAmount * detail.Quantity
                         },
                         TaxSubtotal = new TaxSubtotalType[]
@@ -1051,12 +1051,12 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                             {
                                 TaxableAmount = new TaxableAmountType
                                 {
-                                    currencyID = request.DebitNoteDetail.CurrencyCode,
+                                    currencyID = request.NoteDetail.CurrencyCode,
                                     Value = detail.UnitPrice * detail.Quantity,
                                 },
                                 TaxAmount = new TaxAmountType
                                 {
-                                    currencyID = request.DebitNoteDetail.CurrencyCode,
+                                    currencyID = request.NoteDetail.CurrencyCode,
                                     Value = detail.TaxAmount * detail.Quantity
                                 },
                                 TaxCategory = new TaxCategoryType
@@ -1098,7 +1098,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
                 },
                 Price = new PriceType
                 {
-                    PriceAmount = new PriceAmountType { currencyID = request.DebitNoteDetail.CurrencyCode, Value = detail.UnitPrice }
+                    PriceAmount = new PriceAmountType { currencyID = request.NoteDetail.CurrencyCode, Value = detail.UnitPrice }
                 }
             });
             count++;
