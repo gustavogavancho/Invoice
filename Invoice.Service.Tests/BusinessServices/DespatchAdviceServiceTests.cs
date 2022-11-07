@@ -55,6 +55,6 @@ public class DespatchAdviceServiceTests
 
         //Assert
         Assert.NotNull(sut);
-        Assert.IsType<DespatchAdviceResponse>(sut);
+        Assert.IsType<InvoiceResponse>(sut);
     }
 }

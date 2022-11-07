@@ -32,7 +32,7 @@ public class DespatchAdviceService : IDespatchAdviceService
         _sunatService = sunatService;
     }
 
-    public async Task<DespatchAdviceResponse> CreateDespatchAdviceAsync(Guid id, DespatchAdviceRequest request, bool trackChanges)
+    public async Task<InvoiceResponse> CreateDespatchAdviceAsync(Guid id, DespatchAdviceRequest request, bool trackChanges)
     {
         var issuer = await GetIssuerAndCheckIfItExists(id, trackChanges);
 
@@ -71,13 +71,13 @@ public class DespatchAdviceService : IDespatchAdviceService
             _repository.Invoice.CreateInvoice(invoiceDb);
             await _repository.SaveAsync();
 
-            var invoiceResponse = _mapper.Map<Entities.Models.Invoice, DespatchAdviceResponse>(invoiceDb);
+            var invoiceResponse = _mapper.Map<Entities.Models.Invoice, InvoiceResponse>(invoiceDb);
             return invoiceResponse;
         }
         return null;
     }
 
-    public async Task<DespatchAdviceResponse> GetDespatchAdviceAsync(Guid id, bool trackChanges)
+    public async Task<InvoiceResponse> GetDespatchAdviceAsync(Guid id, bool trackChanges)
     {
         throw new NotImplementedException();
     }
