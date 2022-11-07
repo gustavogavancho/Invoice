@@ -58,7 +58,7 @@ public class CreditNoteServiceTests
 
         //Assert
         Assert.NotNull(sut);
-        Assert.IsType<CreditNoteResponse>(sut);
+        Assert.IsType<InvoiceResponse>(sut);
     }
 
     [Fact]
@@ -71,7 +71,7 @@ public class CreditNoteServiceTests
 
         //Act
         var creditNoteService = new CreditNoteService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object);
-        CreditNoteResponse sut = await creditNoteService.GetCreditNoteAsync(id, false);
+        var sut = await creditNoteService.GetCreditNoteAsync(id, false);
 
         //Assert
         Assert.NotNull(sut);

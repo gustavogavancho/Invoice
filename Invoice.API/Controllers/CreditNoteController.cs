@@ -24,7 +24,7 @@ public class CreditNoteController : ControllerBase
     }
 
     [HttpGet("{id:guid}", Name = "CreditNoteById")]
-    public async Task<ActionResult<CreditNoteResponse>> GetCreditNote(Guid id)
+    public async Task<ActionResult<InvoiceResponse>> GetCreditNote(Guid id)
     {
         var creditNoteResponse = await _service.CreditNoteService.GetCreditNoteAsync(id, trackChanges: false);
 

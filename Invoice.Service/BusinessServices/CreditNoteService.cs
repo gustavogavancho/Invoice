@@ -28,7 +28,7 @@ public class CreditNoteService : ICreditNoteService
         _sunatService = sunatService;
     }
 
-    public async Task<CreditNoteResponse> CreateCreditNoteAsync(Guid id, CreditNoteRequest request, bool trackChanges)
+    public async Task<InvoiceResponse> CreateCreditNoteAsync(Guid id, CreditNoteRequest request, bool trackChanges)
     {
         var issuer = await GetIssuerAndCheckIfItExists(id, trackChanges);
 
@@ -74,18 +74,18 @@ public class CreditNoteService : ICreditNoteService
             invoice.CanceledReason = responses.FirstOrDefault(x => x.Contains("aceptada"));
             await _repository.SaveAsync();
 
-            var invoiceResponse = _mapper.Map<Entities.Models.Invoice, CreditNoteResponse>(invoiceDb);
+            var invoiceResponse = _mapper.Map<Entities.Models.Invoice, InvoiceResponse>(invoiceDb);
             return invoiceResponse;
         }
 
         return null;
     }
 
-    public async Task<CreditNoteResponse> GetCreditNoteAsync(Guid id, bool trackChanges)
+    public async Task<InvoiceResponse> GetCreditNoteAsync(Guid id, bool trackChanges)
     {
         var creditNote = await GetInvoiceAndCheckIfItExists(id, trackChanges);
 
-        var debitNoteResponse = _mapper.Map<Entities.Models.Invoice, CreditNoteResponse>(creditNote);
+        var debitNoteResponse = _mapper.Map<Entities.Models.Invoice, InvoiceResponse>(creditNote);
         return debitNoteResponse;
     }
 

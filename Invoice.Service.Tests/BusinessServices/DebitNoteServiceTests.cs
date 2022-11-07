@@ -54,11 +54,11 @@ public class DebitNoteServiceTests
 
         //Act
         var debitNoteService = new DebitNoteService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object);
-        DebitNoteResponse sut = await debitNoteService.CreateDebitNoteAsync(It.IsAny<Guid>(), request, false);
+        var sut = await debitNoteService.CreateDebitNoteAsync(It.IsAny<Guid>(), request, false);
 
         //Assert
         Assert.NotNull(sut);
-        Assert.IsType<DebitNoteResponse>(sut);
+        Assert.IsType<InvoiceResponse>(sut);
     }
 
     [Fact]
@@ -71,7 +71,7 @@ public class DebitNoteServiceTests
 
         //Act
         var debitNoteService = new DebitNoteService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object);
-        DebitNoteResponse sut = await debitNoteService.GetDebitNoteAsync(id, false);
+        var sut = await debitNoteService.GetDebitNoteAsync(id, false);
 
         //Assert
         Assert.NotNull(sut);

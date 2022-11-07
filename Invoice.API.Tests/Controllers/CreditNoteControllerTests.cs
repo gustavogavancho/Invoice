@@ -24,7 +24,7 @@ public class CreditNoteControllerTests
     {
         //Arrange
         var creditNoteRequest = _fixture.Create<CreditNoteRequest>();
-        var creditNoteResponse = _fixture.Create<CreditNoteResponse>();
+        var creditNoteResponse = _fixture.Create<InvoiceResponse>();
         _service.Setup(x => x.CreditNoteService.CreateCreditNoteAsync(It.IsAny<Guid>(), It.IsAny<CreditNoteRequest>(), false)).ReturnsAsync(creditNoteResponse);
 
         //Act
@@ -40,17 +40,17 @@ public class CreditNoteControllerTests
     public async Task CreditNoteController_GetCreditNoteTest()
     {
         //Arrange
-        var debitNote = _fixture.Create<CreditNoteResponse>();
+        var debitNote = _fixture.Create<InvoiceResponse>();
         _service.Setup(x => x.CreditNoteService.GetCreditNoteAsync(debitNote.Id, false)).ReturnsAsync(debitNote);
 
         //Act
         var creditNoteController = new CreditNoteController(_service.Object);
-        ActionResult<CreditNoteResponse> sut = await creditNoteController.GetCreditNote(debitNote.Id);
+        var sut = await creditNoteController.GetCreditNote(debitNote.Id);
 
         //Assert
-        var actionResult = Assert.IsType<ActionResult<CreditNoteResponse>>(sut);
+        var actionResult = Assert.IsType<ActionResult<InvoiceResponse>>(sut);
         var okObjectResult = Assert.IsType<OkObjectResult>(actionResult.Result);
-        var response = Assert.IsType<CreditNoteResponse>(okObjectResult.Value);
+        var response = Assert.IsType<InvoiceResponse>(okObjectResult.Value);
         Assert.Equal(response.Observations, debitNote.Observations);
     }
 }

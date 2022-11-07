@@ -25,7 +25,7 @@ public class DebitNoteController : ControllerBase
     }
 
     [HttpGet("{id:guid}", Name = "DebitNoteById")]
-    public async Task<ActionResult<DebitNoteResponse>> GetDebitNote(Guid id)
+    public async Task<ActionResult<InvoiceResponse>> GetDebitNote(Guid id)
     {
         var debitNoteResponse = await _service.DebitNoteService.GetDebitNoteAsync(id, trackChanges: false);
 

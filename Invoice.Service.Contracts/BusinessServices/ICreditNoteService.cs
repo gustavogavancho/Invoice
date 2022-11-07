@@ -5,6 +5,6 @@ namespace Invoice.Service.Contracts.BusinessServices;
 
 public interface ICreditNoteService
 {
-    Task<CreditNoteResponse> CreateCreditNoteAsync(Guid id, CreditNoteRequest request, bool trackChanges);
-    Task<CreditNoteResponse> GetCreditNoteAsync(Guid id, bool trackChanges);
+    Task<InvoiceResponse> CreateCreditNoteAsync(Guid id, CreditNoteRequest request, bool trackChanges);
+    Task<InvoiceResponse> GetCreditNoteAsync(Guid id, bool trackChanges);
 }

@@ -28,7 +28,7 @@ public class DebitNoteService : IDebitNoteService
         _sunatService = sunatService;
     }
 
-    public async Task<DebitNoteResponse> CreateDebitNoteAsync(Guid id, DebitNoteRequest request, bool trackChanges)
+    public async Task<InvoiceResponse> CreateDebitNoteAsync(Guid id, DebitNoteRequest request, bool trackChanges)
     {
         var issuer = await GetIssuerAndCheckIfItExists(id, trackChanges);
 
@@ -74,18 +74,18 @@ public class DebitNoteService : IDebitNoteService
             invoice.CanceledReason = responses.FirstOrDefault(x => x.Contains("aceptada"));
             await _repository.SaveAsync();
 
-            var invoiceResponse = _mapper.Map<Entities.Models.Invoice, DebitNoteResponse>(invoiceDb);
+            var invoiceResponse = _mapper.Map<Entities.Models.Invoice, InvoiceResponse>(invoiceDb);
             return invoiceResponse;
         }
 
         return null;
     }
 
-    public async Task<DebitNoteResponse> GetDebitNoteAsync(Guid id, bool trackChanges)
+    public async Task<InvoiceResponse> GetDebitNoteAsync(Guid id, bool trackChanges)
     {
         var debitNote = await GetInvoiceAndCheckIfItExists(id, trackChanges);
 
-        var debitNoteResponse = _mapper.Map<Entities.Models.Invoice, DebitNoteResponse>(debitNote);
+        var debitNoteResponse = _mapper.Map<Entities.Models.Invoice, InvoiceResponse>(debitNote);
         return debitNoteResponse;
     }
 
