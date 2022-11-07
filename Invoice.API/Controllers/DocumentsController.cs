@@ -7,13 +7,22 @@ namespace Invoice.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class VoidedDocumentsController : ControllerBase
+public class DocumentsController : ControllerBase
 {
     private readonly IServiceManager _service;
 
-    public VoidedDocumentsController(IServiceManager service) => _service = service;
+    public DocumentsController(IServiceManager service) => _service = service;
 
-    [HttpPost("{issuerId:guid}")]
+    [HttpPost("Summary/{issuerId:guid}")]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
+    public async Task<IActionResult> CreateSummaryDocuments(Guid issuerId, SummaryDocumentsRequest request)
+    {
+        var summaryDocumentsCreated = await _service.SummaryDocumentsService.CreateSummaryDocumentsAsync(issuerId, request, trackChanges: true);
+
+        return Ok(summaryDocumentsCreated);
+    }
+
+    [HttpPost("Voided/{issuerId:guid}")]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> CreateVoidedDocuments(Guid issuerId, VoidedDocumentsRequest request)
     {
@@ -21,5 +30,4 @@ public class VoidedDocumentsController : ControllerBase
 
         return Ok(summaryDocumentsCreated);
     }
-
 }

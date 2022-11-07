@@ -8,19 +8,19 @@ using Moq;
 
 namespace Invoice.API.Tests.Controllers;
 
-public class CreditNoteControllerTests
+public class NoteControllerTests
 {
     private readonly Fixture _fixture;
     private readonly Mock<IServiceManager> _service;
 
-    public CreditNoteControllerTests()
+    public NoteControllerTests()
     {
         _fixture = new Fixture();
         _service = new Mock<IServiceManager>();
     }
 
     [Fact]
-    public async Task CreditNoteController_CreateCreditNoteTest()
+    public async Task NoteController_CreateCreditNoteTest()
     {
         //Arrange
         var creditNoteRequest = _fixture.Create<NoteRequest>();
@@ -37,7 +37,7 @@ public class CreditNoteControllerTests
     }
 
     [Fact]
-    public async Task CreditNoteController_GetCreditNoteTest()
+    public async Task NoteController_GetCreditNoteTest()
     {
         //Arrange
         var debitNote = _fixture.Create<InvoiceResponse>();
@@ -55,7 +55,7 @@ public class CreditNoteControllerTests
     }
 
     [Fact]
-    public async Task DebitNoteController_CreateDebitNoteTest()
+    public async Task NoteController_CreateDebitNoteTest()
     {
         //Arrange
         var debitNoteRequest = _fixture.Create<NoteRequest>();
@@ -72,7 +72,7 @@ public class CreditNoteControllerTests
     }
 
     [Fact]
-    public async Task DebitNoteController_GetDebitNoteTest()
+    public async Task NoteController_GetDebitNoteTest()
     {
         //Arrange
         var debitNote = _fixture.Create<InvoiceResponse>();
