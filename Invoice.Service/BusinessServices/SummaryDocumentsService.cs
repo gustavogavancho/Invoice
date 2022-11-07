@@ -28,7 +28,7 @@ public class SummaryDocumentsService : ISummaryDocumentsService
         _sunatService = sunatService;
     }
 
-    public async Task<SummaryDocumentsResponse> CreateSummaryDocumentsAsync(Guid id, SummaryDocumentsRequest request, bool trackChanges)
+    public async Task<DocumentsResponse> CreateSummaryDocumentsAsync(Guid id, SummaryDocumentsRequest request, bool trackChanges)
     {
         var issuer = await GetIssuerAndCheckIfItExists(id, trackChanges);
 
@@ -74,7 +74,7 @@ public class SummaryDocumentsService : ISummaryDocumentsService
 
             await _repository.SaveAsync();
 
-            var summaryDocumentsResponse = new SummaryDocumentsResponse
+            var summaryDocumentsResponse = new DocumentsResponse
             {
                 TicketType = "Summary",
                 SummarySended = true,

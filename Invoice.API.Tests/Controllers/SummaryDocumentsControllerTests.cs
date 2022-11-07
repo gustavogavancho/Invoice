@@ -24,7 +24,7 @@ public class SummaryDocumentsControllerTests
     {
         //Arrange
         var summaryDocumentsRequest = _fixture.Create<SummaryDocumentsRequest>();
-        var summaryDocumentsResponse = _fixture.Create<SummaryDocumentsResponse>();
+        var summaryDocumentsResponse = _fixture.Create<DocumentsResponse>();
         _service.Setup(x => x.SummaryDocumentsService.CreateSummaryDocumentsAsync(It.IsAny<Guid>(), It.IsAny<SummaryDocumentsRequest>(), false)).ReturnsAsync(summaryDocumentsResponse);
 
         //Act

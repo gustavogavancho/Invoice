@@ -5,5 +5,5 @@ namespace Invoice.Service.Contracts.BusinessServices;
 
 public interface IVoidedDocumentsService
 {
-    Task<VoidedDocumentsResponse> CreateVoidedDocumentsAsync(Guid id, VoidedDocumentsRequest request, bool trackChanges);
+    Task<DocumentsResponse> CreateVoidedDocumentsAsync(Guid id, VoidedDocumentsRequest request, bool trackChanges);
 }

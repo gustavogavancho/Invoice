@@ -63,6 +63,6 @@ public class VoidedDocumetsServiceTests
 
         //Assert
         Assert.NotNull(sut);
-        Assert.IsType<VoidedDocumentsResponse>(sut);
+        Assert.IsType<DocumentsResponse>(sut);
     }
 }

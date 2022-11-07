@@ -5,5 +5,5 @@ namespace Invoice.Service.Contracts.BusinessServices;
 
 public interface ISummaryDocumentsService
 {
-    Task<SummaryDocumentsResponse> CreateSummaryDocumentsAsync(Guid id, SummaryDocumentsRequest request, bool trackChanges);
+    Task<DocumentsResponse> CreateSummaryDocumentsAsync(Guid id, SummaryDocumentsRequest request, bool trackChanges);
 }

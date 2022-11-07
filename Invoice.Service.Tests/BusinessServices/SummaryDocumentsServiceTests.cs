@@ -75,6 +75,6 @@ public class SummaryDocumentsServiceTests
 
         //Assert
         Assert.NotNull(sut);
-        Assert.IsType<SummaryDocumentsResponse>(sut);
+        Assert.IsType<DocumentsResponse>(sut);
     }
 }

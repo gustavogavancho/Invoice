@@ -24,7 +24,7 @@ public class VoidedDocumentsControllerTests
     {
         //Arrange
         var voidedDocumentsRequest = _fixture.Create<VoidedDocumentsRequest>();
-        var voidedDocumentsResponse = _fixture.Create<VoidedDocumentsResponse>();
+        var voidedDocumentsResponse = _fixture.Create<DocumentsResponse>();
         _service.Setup(x => x.VoidedDocumentsService.CreateVoidedDocumentsAsync(It.IsAny<Guid>(), It.IsAny<VoidedDocumentsRequest>(), false)).ReturnsAsync(voidedDocumentsResponse);
 
         //Act
