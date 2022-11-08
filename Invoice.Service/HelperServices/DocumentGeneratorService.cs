@@ -1205,14 +1205,14 @@ public class DocumentGeneratorService : IDocumentGeneratorService
             {
                 CustomerAssignedAccountID = new CustomerAssignedAccountIDType
                 {
-                    schemeID = request.DeliveryCustomer.DeliveryCustomerType,
-                    Value = request.DeliveryCustomer.DeliveryCustomerId.ToString()
+                    schemeID = request.DeliveryCustomer.DespatchAdvicePartyType,
+                    Value = request.DeliveryCustomer.DespatchAdvicePartyId.ToString()
                 },
                 Party = new PartyType
                 {
                     PartyLegalEntity = new PartyLegalEntityType[]
                     {
-                        new PartyLegalEntityType { RegistrationName = new RegistrationNameType { Value = request.DeliveryCustomer.DeliveryCustomerName } }
+                        new PartyLegalEntityType { RegistrationName = new RegistrationNameType { Value = request.DeliveryCustomer.DespatchAdvicePartyName } }
                     }
                 }
             },
@@ -1221,14 +1221,14 @@ public class DocumentGeneratorService : IDocumentGeneratorService
             {
                 CustomerAssignedAccountID = new CustomerAssignedAccountIDType
                 {
-                    schemeID = request.SellerSupplier.SellerSuplierType,
-                    Value = request.SellerSupplier.SellerSupplierId.ToString()
+                    schemeID = request.SellerSupplier.DespatchAdvicePartyType,
+                    Value = request.SellerSupplier.DespatchAdvicePartyId.ToString()
                 },
                 Party = new PartyType
                 {
                     PartyLegalEntity = new PartyLegalEntityType[]
                     {
-                        new PartyLegalEntityType { RegistrationName = new RegistrationNameType { Value = request.SellerSupplier.SellerSupplierName }}
+                        new PartyLegalEntityType { RegistrationName = new RegistrationNameType { Value = request.SellerSupplier.DespatchAdvicePartyName }}
                     }
                 }
             },
