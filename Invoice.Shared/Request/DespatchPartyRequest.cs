@@ -2,7 +2,7 @@
 
 namespace Invoice.Shared.Request;
 
-public record DespatchAdvicePartyRequest
+public record DespatchPartyRequest
 {
     public ulong DespatchAdvicePartyId { get; set; } //RUC 
     [Required] public string DespatchAdvicePartyName { get; set; } = default!;

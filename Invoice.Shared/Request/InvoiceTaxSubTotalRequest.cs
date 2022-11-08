@@ -2,7 +2,7 @@
 
 namespace Invoice.Shared.Request;
 
-public record TaxSubTotalRequest
+public record InvoiceTaxSubTotalRequest
 {
     [Range(0, 9999999999999999.99)] public decimal TaxableAmount { get; set; }
     [Range(0, 9999999999999999.99)] public decimal TaxAmount { get; set; }

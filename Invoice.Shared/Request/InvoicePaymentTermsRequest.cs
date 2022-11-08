@@ -3,7 +3,7 @@
 namespace Invoice.Shared.Request;
 
 //FYI: There are three type of payment terms => Contado, Credito, Cuotas
-public record PaymentTermsRequest
+public record InvoicePaymentTermsRequest
 {
     [Required] public string PaymentId { get; set; } = "FormaPago";
     public string PaymentType { get; set; } = default!; //PaymentTerms SUNAT

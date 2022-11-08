@@ -30,9 +30,9 @@ public class MappingProfile : Profile
 
         CreateMap<InvoiceDetail, NoteDetailRequest>().ReverseMap();
 
-        CreateMap<PaymentTerms, PaymentTermsRequest>().ReverseMap();
-        CreateMap<ProductDetails, ProductDetailsRequest>().ReverseMap();
+        CreateMap<PaymentTerms, InvoicePaymentTermsRequest>().ReverseMap();
+        CreateMap<ProductDetails, InvoiceProductDetailsRequest>().ReverseMap();
         CreateMap<Receiver, ReceiverRequest>().ReverseMap();
-        CreateMap<TaxSubTotal, TaxSubTotalRequest>().ReverseMap();
+        CreateMap<TaxSubTotal, InvoiceTaxSubTotalRequest>().ReverseMap();
     }
 }

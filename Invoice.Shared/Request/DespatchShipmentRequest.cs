@@ -2,7 +2,7 @@
 
 namespace Invoice.Shared.Request;
 
-public record ShipmentRequest
+public record DespatchShipmentRequest
 {
     public int IdNumber { get; set; }
     [Required, MinLength(2), MaxLength(2)] public string HandlingCode { get; set; } = default!;

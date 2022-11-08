@@ -2,7 +2,7 @@
 
 namespace Invoice.Shared.Request;
 
-public record ProductDetailsRequest
+public record InvoiceProductDetailsRequest
 {
     [Required] public string UnitCode { get; set; } = default!; //Sunat UNIT CODES
     [Range(0, 9999999999999999.99)] public decimal Quantity { get; set; }
