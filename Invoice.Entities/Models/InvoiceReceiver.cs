@@ -2,7 +2,7 @@
 
 namespace Invoice.Entities.Models;
 
-public class Receiver
+public class InvoiceReceiver
 {
     public Guid Id { get; set; }
     [Range(10000000000, 99999999999)] public ulong ReceiverId { get; set; } //RUC 

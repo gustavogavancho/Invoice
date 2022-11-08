@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Invoice.Repository.Migrations
 {
     [DbContext(typeof(InvoiceContext))]
-    [Migration("20221103031936_Init")]
+    [Migration("20221108015803_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,9 +44,6 @@ namespace Invoice.Repository.Migrations
                         .HasMaxLength(3)
                         .HasColumnType("nvarchar(3)");
 
-                    b.Property<bool?>("DocumentStatus")
-                        .HasColumnType("bit");
-
                     b.Property<string>("InvoiceXml")
                         .IsRequired()
                         .HasColumnType("xml");
@@ -60,6 +57,9 @@ namespace Invoice.Repository.Migrations
                     b.Property<string>("Observations")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("SummaryDocumentStatus")
+                        .HasColumnType("bit");
 
                     b.Property<byte[]>("SunatResponse")
                         .IsRequired()
@@ -83,7 +83,7 @@ namespace Invoice.Repository.Migrations
 
                     b.HasIndex("IssuerId");
 
-                    b.ToTable("Invoices");
+                    b.ToTable("Invoice");
                 });
 
             modelBuilder.Entity("Invoice.Entities.Models.InvoiceDetail", b =>
@@ -136,83 +136,7 @@ namespace Invoice.Repository.Migrations
                     b.ToTable("InvoiceDetail");
                 });
 
-            modelBuilder.Entity("Invoice.Entities.Models.Issuer", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("BetaCertificate")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("BetaCertificatePasword")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Department")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("District")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EstablishmentCode")
-                        .IsRequired()
-                        .HasMaxLength(4)
-                        .HasColumnType("nvarchar(4)");
-
-                    b.Property<string>("GeoCode")
-                        .IsRequired()
-                        .HasMaxLength(6)
-                        .HasColumnType("nvarchar(6)");
-
-                    b.Property<decimal>("IssuerId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.Property<string>("IssuerName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("IssuerType")
-                        .IsRequired()
-                        .HasMaxLength(1)
-                        .HasColumnType("nvarchar(1)");
-
-                    b.Property<byte[]>("ProdCertificate")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("ProdCertificatePasword")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Province")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Issuers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("ebaaf4c3-845e-4450-9bc1-834cf1bb754d"),
-                            Address = "PSJE. LIMATAMBO 121",
-                            Department = "SAN MARTIN",
-                            District = "TARAPOTO",
-                            EstablishmentCode = "0000",
-                            GeoCode = "220901",
-                            IssuerId = 20606022779m,
-                            IssuerName = "SWIFTLINE SAC",
-                            IssuerType = "6",
-                            Province = "SAN MARTIN"
-                        });
-                });
-
-            modelBuilder.Entity("Invoice.Entities.Models.PaymentTerms", b =>
+            modelBuilder.Entity("Invoice.Entities.Models.InvoicePaymentTerms", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -239,10 +163,10 @@ namespace Invoice.Repository.Migrations
 
                     b.HasIndex("InvoiceId");
 
-                    b.ToTable("PaymentTerms");
+                    b.ToTable("InvoicePaymentTerms");
                 });
 
-            modelBuilder.Entity("Invoice.Entities.Models.ProductDetails", b =>
+            modelBuilder.Entity("Invoice.Entities.Models.InvoiceProductDetails", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -308,10 +232,10 @@ namespace Invoice.Repository.Migrations
 
                     b.HasIndex("InvoiceId");
 
-                    b.ToTable("ProductDetails");
+                    b.ToTable("InvoiceProductDetails");
                 });
 
-            modelBuilder.Entity("Invoice.Entities.Models.Receiver", b =>
+            modelBuilder.Entity("Invoice.Entities.Models.InvoiceReceiver", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -341,10 +265,10 @@ namespace Invoice.Repository.Migrations
                     b.HasIndex("InvoiceId")
                         .IsUnique();
 
-                    b.ToTable("Receiver");
+                    b.ToTable("InvoiceReceiver");
                 });
 
-            modelBuilder.Entity("Invoice.Entities.Models.TaxSubTotal", b =>
+            modelBuilder.Entity("Invoice.Entities.Models.InvoiceTaxSubTotal", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -378,7 +302,83 @@ namespace Invoice.Repository.Migrations
 
                     b.HasIndex("InvoiceId");
 
-                    b.ToTable("TaxSubTotal");
+                    b.ToTable("InvoiceTaxSubTotal");
+                });
+
+            modelBuilder.Entity("Invoice.Entities.Models.Issuer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("BetaCertificate")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("BetaCertificatePasword")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Department")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("District")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EstablishmentCode")
+                        .IsRequired()
+                        .HasMaxLength(4)
+                        .HasColumnType("nvarchar(4)");
+
+                    b.Property<string>("GeoCode")
+                        .IsRequired()
+                        .HasMaxLength(6)
+                        .HasColumnType("nvarchar(6)");
+
+                    b.Property<decimal>("IssuerId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<string>("IssuerName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IssuerType")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .HasColumnType("nvarchar(1)");
+
+                    b.Property<byte[]>("ProdCertificate")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ProdCertificatePasword")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Province")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Issuer");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("dc64f2c3-2f0b-40f0-a7de-c63200ce01f5"),
+                            Address = "PSJE. LIMATAMBO 121",
+                            Department = "SAN MARTIN",
+                            District = "TARAPOTO",
+                            EstablishmentCode = "0000",
+                            GeoCode = "220901",
+                            IssuerId = 20606022779m,
+                            IssuerName = "SWIFTLINE SAC",
+                            IssuerType = "6",
+                            Province = "SAN MARTIN"
+                        });
                 });
 
             modelBuilder.Entity("Invoice.Entities.Models.Ticket", b =>
@@ -413,7 +413,7 @@ namespace Invoice.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tickets");
+                    b.ToTable("Ticket");
                 });
 
             modelBuilder.Entity("Invoice.Entities.Models.Invoice", b =>
@@ -436,7 +436,7 @@ namespace Invoice.Repository.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Invoice.Entities.Models.PaymentTerms", b =>
+            modelBuilder.Entity("Invoice.Entities.Models.InvoicePaymentTerms", b =>
                 {
                     b.HasOne("Invoice.Entities.Models.Invoice", null)
                         .WithMany("PaymentTerms")
@@ -445,7 +445,7 @@ namespace Invoice.Repository.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Invoice.Entities.Models.ProductDetails", b =>
+            modelBuilder.Entity("Invoice.Entities.Models.InvoiceProductDetails", b =>
                 {
                     b.HasOne("Invoice.Entities.Models.Invoice", null)
                         .WithMany("ProductsDetails")
@@ -454,16 +454,16 @@ namespace Invoice.Repository.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Invoice.Entities.Models.Receiver", b =>
+            modelBuilder.Entity("Invoice.Entities.Models.InvoiceReceiver", b =>
                 {
                     b.HasOne("Invoice.Entities.Models.Invoice", null)
                         .WithOne("Receiver")
-                        .HasForeignKey("Invoice.Entities.Models.Receiver", "InvoiceId")
+                        .HasForeignKey("Invoice.Entities.Models.InvoiceReceiver", "InvoiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Invoice.Entities.Models.TaxSubTotal", b =>
+            modelBuilder.Entity("Invoice.Entities.Models.InvoiceTaxSubTotal", b =>
                 {
                     b.HasOne("Invoice.Entities.Models.Invoice", null)
                         .WithMany("TaxSubTotals")

@@ -11,9 +11,9 @@ public class InvoiceContext : DbContext
 
 	}
 
-	public DbSet<Issuer> Issuers { get; set; }
-	public DbSet<Entities.Models.Invoice> Invoices { get; set; }
-	public DbSet<Ticket> Tickets { get; set; }
+	public DbSet<Issuer> Issuer { get; set; }
+	public DbSet<Entities.Models.Invoice> Invoice { get; set; }
+	public DbSet<Ticket> Ticket { get; set; }
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{

@@ -1141,7 +1141,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
 
             #region Serial Number
 
-            ID = new IDType { Value = $"{request.DespatchAdviceDetail.Serie}{request.DespatchAdviceDetail.SerialNumber.ToString("00")}-{request.DespatchAdviceDetail.CorrelativeNumber.ToString("00000000")}" },
+            ID = new IDType { Value = $"{request.DespatchDetail.Serie}{request.DespatchDetail.SerialNumber.ToString("00")}-{request.DespatchDetail.CorrelativeNumber.ToString("00000000")}" },
 
             #endregion
 
@@ -1156,14 +1156,14 @@ public class DocumentGeneratorService : IDocumentGeneratorService
 
             DespatchAdviceTypeCode = new DespatchAdviceTypeCodeType
             {
-                Value = request.DespatchAdviceDetail.DocumentType //Catalog 1
+                Value = request.DespatchDetail.DocumentType //Catalog 1
             },
 
             Note = new NoteType[]
             {
                 new NoteType
                 {
-                    Value = request.DespatchAdviceDetail.NoteType //e. "MONTO EN SOLES"
+                    Value = request.DespatchDetail.NoteType //e. "MONTO EN SOLES"
                 }
             },
 
@@ -1171,8 +1171,8 @@ public class DocumentGeneratorService : IDocumentGeneratorService
             {
                 new OrderReferenceType
                 {
-                    ID = new IDType { Value = $"{request.DespatchAdviceDetail.Serie}{request.DespatchAdviceDetail.SerialNumber.ToString("00")}-{request.DespatchAdviceDetail.CorrelativeNumber.ToString("00000000")}" },
-                    OrderTypeCode = new OrderTypeCodeType { Value = request.DespatchAdviceDetail.DocumentType }
+                    ID = new IDType { Value = $"{request.DespatchDetail.Serie}{request.DespatchDetail.SerialNumber.ToString("00")}-{request.DespatchDetail.CorrelativeNumber.ToString("00000000")}" },
+                    OrderTypeCode = new OrderTypeCodeType { Value = request.DespatchDetail.DocumentType }
                 }
             },
 
@@ -1180,8 +1180,8 @@ public class DocumentGeneratorService : IDocumentGeneratorService
             {
                 new DocumentReferenceType
                 {
-                    ID = new IDType { Value = request.DespatchAdviceDetail.DocumentReferenceId },
-                    DocumentTypeCode = new DocumentTypeCodeType { Value = request.DespatchAdviceDetail.DocumentReferenceType },
+                    ID = new IDType { Value = request.DespatchDetail.DocumentReferenceId },
+                    DocumentTypeCode = new DocumentTypeCodeType { Value = request.DespatchDetail.DocumentReferenceType },
                 }
             },
 
@@ -1205,14 +1205,14 @@ public class DocumentGeneratorService : IDocumentGeneratorService
             {
                 CustomerAssignedAccountID = new CustomerAssignedAccountIDType
                 {
-                    schemeID = request.DeliveryCustomer.DespatchAdvicePartyType,
-                    Value = request.DeliveryCustomer.DespatchAdvicePartyId.ToString()
+                    schemeID = request.DeliveryCustomer.DespatchPartyType,
+                    Value = request.DeliveryCustomer.DespatchPartyId.ToString()
                 },
                 Party = new PartyType
                 {
                     PartyLegalEntity = new PartyLegalEntityType[]
                     {
-                        new PartyLegalEntityType { RegistrationName = new RegistrationNameType { Value = request.DeliveryCustomer.DespatchAdvicePartyName } }
+                        new PartyLegalEntityType { RegistrationName = new RegistrationNameType { Value = request.DeliveryCustomer.DespatchPartyName } }
                     }
                 }
             },
@@ -1221,14 +1221,14 @@ public class DocumentGeneratorService : IDocumentGeneratorService
             {
                 CustomerAssignedAccountID = new CustomerAssignedAccountIDType
                 {
-                    schemeID = request.SellerSupplier.DespatchAdvicePartyType,
-                    Value = request.SellerSupplier.DespatchAdvicePartyId.ToString()
+                    schemeID = request.SellerSupplier.DespatchPartyType,
+                    Value = request.SellerSupplier.DespatchPartyId.ToString()
                 },
                 Party = new PartyType
                 {
                     PartyLegalEntity = new PartyLegalEntityType[]
                     {
-                        new PartyLegalEntityType { RegistrationName = new RegistrationNameType { Value = request.SellerSupplier.DespatchAdvicePartyName }}
+                        new PartyLegalEntityType { RegistrationName = new RegistrationNameType { Value = request.SellerSupplier.DespatchPartyName }}
                     }
                 }
             },

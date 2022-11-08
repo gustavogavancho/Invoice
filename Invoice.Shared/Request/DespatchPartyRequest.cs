@@ -4,7 +4,7 @@ namespace Invoice.Shared.Request;
 
 public record DespatchPartyRequest
 {
-    public ulong DespatchAdvicePartyId { get; set; } //RUC 
-    [Required] public string DespatchAdvicePartyName { get; set; } = default!;
-    [Required, MinLength(1), MaxLength(1)] public string DespatchAdvicePartyType { get; set; } = default!; //Catalog 6
+    public ulong DespatchPartyId { get; set; } //RUC 
+    [Required] public string DespatchPartyName { get; set; } = default!;
+    [Required, MinLength(1), MaxLength(1)] public string DespatchPartyType { get; set; } = default!; //Catalog 6
 }

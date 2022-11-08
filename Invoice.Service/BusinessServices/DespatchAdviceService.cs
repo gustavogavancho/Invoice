@@ -42,10 +42,10 @@ public class DespatchAdviceService : IDespatchAdviceService
         var xmlString = _sunatService.SerializeXmlDocument(typeof(DespatchAdviceType), despatchAdvice);
 
         //Sign xml
-        var xmlDoc = _sunatService.SignXml(xmlString, issuer, request.DespatchAdviceDetail.DocumentType);
+        var xmlDoc = _sunatService.SignXml(xmlString, issuer, request.DespatchDetail.DocumentType);
 
         //Zip xml
-        var xmlFile = $"{issuer.IssuerId}-{request.DespatchAdviceDetail.DocumentType}-{request.DespatchAdviceDetail.Serie}{request.DespatchAdviceDetail.SerialNumber.ToString("00")}-{request.DespatchAdviceDetail.CorrelativeNumber.ToString("00000000")}.xml";
+        var xmlFile = $"{issuer.IssuerId}-{request.DespatchDetail.DocumentType}-{request.DespatchDetail.Serie}{request.DespatchDetail.SerialNumber.ToString("00")}-{request.DespatchDetail.CorrelativeNumber.ToString("00000000")}.xml";
         var byteZippedXml = _sunatService.ZipXml(xmlDoc, Path.GetFileName(xmlFile));
 
         //Send bill

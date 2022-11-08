@@ -29,7 +29,7 @@ public class IssuerRepositoryTests : IClassFixture<InvoiceContextClassFixture>
         _issuerRepository.CreateIssuer(issuer);
         await _contextFixture.Context.SaveChangesAsync();
 
-        var issuerSaved = await _contextFixture.Context.Issuers.LastOrDefaultAsync();
+        var issuerSaved = await _contextFixture.Context.Issuer.LastOrDefaultAsync();
 
         //Assert
         Assert.NotNull(issuerSaved);
@@ -75,7 +75,7 @@ public class IssuerRepositoryTests : IClassFixture<InvoiceContextClassFixture>
         issuerToUpdate.IssuerName = issuer.IssuerName;
         _issuerRepository.Update(issuerToUpdate);
         await _contextFixture.Context.SaveChangesAsync();
-        var issuerSaved = await _contextFixture.Context.Issuers.FindAsync(id);
+        var issuerSaved = await _contextFixture.Context.Issuer.FindAsync(id);
 
         //Assert
         Assert.NotNull(issuerSaved);
@@ -92,7 +92,7 @@ public class IssuerRepositoryTests : IClassFixture<InvoiceContextClassFixture>
         //Act
         _issuerRepository.DeleteIssuer(issuerToDelete);
         await _contextFixture.Context.SaveChangesAsync();
-        var issuerSaved = await _contextFixture.Context.Issuers.FindAsync(id);
+        var issuerSaved = await _contextFixture.Context.Issuer.FindAsync(id);
 
         //Assert
         Assert.Null(issuerSaved);

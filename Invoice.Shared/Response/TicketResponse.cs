@@ -6,7 +6,6 @@ public class TicketResponse
 {
     public string TicketNumber { get; set; } = default!;
     public DateTime IssueDate { get; set; }
-    public bool Status { get; set; }
     [Column(TypeName = "xml")]
     public string DocumentsXml { get; set; } = default!;
     public string StatusCode { get; set; } = default!;

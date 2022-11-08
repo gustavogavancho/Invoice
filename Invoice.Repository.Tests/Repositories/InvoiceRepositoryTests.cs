@@ -24,15 +24,15 @@ public class InvoiceRepositoryTests : IClassFixture<InvoiceContextClassFixture>
     {
         //Arrange
         var invoice = _fixture.Create<Entities.Models.Invoice>();
-        invoice.PaymentTerms = new List<PaymentTerms>();
-        invoice.ProductsDetails = new List<ProductDetails>();
-        invoice.TaxSubTotals = new List<TaxSubTotal>();
+        invoice.PaymentTerms = new List<InvoicePaymentTerms>();
+        invoice.ProductsDetails = new List<InvoiceProductDetails>();
+        invoice.TaxSubTotals = new List<InvoiceTaxSubTotal>();
 
         //Act
         _invoiceRepository.CreateInvoice(invoice);
         await _contextFixture.Context.SaveChangesAsync();
 
-        var invoiceSaved = await _contextFixture.Context.Invoices.LastOrDefaultAsync();
+        var invoiceSaved = await _contextFixture.Context.Invoice.LastOrDefaultAsync();
 
         //Assert
         Assert.NotNull(invoiceSaved);
@@ -106,7 +106,7 @@ public class InvoiceRepositoryTests : IClassFixture<InvoiceContextClassFixture>
         invoiceToUpdate.InvoiceXml = issuer.InvoiceXml;
         _invoiceRepository.Update(invoiceToUpdate);
         await _contextFixture.Context.SaveChangesAsync();
-        var invoiceSaved = await _contextFixture.Context.Invoices.FindAsync(id);
+        var invoiceSaved = await _contextFixture.Context.Invoice.FindAsync(id);
 
         //Assert
         Assert.NotNull(invoiceSaved);
@@ -123,7 +123,7 @@ public class InvoiceRepositoryTests : IClassFixture<InvoiceContextClassFixture>
         //Act
         _invoiceRepository.DeleteInvoice(invoiceToDelete);
         await _contextFixture.Context.SaveChangesAsync();
-        var invoiceSaved = await _contextFixture.Context.Issuers.FindAsync(id);
+        var invoiceSaved = await _contextFixture.Context.Issuer.FindAsync(id);
 
         //Assert
         Assert.Null(invoiceSaved);

@@ -2,7 +2,7 @@
 
 namespace Invoice.Entities.Models;
 
-public class ProductDetails
+public class InvoiceProductDetails
 {
     public Guid Id { get; set; }
     public string UnitCode { get; set; } = default!; //Sunat UNIT CODES

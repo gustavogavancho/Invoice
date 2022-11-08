@@ -29,7 +29,7 @@ public class TicketRepositoryTests : IClassFixture<InvoiceContextClassFixture>
         _ticketRepository.CreateTicket(ticket);
         await _contextFixture.Context.SaveChangesAsync();
 
-        var ticketSaved = await _contextFixture.Context.Tickets.LastOrDefaultAsync(x => x.TicketNumber == ticket.TicketNumber);
+        var ticketSaved = await _contextFixture.Context.Ticket.LastOrDefaultAsync(x => x.TicketNumber == ticket.TicketNumber);
 
         //Assert
         Assert.NotNull(ticketSaved);
@@ -75,7 +75,7 @@ public class TicketRepositoryTests : IClassFixture<InvoiceContextClassFixture>
         ticketToUpdate.TicketNumber = ticket.TicketNumber;
         _ticketRepository.Update(ticketToUpdate);
         await _contextFixture.Context.SaveChangesAsync();
-        var ticketSaved = await _contextFixture.Context.Tickets.FirstOrDefaultAsync(x => x.TicketNumber == ticket.TicketNumber);
+        var ticketSaved = await _contextFixture.Context.Ticket.FirstOrDefaultAsync(x => x.TicketNumber == ticket.TicketNumber);
 
         //Assert
         Assert.NotNull(ticketSaved);
@@ -92,7 +92,7 @@ public class TicketRepositoryTests : IClassFixture<InvoiceContextClassFixture>
         //Act
         _ticketRepository.DeleteTicket(ticketToDelete);
         await _contextFixture.Context.SaveChangesAsync();
-        var ticketSaved = await _contextFixture.Context.Tickets.FindAsync(ticketToDelete.Id);
+        var ticketSaved = await _contextFixture.Context.Ticket.FindAsync(ticketToDelete.Id);
 
         //Assert
         Assert.Null(ticketSaved);

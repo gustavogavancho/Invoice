@@ -2,7 +2,7 @@
 
 namespace Invoice.Entities.Models;
 
-public class PaymentTerms
+public class InvoicePaymentTerms
 {
     public Guid Id { get; set; }
     [Required] public string PaymentId { get; set; } = "FormaPago";

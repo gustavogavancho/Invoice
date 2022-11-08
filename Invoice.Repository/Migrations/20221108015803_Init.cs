@@ -10,7 +10,7 @@ namespace Invoice.Repository.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Issuers",
+                name: "Issuer",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -30,11 +30,11 @@ namespace Invoice.Repository.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Issuers", x => x.Id);
+                    table.PrimaryKey("PK_Issuer", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tickets",
+                name: "Ticket",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -48,11 +48,11 @@ namespace Invoice.Repository.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tickets", x => x.Id);
+                    table.PrimaryKey("PK_Ticket", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Invoices",
+                name: "Invoice",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -66,18 +66,18 @@ namespace Invoice.Repository.Migrations
                     CustomizationId = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
                     TaxTotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    DocumentStatus = table.Column<bool>(type: "bit", nullable: true),
+                    SummaryDocumentStatus = table.Column<bool>(type: "bit", nullable: true),
                     Ticket = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Canceled = table.Column<bool>(type: "bit", nullable: false),
                     CanceledReason = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Invoices", x => x.Id);
+                    table.PrimaryKey("PK_Invoice", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Invoices_Issuers_IssuerId",
+                        name: "FK_Invoice_Issuer_IssuerId",
                         column: x => x.IssuerId,
-                        principalTable: "Issuers",
+                        principalTable: "Issuer",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -101,15 +101,15 @@ namespace Invoice.Repository.Migrations
                 {
                     table.PrimaryKey("PK_InvoiceDetail", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_InvoiceDetail_Invoices_InvoiceId",
+                        name: "FK_InvoiceDetail_Invoice_InvoiceId",
                         column: x => x.InvoiceId,
-                        principalTable: "Invoices",
+                        principalTable: "Invoice",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "PaymentTerms",
+                name: "InvoicePaymentTerms",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -121,17 +121,17 @@ namespace Invoice.Repository.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PaymentTerms", x => x.Id);
+                    table.PrimaryKey("PK_InvoicePaymentTerms", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PaymentTerms_Invoices_InvoiceId",
+                        name: "FK_InvoicePaymentTerms_Invoice_InvoiceId",
                         column: x => x.InvoiceId,
-                        principalTable: "Invoices",
+                        principalTable: "Invoice",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductDetails",
+                name: "InvoiceProductDetails",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -152,17 +152,17 @@ namespace Invoice.Repository.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductDetails", x => x.Id);
+                    table.PrimaryKey("PK_InvoiceProductDetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProductDetails_Invoices_InvoiceId",
+                        name: "FK_InvoiceProductDetails_Invoice_InvoiceId",
                         column: x => x.InvoiceId,
-                        principalTable: "Invoices",
+                        principalTable: "Invoice",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Receiver",
+                name: "InvoiceReceiver",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -174,17 +174,17 @@ namespace Invoice.Repository.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Receiver", x => x.Id);
+                    table.PrimaryKey("PK_InvoiceReceiver", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Receiver_Invoices_InvoiceId",
+                        name: "FK_InvoiceReceiver_Invoice_InvoiceId",
                         column: x => x.InvoiceId,
-                        principalTable: "Invoices",
+                        principalTable: "Invoice",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "TaxSubTotal",
+                name: "InvoiceTaxSubTotal",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -197,19 +197,24 @@ namespace Invoice.Repository.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TaxSubTotal", x => x.Id);
+                    table.PrimaryKey("PK_InvoiceTaxSubTotal", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TaxSubTotal_Invoices_InvoiceId",
+                        name: "FK_InvoiceTaxSubTotal_Invoice_InvoiceId",
                         column: x => x.InvoiceId,
-                        principalTable: "Invoices",
+                        principalTable: "Invoice",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
-                table: "Issuers",
+                table: "Issuer",
                 columns: new[] { "Id", "Address", "BetaCertificate", "BetaCertificatePasword", "Department", "District", "EstablishmentCode", "GeoCode", "IssuerId", "IssuerName", "IssuerType", "ProdCertificate", "ProdCertificatePasword", "Province" },
-                values: new object[] { new Guid("ebaaf4c3-845e-4450-9bc1-834cf1bb754d"), "PSJE. LIMATAMBO 121", null, null, "SAN MARTIN", "TARAPOTO", "0000", "220901", 20606022779m, "SWIFTLINE SAC", "6", null, null, "SAN MARTIN" });
+                values: new object[] { new Guid("dc64f2c3-2f0b-40f0-a7de-c63200ce01f5"), "PSJE. LIMATAMBO 121", null, null, "SAN MARTIN", "TARAPOTO", "0000", "220901", 20606022779m, "SWIFTLINE SAC", "6", null, null, "SAN MARTIN" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Invoice_IssuerId",
+                table: "Invoice",
+                column: "IssuerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_InvoiceDetail_InvoiceId",
@@ -218,29 +223,24 @@ namespace Invoice.Repository.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Invoices_IssuerId",
-                table: "Invoices",
-                column: "IssuerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PaymentTerms_InvoiceId",
-                table: "PaymentTerms",
+                name: "IX_InvoicePaymentTerms_InvoiceId",
+                table: "InvoicePaymentTerms",
                 column: "InvoiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductDetails_InvoiceId",
-                table: "ProductDetails",
+                name: "IX_InvoiceProductDetails_InvoiceId",
+                table: "InvoiceProductDetails",
                 column: "InvoiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Receiver_InvoiceId",
-                table: "Receiver",
+                name: "IX_InvoiceReceiver_InvoiceId",
+                table: "InvoiceReceiver",
                 column: "InvoiceId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_TaxSubTotal_InvoiceId",
-                table: "TaxSubTotal",
+                name: "IX_InvoiceTaxSubTotal_InvoiceId",
+                table: "InvoiceTaxSubTotal",
                 column: "InvoiceId");
         }
 
@@ -250,25 +250,25 @@ namespace Invoice.Repository.Migrations
                 name: "InvoiceDetail");
 
             migrationBuilder.DropTable(
-                name: "PaymentTerms");
+                name: "InvoicePaymentTerms");
 
             migrationBuilder.DropTable(
-                name: "ProductDetails");
+                name: "InvoiceProductDetails");
 
             migrationBuilder.DropTable(
-                name: "Receiver");
+                name: "InvoiceReceiver");
 
             migrationBuilder.DropTable(
-                name: "TaxSubTotal");
+                name: "InvoiceTaxSubTotal");
 
             migrationBuilder.DropTable(
-                name: "Tickets");
+                name: "Ticket");
 
             migrationBuilder.DropTable(
-                name: "Invoices");
+                name: "Invoice");
 
             migrationBuilder.DropTable(
-                name: "Issuers");
+                name: "Issuer");
         }
     }
 }
