@@ -160,7 +160,7 @@ public class DocumentGeneratorServiceTests
     public void DocumentGeneratorService_GenerateDespatchAdviceTypeTest()
     {
         //Arrange
-        var despatchAdviceRequest = _fixture.Create<DespatchAdviceRequest>();
+        var despatchAdviceRequest = _fixture.Create<DespatchRequest>();
         var issuer = _fixture.Create<Issuer>();
 
         #region Fix amount

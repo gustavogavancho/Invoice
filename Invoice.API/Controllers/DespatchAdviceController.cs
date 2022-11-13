@@ -16,7 +16,7 @@ public class DespatchAdviceController : ControllerBase
 
     [HttpPost("{issuerId:guid}")]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
-    public async Task<IActionResult> CreateDespatchAdvice(Guid issuerId, DespatchAdviceRequest request)
+    public async Task<IActionResult> CreateDespatchAdvice(Guid issuerId, DespatchRequest request)
     {
         var despathAdviceCreated = await _service.DespatchAdviceService.CreateDespatchAdviceAsync(issuerId, request, trackChanges: false);
 

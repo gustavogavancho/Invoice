@@ -14,7 +14,13 @@ public class MappingProfile : Profile
 		CreateMap<Issuer, IssuerRequest>().ReverseMap();
 		CreateMap<Issuer, IssuerResponse>().ReverseMap();
 
-        CreateMap<Entities.Models.Invoice, DespatchAdviceRequest>().ReverseMap();
+        CreateMap<Despatch, DespatchRequest>().ReverseMap();
+        CreateMap<Despatch, DespatchResponse>().ReverseMap();
+        CreateMap<DespatchDetail, DespatchDetailRequest>().ReverseMap();
+        CreateMap<DespatchDeliveryCustomer, DespatchPartyRequest>().ReverseMap();
+        CreateMap<DespatchSellerSupplier, DespatchPartyRequest>().ReverseMap();
+        CreateMap<DespatchShipment, DespatchShipmentRequest>().ReverseMap();
+        CreateMap<DespatchProductDetails, DespatchProductDetailsRequest>().ReverseMap();
 
         CreateMap<Entities.Models.Invoice, InvoiceRequest>().ReverseMap();
         CreateMap<Entities.Models.Invoice, InvoiceResponse>().ReverseMap();

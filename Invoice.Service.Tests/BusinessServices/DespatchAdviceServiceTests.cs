@@ -38,7 +38,7 @@ public class DespatchAdviceServiceTests
     public async Task DespatchAdviceService_CreateDespaAsyncTest()
     {
         //Arrange
-        var request = _fixture.Create<DespatchAdviceRequest>();
+        var request = _fixture.Create<DespatchRequest>();
         var issuer = _fixture.Create<Issuer>();
 
         _repository.Setup(x => x.Issuer.GetIssuerAsync(It.IsAny<Guid>(), false)).ReturnsAsync(issuer);

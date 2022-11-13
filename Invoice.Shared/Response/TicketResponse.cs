@@ -2,7 +2,7 @@
 
 namespace Invoice.Shared.Response;
 
-public class TicketResponse
+public record TicketResponse
 {
     public string TicketNumber { get; set; } = default!;
     public DateTime IssueDate { get; set; }

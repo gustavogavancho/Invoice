@@ -1,6 +1,5 @@
 ﻿using Invoice.Contracts.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Invoice.Repository.Repositories;
 

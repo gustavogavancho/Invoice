@@ -14,6 +14,7 @@ public class InvoiceContext : DbContext
 	public DbSet<Issuer> Issuer { get; set; }
 	public DbSet<Entities.Models.Invoice> Invoice { get; set; }
 	public DbSet<Ticket> Ticket { get; set; }
+	public DbSet<Despatch> Despatch { get; set; }
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{

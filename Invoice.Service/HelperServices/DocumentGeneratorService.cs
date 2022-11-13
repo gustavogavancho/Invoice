@@ -1110,7 +1110,7 @@ public class DocumentGeneratorService : IDocumentGeneratorService
         return debitNoteType;
     }
 
-    public DespatchAdviceType GenerateDespatchAdviceType(DespatchAdviceRequest request, Issuer issuer)
+    public DespatchAdviceType GenerateDespatchAdviceType(DespatchRequest request, Issuer issuer)
     {
         var despatchAdviceType = new DespatchAdviceType
         {

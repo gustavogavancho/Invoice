@@ -32,7 +32,7 @@ public class DespatchAdviceService : IDespatchAdviceService
         _sunatService = sunatService;
     }
 
-    public async Task<InvoiceResponse> CreateDespatchAdviceAsync(Guid id, DespatchAdviceRequest request, bool trackChanges)
+    public async Task<DespatchResponse> CreateDespatchAdviceAsync(Guid id, DespatchRequest request, bool trackChanges)
     {
         var issuer = await GetIssuerAndCheckIfItExists(id, trackChanges);
 
@@ -59,25 +59,25 @@ public class DespatchAdviceService : IDespatchAdviceService
         //Read response
         var responses = _sunatService.ReadResponse(cdrByte);
 
-        //Save invoice
         if (responses.Any(x => x.Contains("aceptado")))
         {
-            var invoiceDb = _mapper.Map<DespatchAdviceRequest, Invoice.Entities.Models.Invoice>(request);
-            invoiceDb.IssuerId = issuer.Id;
-            invoiceDb.InvoiceXml = xmlDoc.OuterXml;
-            invoiceDb.Accepted = true;
-            invoiceDb.SunatResponse = cdrByte;
-            invoiceDb.Observations = string.Join("|", responses);
-            _repository.Invoice.CreateInvoice(invoiceDb);
+            var despatchDb = _mapper.Map<DespatchRequest, Despatch>(request);
+            despatchDb.IssuerId = issuer.Id;
+            despatchDb.DespatchXml = xmlDoc.OuterXml;
+            despatchDb.Accepted = true;
+            despatchDb.SunatResponse = cdrByte;
+            despatchDb.Observations = string.Join("|", responses);
+            _repository.Despatch.CreateDespatch(despatchDb);
             await _repository.SaveAsync();
 
-            var invoiceResponse = _mapper.Map<Entities.Models.Invoice, InvoiceResponse>(invoiceDb);
-            return invoiceResponse;
+            var despatchResponse = _mapper.Map<Despatch, DespatchResponse>(despatchDb);
+            return despatchResponse;
         }
+
         return null;
     }
 
-    public async Task<InvoiceResponse> GetDespatchAdviceAsync(Guid id, bool trackChanges)
+    public async Task<DespatchResponse> GetDespatchAdviceAsync(Guid id, bool trackChanges)
     {
         throw new NotImplementedException();
     }

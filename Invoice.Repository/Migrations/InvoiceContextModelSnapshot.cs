@@ -22,6 +22,281 @@ namespace Invoice.Repository.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("Invoice.Entities.Models.Despatch", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Accepted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("CustomizationId")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
+
+                    b.Property<Guid>("DeliveryCustomerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("DespatchDetailId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("DespatchXml")
+                        .IsRequired()
+                        .HasColumnType("xml");
+
+                    b.Property<DateTime>("IssueDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("IssuerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Observations")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("SellerSupplierId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ShipmentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("SunatResponse")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("UblVersionId")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeliveryCustomerId");
+
+                    b.HasIndex("DespatchDetailId");
+
+                    b.HasIndex("IssuerId");
+
+                    b.HasIndex("SellerSupplierId");
+
+                    b.HasIndex("ShipmentId");
+
+                    b.ToTable("Despatch");
+                });
+
+            modelBuilder.Entity("Invoice.Entities.Models.DespatchDeliveryCustomer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("DespatchPartyId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<string>("DespatchPartyName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DespatchPartyType")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .HasColumnType("nvarchar(1)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DespatchDeliveryCustomer");
+                });
+
+            modelBuilder.Entity("Invoice.Entities.Models.DespatchDetail", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("CorrelativeNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DocumentReferenceId")
+                        .IsRequired()
+                        .HasMaxLength(6)
+                        .HasColumnType("nvarchar(6)");
+
+                    b.Property<string>("DocumentReferenceType")
+                        .IsRequired()
+                        .HasMaxLength(2)
+                        .HasColumnType("nvarchar(2)");
+
+                    b.Property<string>("DocumentType")
+                        .IsRequired()
+                        .HasMaxLength(2)
+                        .HasColumnType("nvarchar(2)");
+
+                    b.Property<string>("NoteType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("SerialNumber")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Serie")
+                        .IsRequired()
+                        .HasMaxLength(2)
+                        .HasColumnType("nvarchar(2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DespatchDetail");
+                });
+
+            modelBuilder.Entity("Invoice.Entities.Models.DespatchProductDetails", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("DespatchId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ItemClassificationCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("SellerItemIdentification")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UnitCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DespatchId");
+
+                    b.ToTable("DespatchProductDetails");
+                });
+
+            modelBuilder.Entity("Invoice.Entities.Models.DespatchSellerSupplier", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("DespatchPartyId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<string>("DespatchPartyName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DespatchPartyType")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .HasColumnType("nvarchar(1)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DespatchSellerSupplier");
+                });
+
+            modelBuilder.Entity("Invoice.Entities.Models.DespatchShipment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<long>("CarrierPartyId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("CarrierPartyName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CarrierPartyType")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .HasColumnType("nvarchar(1)");
+
+                    b.Property<string>("DeliveryAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DeliveryGeoCode")
+                        .IsRequired()
+                        .HasMaxLength(6)
+                        .HasColumnType("nvarchar(6)");
+
+                    b.Property<int>("DriveId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DriverIdType")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .HasColumnType("nvarchar(1)");
+
+                    b.Property<string>("FirstArrivalPortLocation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("GrossWeightMeasure")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("HandlingCode")
+                        .IsRequired()
+                        .HasMaxLength(2)
+                        .HasColumnType("nvarchar(2)");
+
+                    b.Property<int>("IdNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Information")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OriginAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OriginGeoCode")
+                        .IsRequired()
+                        .HasMaxLength(6)
+                        .HasColumnType("nvarchar(6)");
+
+                    b.Property<bool>("SplitConsignmentIndicator")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("TotalTransportHandlingUnitQuantity")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("TransitPeriod")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TransportHandlingUnit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TransportLicensePlate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UnitCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DespatchShipment");
+                });
+
             modelBuilder.Entity("Invoice.Entities.Models.Invoice", b =>
                 {
                     b.Property<Guid>("Id")
@@ -366,7 +641,7 @@ namespace Invoice.Repository.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("dc64f2c3-2f0b-40f0-a7de-c63200ce01f5"),
+                            Id = new Guid("357b93e4-03cb-435a-8482-cb0015ab8a8b"),
                             Address = "PSJE. LIMATAMBO 121",
                             Department = "SAN MARTIN",
                             District = "TARAPOTO",
@@ -412,6 +687,56 @@ namespace Invoice.Repository.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Ticket");
+                });
+
+            modelBuilder.Entity("Invoice.Entities.Models.Despatch", b =>
+                {
+                    b.HasOne("Invoice.Entities.Models.DespatchDeliveryCustomer", "DeliveryCustomer")
+                        .WithMany()
+                        .HasForeignKey("DeliveryCustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Invoice.Entities.Models.DespatchDetail", "DespatchDetail")
+                        .WithMany()
+                        .HasForeignKey("DespatchDetailId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Invoice.Entities.Models.Issuer", "Issuer")
+                        .WithMany()
+                        .HasForeignKey("IssuerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Invoice.Entities.Models.DespatchSellerSupplier", "SellerSupplier")
+                        .WithMany()
+                        .HasForeignKey("SellerSupplierId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Invoice.Entities.Models.DespatchShipment", "Shipment")
+                        .WithMany()
+                        .HasForeignKey("ShipmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DeliveryCustomer");
+
+                    b.Navigation("DespatchDetail");
+
+                    b.Navigation("Issuer");
+
+                    b.Navigation("SellerSupplier");
+
+                    b.Navigation("Shipment");
+                });
+
+            modelBuilder.Entity("Invoice.Entities.Models.DespatchProductDetails", b =>
+                {
+                    b.HasOne("Invoice.Entities.Models.Despatch", null)
+                        .WithMany("ProductsDetails")
+                        .HasForeignKey("DespatchId");
                 });
 
             modelBuilder.Entity("Invoice.Entities.Models.Invoice", b =>
@@ -468,6 +793,11 @@ namespace Invoice.Repository.Migrations
                         .HasForeignKey("InvoiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Invoice.Entities.Models.Despatch", b =>
+                {
+                    b.Navigation("ProductsDetails");
                 });
 
             modelBuilder.Entity("Invoice.Entities.Models.Invoice", b =>

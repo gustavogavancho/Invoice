@@ -5,6 +5,6 @@ namespace Invoice.Service.Contracts.BusinessServices;
 
 public interface IDespatchAdviceService
 {
-    Task<InvoiceResponse> CreateDespatchAdviceAsync(Guid id, DespatchAdviceRequest request, bool trackChanges);
-    Task<InvoiceResponse> GetDespatchAdviceAsync(Guid id, bool trackChanges);
+    Task<DespatchResponse> CreateDespatchAdviceAsync(Guid id, DespatchRequest request, bool trackChanges);
+    Task<DespatchResponse> GetDespatchAdviceAsync(Guid id, bool trackChanges);
 }

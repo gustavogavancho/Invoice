@@ -10,6 +10,83 @@ namespace Invoice.Repository.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "DespatchDeliveryCustomer",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DespatchPartyId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    DespatchPartyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DespatchPartyType = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DespatchDeliveryCustomer", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DespatchDetail",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Serie = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: false),
+                    SerialNumber = table.Column<long>(type: "bigint", nullable: false),
+                    CorrelativeNumber = table.Column<int>(type: "int", nullable: false),
+                    DocumentType = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: false),
+                    DocumentReferenceId = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false),
+                    DocumentReferenceType = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: false),
+                    NoteType = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DespatchDetail", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DespatchSellerSupplier",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DespatchPartyId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    DespatchPartyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DespatchPartyType = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DespatchSellerSupplier", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DespatchShipment",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IdNumber = table.Column<int>(type: "int", nullable: false),
+                    HandlingCode = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: false),
+                    Information = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    GrossWeightMeasure = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    UnitCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TotalTransportHandlingUnitQuantity = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    SplitConsignmentIndicator = table.Column<bool>(type: "bit", nullable: false),
+                    TransitPeriod = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CarrierPartyType = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: false),
+                    CarrierPartyId = table.Column<long>(type: "bigint", nullable: false),
+                    CarrierPartyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TransportLicensePlate = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DriverIdType = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: false),
+                    DriveId = table.Column<int>(type: "int", nullable: false),
+                    DeliveryGeoCode = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false),
+                    DeliveryAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TransportHandlingUnit = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OriginGeoCode = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false),
+                    OriginAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FirstArrivalPortLocation = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DespatchShipment", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Issuer",
                 columns: table => new
                 {
@@ -52,6 +129,59 @@ namespace Invoice.Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Despatch",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DespatchXml = table.Column<string>(type: "xml", nullable: false),
+                    SunatResponse = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    Accepted = table.Column<bool>(type: "bit", nullable: false),
+                    Observations = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IssuerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IssueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UblVersionId = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
+                    CustomizationId = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
+                    DespatchDetailId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DeliveryCustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SellerSupplierId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ShipmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Despatch", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Despatch_DespatchDeliveryCustomer_DeliveryCustomerId",
+                        column: x => x.DeliveryCustomerId,
+                        principalTable: "DespatchDeliveryCustomer",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Despatch_DespatchDetail_DespatchDetailId",
+                        column: x => x.DespatchDetailId,
+                        principalTable: "DespatchDetail",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Despatch_DespatchSellerSupplier_SellerSupplierId",
+                        column: x => x.SellerSupplierId,
+                        principalTable: "DespatchSellerSupplier",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Despatch_DespatchShipment_ShipmentId",
+                        column: x => x.ShipmentId,
+                        principalTable: "DespatchShipment",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Despatch_Issuer_IssuerId",
+                        column: x => x.IssuerId,
+                        principalTable: "Issuer",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Invoice",
                 columns: table => new
                 {
@@ -80,6 +210,28 @@ namespace Invoice.Repository.Migrations
                         principalTable: "Issuer",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DespatchProductDetails",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UnitCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Quantity = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    SellerItemIdentification = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ItemClassificationCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DespatchId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DespatchProductDetails", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DespatchProductDetails_Despatch_DespatchId",
+                        column: x => x.DespatchId,
+                        principalTable: "Despatch",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -209,7 +361,37 @@ namespace Invoice.Repository.Migrations
             migrationBuilder.InsertData(
                 table: "Issuer",
                 columns: new[] { "Id", "Address", "BetaCertificate", "BetaCertificatePasword", "Department", "District", "EstablishmentCode", "GeoCode", "IssuerId", "IssuerName", "IssuerType", "ProdCertificate", "ProdCertificatePasword", "Province" },
-                values: new object[] { new Guid("dc64f2c3-2f0b-40f0-a7de-c63200ce01f5"), "PSJE. LIMATAMBO 121", null, null, "SAN MARTIN", "TARAPOTO", "0000", "220901", 20606022779m, "SWIFTLINE SAC", "6", null, null, "SAN MARTIN" });
+                values: new object[] { new Guid("357b93e4-03cb-435a-8482-cb0015ab8a8b"), "PSJE. LIMATAMBO 121", null, null, "SAN MARTIN", "TARAPOTO", "0000", "220901", 20606022779m, "SWIFTLINE SAC", "6", null, null, "SAN MARTIN" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Despatch_DeliveryCustomerId",
+                table: "Despatch",
+                column: "DeliveryCustomerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Despatch_DespatchDetailId",
+                table: "Despatch",
+                column: "DespatchDetailId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Despatch_IssuerId",
+                table: "Despatch",
+                column: "IssuerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Despatch_SellerSupplierId",
+                table: "Despatch",
+                column: "SellerSupplierId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Despatch_ShipmentId",
+                table: "Despatch",
+                column: "ShipmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DespatchProductDetails_DespatchId",
+                table: "DespatchProductDetails",
+                column: "DespatchId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Invoice_IssuerId",
@@ -247,6 +429,9 @@ namespace Invoice.Repository.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "DespatchProductDetails");
+
+            migrationBuilder.DropTable(
                 name: "InvoiceDetail");
 
             migrationBuilder.DropTable(
@@ -265,7 +450,22 @@ namespace Invoice.Repository.Migrations
                 name: "Ticket");
 
             migrationBuilder.DropTable(
+                name: "Despatch");
+
+            migrationBuilder.DropTable(
                 name: "Invoice");
+
+            migrationBuilder.DropTable(
+                name: "DespatchDeliveryCustomer");
+
+            migrationBuilder.DropTable(
+                name: "DespatchDetail");
+
+            migrationBuilder.DropTable(
+                name: "DespatchSellerSupplier");
+
+            migrationBuilder.DropTable(
+                name: "DespatchShipment");
 
             migrationBuilder.DropTable(
                 name: "Issuer");
