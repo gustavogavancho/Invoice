@@ -59,16 +59,31 @@ public class InvoiceServiceTests
     }
 
     [Fact]
-    public async Task InvoiceService_GetInvoiceAsyncTest()
+    public async Task InvoiceService_GetInvoicesAsyncTest()
     {
         //Arrange
-        var issuer = _fixture.Create<Entities.Models.Invoice>();
-        var id = Guid.Parse("CCE03168-F901-4B23-AE9C-FC031D9DC888");
-        _repository.Setup(x => x.Invoice.GetInvoiceAsync(id, false)).ReturnsAsync(issuer);
+        var invoices = _fixture.Create<IEnumerable<Entities.Models.Invoice>>();
+        _repository.Setup(x => x.Invoice.GetInvoicesAsync(false)).ReturnsAsync(invoices);
 
         //Act
         var invoiceService = new InvoiceService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object);
-        var sut = await invoiceService.GetInvoiceAsync(id, false);
+        var sut = await invoiceService.GetInvoicesAsync(false);
+
+        //Assert
+        Assert.NotNull(sut);
+        Assert.True(sut.Count() > 1, "Expected sut to be greater than 1");
+    }
+
+    [Fact]
+    public async Task InvoiceService_GetInvoiceBySerieAsyncTest()
+    {
+        //Arrange
+        var issuer = _fixture.Create<Entities.Models.Invoice>();
+        _repository.Setup(x => x.Invoice.GetInvoiceBySerieAsync(It.IsAny<string>(), It.IsAny<uint>(), It.IsAny<uint>(), false)).ReturnsAsync(issuer);
+
+        //Act
+        var invoiceService = new InvoiceService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object);
+        var sut = await invoiceService.GetInvoiceBySerieAsync(It.IsAny<string>(), It.IsAny<uint>(), It.IsAny<uint>(), false);
 
         //Assert
         Assert.NotNull(sut);

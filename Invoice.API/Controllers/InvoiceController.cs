@@ -1,5 +1,6 @@
 ﻿using Invoice.API.ActionFilters;
 using Invoice.Service.Contracts.ServiceManagers;
+using Invoice.Shared.Params;
 using Invoice.Shared.Request;
 using Invoice.Shared.Response;
 using Microsoft.AspNetCore.Mvc;
@@ -23,10 +24,18 @@ public class InvoiceController : ControllerBase
         return CreatedAtRoute("InvoiceById", new { id = invoiceCreated.Id }, invoiceCreated);
     }
 
-    [HttpGet("{id:guid}", Name = "InvoiceById")]
-    public async Task<ActionResult<InvoiceResponse>> GetInvoice(Guid id)
+    [HttpGet("GetAll")]
+    public async Task<ActionResult<List<InvoiceResponse>>> GetInvoices()
     {
-        var issuerResponse = await _service.InvoiceService.GetInvoiceAsync(id, trackChanges: false);
+        var issuerResponse = await _service.InvoiceService.GetInvoicesAsync(false);
+
+        return Ok(issuerResponse);
+    }
+
+    [HttpGet()]
+    public async Task<ActionResult<InvoiceResponse>> GetInvoicBySerie([FromQuery]InvoiceParams invoiceParams)
+    {
+        var issuerResponse = await _service.InvoiceService.GetInvoiceBySerieAsync(invoiceParams.Serie, invoiceParams.SerialNumber, invoiceParams.CorrelativeNumber, trackChanges: false);
 
         return Ok(issuerResponse);
     }

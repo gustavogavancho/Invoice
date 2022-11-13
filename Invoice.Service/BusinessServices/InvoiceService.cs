@@ -76,9 +76,19 @@ public class InvoiceService : IInvoiceService
         }
         return null;
     }
-    public async Task<InvoiceResponse> GetInvoiceAsync(Guid id, bool trackChanges)
+
+    public async Task<List<InvoiceResponse>> GetInvoicesAsync(bool trackChanges)
     {
-        var invoice = await GetInvoiceAndCheckIfItExists(id, trackChanges);
+        var invoices = await _repository.Invoice.GetInvoicesAsync(trackChanges);
+
+        var invoicesResponse = _mapper.Map<IEnumerable<Entities.Models.Invoice>, List<InvoiceResponse>>(invoices);
+
+        return invoicesResponse;
+    }
+
+    public async Task<InvoiceResponse> GetInvoiceBySerieAsync(string serie, uint serialNumber, uint correlativeNumber, bool trackChanges)
+    {
+        var invoice = await GetInvoiceBySerieAndCheckIfItExists(serie, serialNumber, correlativeNumber, trackChanges);
 
         var invoiceResponse = _mapper.Map<Entities.Models.Invoice, InvoiceResponse>(invoice);
         return invoiceResponse;
@@ -94,12 +104,12 @@ public class InvoiceService : IInvoiceService
         return issuer;
     }
 
-    private async Task<Entities.Models.Invoice> GetInvoiceAndCheckIfItExists(Guid id, bool trackChanges)
+    private async Task<Entities.Models.Invoice> GetInvoiceBySerieAndCheckIfItExists(string serie, uint serialNumber, uint correlativeNumber, bool trackChanges)
     {
-        var invoice = await _repository.Invoice.GetInvoiceAsync(id, trackChanges);
+        var invoice = await _repository.Invoice.GetInvoiceBySerieAsync(serie, serialNumber, correlativeNumber, trackChanges);
 
         if (invoice is null)
-            throw new IssuerNotFoundException(id);
+            throw new InvoiceNotFoundException(serie, serialNumber, correlativeNumber);
 
         return invoice;
     }

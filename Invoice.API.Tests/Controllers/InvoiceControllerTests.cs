@@ -37,20 +37,20 @@ public class InvoiceControllerTests
     }
 
     [Fact]
-    public async Task InvoiceController_GetInvoiceTest()
+    public async Task InvoiceController_GetInvoicesTest()
     {
         //Arrange
-        var invoice = _fixture.Create<InvoiceResponse>();
-        _service.Setup(x => x.InvoiceService.GetInvoiceAsync(invoice.Id, false)).ReturnsAsync(invoice);
+        var invoices = _fixture.Create<List<InvoiceResponse>>();
+        _service.Setup(x => x.InvoiceService.GetInvoicesAsync(false)).ReturnsAsync(invoices);
 
         //Act
         var issuerController = new InvoiceController(_service.Object);
-        var sut = await issuerController.GetInvoice(invoice.Id);
+        var sut = await issuerController.GetInvoices();
 
         //Assert
-        var actionResult = Assert.IsType<ActionResult<InvoiceResponse>>(sut);
+        var actionResult = Assert.IsType<ActionResult<List<InvoiceResponse>>>(sut);
         var okObjectResult = Assert.IsType<OkObjectResult>(actionResult.Result);
-        var response = Assert.IsType<InvoiceResponse>(okObjectResult.Value);
-        Assert.Equal(response.Observations, invoice.Observations);
+        var response = Assert.IsType<List<InvoiceResponse>>(okObjectResult.Value);
+        Assert.True(response.Count() > 1, "Expected sut to be greater than 1");
     }
 }
