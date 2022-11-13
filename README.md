@@ -7,6 +7,7 @@
 - InvoiceType
 - DebitNoteType
 - CreditNoteType
-- VoidedDocumentsType
-- SummaryDocumentsType
+- VoidedDocumentsType => InvoiceTpe, DebitNoteType, CreditNoteType
+- SummaryDocumentsType => InvoiceType (Ticket only)
 - DespatchAdviceType
+- TicketStatus => VoidedDocumentsType, SummaryDocumentsType
