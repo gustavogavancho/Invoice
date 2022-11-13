@@ -77,9 +77,22 @@ public class DespatchAdviceService : IDespatchAdviceService
         return null;
     }
 
-    public async Task<DespatchResponse> GetDespatchAdviceAsync(Guid id, bool trackChanges)
+    public async Task<List<DespatchResponse>> GetDespatchesAsync(bool trackChanges)
     {
-        throw new NotImplementedException();
+        var despatches = await _repository.Despatch.GetDespatchesAsync(trackChanges);
+
+        var despatchesResponse = _mapper.Map<IEnumerable<Despatch>, List<DespatchResponse>>(despatches);
+
+        return despatchesResponse;
+    }
+
+    public async Task<DespatchResponse> GetDespatchAdviceBySerieAsync(string serie, int serialNumber, int correlativeNumber, bool trackChanges)
+    {
+        var despatch = await GetDespatchBySerieAndCheckIfItExists(serie, serialNumber, correlativeNumber, trackChanges);
+
+        var despatchResponse = _mapper.Map<Despatch, DespatchResponse>(despatch);
+
+        return despatchResponse;
     }
 
     private async Task<Issuer> GetIssuerAndCheckIfItExists(Guid id, bool trackChanges)
@@ -90,5 +103,15 @@ public class DespatchAdviceService : IDespatchAdviceService
             throw new IssuerNotFoundException(id);
 
         return issuer;
+    }
+
+    private async Task<Despatch> GetDespatchBySerieAndCheckIfItExists(string serie, int serialNumber, int correlativeNumber, bool trackChanges)
+    {
+        var invoice = await _repository.Despatch.GetDespatchBySerieAsync(serie, serialNumber, correlativeNumber, trackChanges);
+
+        if (invoice is null)
+            throw new DespatchNotFoundException(serie, serialNumber, correlativeNumber);
+
+        return invoice;
     }
 }

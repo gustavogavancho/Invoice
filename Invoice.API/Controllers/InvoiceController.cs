@@ -33,7 +33,7 @@ public class InvoiceController : ControllerBase
     }
 
     [HttpGet()]
-    public async Task<ActionResult<InvoiceResponse>> GetInvoicBySerie([FromQuery]InvoiceParams invoiceParams)
+    public async Task<ActionResult<InvoiceResponse>> GetInvoiceBySerie([FromQuery]InvoiceParams invoiceParams)
     {
         var issuerResponse = await _service.InvoiceService.GetInvoiceBySerieAsync(invoiceParams.Serie, invoiceParams.SerialNumber, invoiceParams.CorrelativeNumber, trackChanges: false);
 

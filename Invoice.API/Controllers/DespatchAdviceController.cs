@@ -1,6 +1,8 @@
 ﻿using Invoice.API.ActionFilters;
 using Invoice.Service.Contracts.ServiceManagers;
+using Invoice.Shared.Params;
 using Invoice.Shared.Request;
+using Invoice.Shared.Response;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,5 +23,21 @@ public class DespatchAdviceController : ControllerBase
         var despathAdviceCreated = await _service.DespatchAdviceService.CreateDespatchAdviceAsync(issuerId, request, trackChanges: false);
 
         return Ok(despathAdviceCreated);
+    }
+
+    [HttpGet("GetAll")]
+    public async Task<ActionResult<List<InvoiceResponse>>> GetDespatches()
+    {
+        var despatchesResponse = await _service.DespatchAdviceService.GetDespatchesAsync(false);
+
+        return Ok(despatchesResponse);
+    }
+
+    [HttpGet()]
+    public async Task<ActionResult<DespatchResponse>> GetDespatchBySerie([FromQuery] DespatchParams despatchParams)
+    {
+        var despatchResponse = await _service.DespatchAdviceService.GetDespatchAdviceBySerieAsync(despatchParams.Serie, despatchParams.SerialNumber, despatchParams.CorrelativeNumber, trackChanges: false);
+
+        return Ok(despatchResponse);
     }
 }
