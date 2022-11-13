@@ -42,12 +42,12 @@ public class DespatchAdviceServiceTests
         var issuer = _fixture.Create<Issuer>();
 
         _repository.Setup(x => x.Issuer.GetIssuerAsync(It.IsAny<Guid>(), false)).ReturnsAsync(issuer);
-        _repository.Setup(x => x.Invoice.CreateInvoice(It.IsAny<Entities.Models.Invoice>())).Verifiable();
+        _repository.Setup(x => x.Despatch.CreateDespatch(It.IsAny<Despatch>())).Verifiable();
         _sunatService.Setup(x => x.SerializeXmlDocument(typeof(InvoiceType), It.IsAny<InvoiceType>())).Returns(It.IsAny<string>());
         _sunatService.Setup(x => x.SignXml(It.IsAny<String>(), It.IsAny<Issuer>(), It.IsAny<string>())).Returns(new XmlDocument());
         _sunatService.Setup(x => x.ZipXml(It.IsAny<XmlDocument>(), It.IsAny<string>())).Returns(It.IsAny<byte[]>());
         _sunatService.Setup(x => x.SendBill(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<byte[]>())).ReturnsAsync(It.IsAny<byte[]>());
-        _sunatService.Setup(x => x.ReadResponse(It.IsAny<byte[]>())).Returns(new List<string> { "La Factura numero FA01-00000001, ha sido aceptada" });
+        _sunatService.Setup(x => x.ReadResponse(It.IsAny<byte[]>())).Returns(new List<string> { "El Comprobante numero TA01-00000001 ha sido aceptado" });
 
         //Act
         var despatchAdviceService = new DespatchAdviceService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object);
@@ -55,6 +55,6 @@ public class DespatchAdviceServiceTests
 
         //Assert
         Assert.NotNull(sut);
-        Assert.IsType<InvoiceResponse>(sut);
+        Assert.IsType<DespatchResponse>(sut);
     }
 }
