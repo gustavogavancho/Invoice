@@ -79,11 +79,11 @@ public class DespatchAdviceServiceTests
     {
         //Arrange
         var despatch = _fixture.Create<Despatch>();
-        _repository.Setup(x => x.Despatch.GetDespatchBySerieAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), false)).ReturnsAsync(despatch);
+        _repository.Setup(x => x.Despatch.GetDespatchBySerieAsync(It.IsAny<string>(), It.IsAny<uint>(), It.IsAny<uint>(), false)).ReturnsAsync(despatch);
 
         //Act
         var despatchService = new DespatchAdviceService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object);
-        var sut = await despatchService.GetDespatchAdviceBySerieAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), false);
+        var sut = await despatchService.GetDespatchAdviceBySerieAsync(It.IsAny<string>(), It.IsAny<uint>(), It.IsAny<uint>(), false);
 
         //Assert
         Assert.NotNull(sut);

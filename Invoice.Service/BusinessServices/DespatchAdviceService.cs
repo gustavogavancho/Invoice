@@ -86,7 +86,7 @@ public class DespatchAdviceService : IDespatchAdviceService
         return despatchesResponse;
     }
 
-    public async Task<DespatchResponse> GetDespatchAdviceBySerieAsync(string serie, int serialNumber, int correlativeNumber, bool trackChanges)
+    public async Task<DespatchResponse> GetDespatchAdviceBySerieAsync(string serie, uint serialNumber, uint correlativeNumber, bool trackChanges)
     {
         var despatch = await GetDespatchBySerieAndCheckIfItExists(serie, serialNumber, correlativeNumber, trackChanges);
 
@@ -105,7 +105,7 @@ public class DespatchAdviceService : IDespatchAdviceService
         return issuer;
     }
 
-    private async Task<Despatch> GetDespatchBySerieAndCheckIfItExists(string serie, int serialNumber, int correlativeNumber, bool trackChanges)
+    private async Task<Despatch> GetDespatchBySerieAndCheckIfItExists(string serie, uint serialNumber, uint correlativeNumber, bool trackChanges)
     {
         var invoice = await _repository.Despatch.GetDespatchBySerieAsync(serie, serialNumber, correlativeNumber, trackChanges);
 

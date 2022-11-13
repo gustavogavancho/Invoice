@@ -34,7 +34,7 @@ public class DespatchAdviceController : ControllerBase
     }
 
     [HttpGet()]
-    public async Task<ActionResult<DespatchResponse>> GetDespatchBySerie([FromQuery] DespatchParams despatchParams)
+    public async Task<ActionResult<DespatchResponse>> GetDespatchBySerie([FromQuery] InvoiceParams despatchParams)
     {
         var despatchResponse = await _service.DespatchAdviceService.GetDespatchAdviceBySerieAsync(despatchParams.Serie, despatchParams.SerialNumber, despatchParams.CorrelativeNumber, trackChanges: false);
 

@@ -21,7 +21,7 @@ public class DespatchRepository : RepositoryBase<Despatch>, IDespatchRepository
         await FindAll(trackChanges)
         .ToListAsync();
 
-    public async Task<Despatch> GetDespatchBySerieAsync(string serie, int serialNumber, int correlativeNumber, bool trackChanges) =>
+    public async Task<Despatch> GetDespatchBySerieAsync(string serie, uint serialNumber, uint correlativeNumber, bool trackChanges) =>
         await FindByCondition(x => x.DespatchDetail.Serie == serie && x.DespatchDetail.SerialNumber == serialNumber && x.DespatchDetail.CorrelativeNumber == correlativeNumber, trackChanges)
         .FirstOrDefaultAsync();
 }

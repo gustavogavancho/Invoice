@@ -61,11 +61,11 @@ public class DespatchAdviceControllerTests
     {
         //Arrange
         var despatch = _fixture.Create<DespatchResponse>();
-        _service.Setup(x => x.DespatchAdviceService.GetDespatchAdviceBySerieAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), false)).ReturnsAsync(despatch);
+        _service.Setup(x => x.DespatchAdviceService.GetDespatchAdviceBySerieAsync(It.IsAny<string>(), It.IsAny<uint>(), It.IsAny<uint>(), false)).ReturnsAsync(despatch);
 
         //Act
         var despatchController = new DespatchAdviceController(_service.Object);
-        var sut = await despatchController.GetDespatchBySerie(new DespatchParams());
+        var sut = await despatchController.GetDespatchBySerie(new InvoiceParams());
 
         //Assert
         var actionResult = Assert.IsType<ActionResult<DespatchResponse>>(sut);
