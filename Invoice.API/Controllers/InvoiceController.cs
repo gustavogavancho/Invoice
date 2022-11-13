@@ -21,7 +21,7 @@ public class InvoiceController : ControllerBase
 	{
 		var invoiceCreated = await _service.InvoiceService.CreateInvoiceAsync(issuerId, request, trackChanges: false);
 
-        return CreatedAtRoute("InvoiceById", new { id = invoiceCreated.Id }, invoiceCreated);
+        return Ok(invoiceCreated);
     }
 
     [HttpGet("GetAll")]

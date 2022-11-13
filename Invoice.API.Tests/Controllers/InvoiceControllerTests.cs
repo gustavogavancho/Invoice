@@ -1,6 +1,8 @@
 ﻿using AutoFixture;
 using Invoice.API.Controllers;
+using Invoice.Entities.Models;
 using Invoice.Service.Contracts.ServiceManagers;
+using Invoice.Shared.Params;
 using Invoice.Shared.Request;
 using Invoice.Shared.Response;
 using Microsoft.AspNetCore.Mvc;
@@ -32,8 +34,8 @@ public class InvoiceControllerTests
         var sut = await invoiceController.CreateInvoice(It.IsAny<Guid>(), invoiceRequest);
 
         //Assert
-        var statusCodeResult = Assert.IsType<CreatedAtRouteResult>(sut);
-        Assert.Equal(201, statusCodeResult.StatusCode);
+        var statusCodeResult = Assert.IsType<OkObjectResult>(sut);
+        Assert.Equal(200, statusCodeResult.StatusCode);
     }
 
     [Fact]
@@ -52,5 +54,23 @@ public class InvoiceControllerTests
         var okObjectResult = Assert.IsType<OkObjectResult>(actionResult.Result);
         var response = Assert.IsType<List<InvoiceResponse>>(okObjectResult.Value);
         Assert.True(response.Count() > 1, "Expected sut to be greater than 1");
+    }
+
+    [Fact]
+    public async Task InvoiceController_GetInvoiceBySerieTest()
+    {
+        //Arrange
+        var invoice = _fixture.Create<InvoiceResponse>();
+        _service.Setup(x => x.InvoiceService.GetInvoiceBySerieAsync(It.IsAny<string>(), It.IsAny<uint>(), It.IsAny<uint>(), false)).ReturnsAsync(invoice);
+
+        //Act
+        var issuerController = new InvoiceController(_service.Object);
+        var sut = await issuerController.GetInvoiceBySerie(new InvoiceParams());
+
+        //Assert
+        var actionResult = Assert.IsType<ActionResult<InvoiceResponse>>(sut);
+        var okObjectResult = Assert.IsType<OkObjectResult>(actionResult.Result);
+        var response = Assert.IsType<InvoiceResponse>(okObjectResult.Value);
+        Assert.Equal(response.SunatResponse, invoice.SunatResponse);
     }
 }

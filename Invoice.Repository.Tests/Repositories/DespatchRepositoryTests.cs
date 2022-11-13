@@ -53,6 +53,21 @@ public class DespatchRepositoryTests : IClassFixture<InvoiceContextClassFixture>
     }
 
     [Fact]
+    public async Task DespatchRepository_GetDespatchBySerieAsyncTest()
+    {
+        //Arrange
+        var serie = "T0";
+        int serialNumber = 1;
+        int correlativeNumber = 1;
+
+        //Act
+        var sut = await _despatchRepository.GetDespatchBySerieAsync(serie, serialNumber, correlativeNumber, false);
+
+        //Assert
+        Assert.NotNull(sut);
+    }
+
+    [Fact]
     public async Task DespatchRepository_GetDespatchAsyncTest()
     {
         //Arrange

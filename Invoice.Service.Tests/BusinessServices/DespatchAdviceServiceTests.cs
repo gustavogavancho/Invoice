@@ -57,4 +57,35 @@ public class DespatchAdviceServiceTests
         Assert.NotNull(sut);
         Assert.IsType<DespatchResponse>(sut);
     }
+
+    [Fact]
+    public async Task DespatchService_GetDespatchesAsyncTest()
+    {
+        //Arrange
+        var despatches = _fixture.Create<IEnumerable<Despatch>>();
+        _repository.Setup(x => x.Despatch.GetDespatchesAsync(false)).ReturnsAsync(despatches);
+
+        //Act
+        var despatchService = new DespatchAdviceService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object);
+        var sut = await despatchService.GetDespatchesAsync(false);
+
+        //Assert
+        Assert.NotNull(sut);
+        Assert.True(sut.Count() > 1, "Expected sut to be greater than 1");
+    }
+
+    [Fact]
+    public async Task DespatchService_GetDespatchBySerieAsyncTest()
+    {
+        //Arrange
+        var despatch = _fixture.Create<Despatch>();
+        _repository.Setup(x => x.Despatch.GetDespatchBySerieAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), false)).ReturnsAsync(despatch);
+
+        //Act
+        var despatchService = new DespatchAdviceService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object);
+        var sut = await despatchService.GetDespatchAdviceBySerieAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), false);
+
+        //Assert
+        Assert.NotNull(sut);
+    }
 }

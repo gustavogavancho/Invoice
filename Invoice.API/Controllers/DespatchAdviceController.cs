@@ -26,7 +26,7 @@ public class DespatchAdviceController : ControllerBase
     }
 
     [HttpGet("GetAll")]
-    public async Task<ActionResult<List<InvoiceResponse>>> GetDespatches()
+    public async Task<ActionResult<List<DespatchResponse>>> GetDespatches()
     {
         var despatchesResponse = await _service.DespatchAdviceService.GetDespatchesAsync(false);
 
