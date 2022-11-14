@@ -10,4 +10,4 @@
 - VoidedDocumentsType => InvoiceTpe, DebitNoteType, CreditNoteType
 - SummaryDocumentsType => InvoiceType (Ticket only)
 - DespatchAdviceType
-- TicketStatus => VoidedDocumentsType, SummaryDocumentsType
+- CDRStatus => VoidedDocumentsType, SummaryDocumentsType
