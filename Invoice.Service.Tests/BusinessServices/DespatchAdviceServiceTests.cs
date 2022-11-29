@@ -2,12 +2,14 @@
 using AutoMapper;
 using Invoice.Contracts.Logger;
 using Invoice.Contracts.Repositories;
+using Invoice.Entities.ConfigurationModels;
 using Invoice.Entities.Models;
 using Invoice.Service.BusinessServices;
 using Invoice.Service.Contracts.HelperServices;
 using Invoice.Service.Profiles;
 using Invoice.Shared.Request;
 using Invoice.Shared.Response;
+using Microsoft.Extensions.Options;
 using Moq;
 using System.Xml;
 using UBLSunatPE;
@@ -22,6 +24,7 @@ public class DespatchAdviceServiceTests
     private readonly Mapper _mapper;
     private readonly Mock<IDocumentGeneratorService> _documentGeneratorService;
     private readonly Mock<ISunatService> _sunatService;
+    private readonly Mock<IOptions<SunatConfiguration>> _configuration;
 
     public DespatchAdviceServiceTests()
     {
@@ -32,6 +35,7 @@ public class DespatchAdviceServiceTests
         _mapper = new Mapper(mapperConfiguration);
         _documentGeneratorService = new Mock<IDocumentGeneratorService>();
         _sunatService = new Mock<ISunatService>();
+        _configuration = new Mock<IOptions<SunatConfiguration>>();
     }
 
     [Fact]
@@ -40,9 +44,11 @@ public class DespatchAdviceServiceTests
         //Arrange
         var request = _fixture.Create<DespatchRequest>();
         var issuer = _fixture.Create<Issuer>();
+        var sunatConfiguration = _fixture.Create<SunatConfiguration>();
 
         _repository.Setup(x => x.Issuer.GetIssuerAsync(It.IsAny<Guid>(), false)).ReturnsAsync(issuer);
         _repository.Setup(x => x.Despatch.CreateDespatch(It.IsAny<Despatch>())).Verifiable();
+        _configuration.Setup(x => x.Value).Returns(sunatConfiguration);
         _sunatService.Setup(x => x.SerializeXmlDocument(typeof(InvoiceType), It.IsAny<InvoiceType>())).Returns(It.IsAny<string>());
         _sunatService.Setup(x => x.SignXml(It.IsAny<String>(), It.IsAny<Issuer>(), It.IsAny<string>())).Returns(new XmlDocument());
         _sunatService.Setup(x => x.ZipXml(It.IsAny<XmlDocument>(), It.IsAny<string>())).Returns(It.IsAny<byte[]>());
@@ -50,7 +56,7 @@ public class DespatchAdviceServiceTests
         _sunatService.Setup(x => x.ReadResponse(It.IsAny<byte[]>())).Returns(new List<string> { "El Comprobante numero TA01-00000001 ha sido aceptado" });
 
         //Act
-        var despatchAdviceService = new DespatchAdviceService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object);
+        var despatchAdviceService = new DespatchAdviceService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object, _configuration.Object);
         var sut = await despatchAdviceService.CreateDespatchAdviceAsync(It.IsAny<Guid>(), request, false);
 
         //Assert
@@ -66,7 +72,7 @@ public class DespatchAdviceServiceTests
         _repository.Setup(x => x.Despatch.GetDespatchesAsync(false)).ReturnsAsync(despatches);
 
         //Act
-        var despatchService = new DespatchAdviceService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object);
+        var despatchService = new DespatchAdviceService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object, _configuration.Object);
         var sut = await despatchService.GetDespatchesAsync(false);
 
         //Assert
@@ -82,7 +88,7 @@ public class DespatchAdviceServiceTests
         _repository.Setup(x => x.Despatch.GetDespatchBySerieAsync(It.IsAny<string>(), It.IsAny<uint>(), It.IsAny<uint>(), false)).ReturnsAsync(despatch);
 
         //Act
-        var despatchService = new DespatchAdviceService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object);
+        var despatchService = new DespatchAdviceService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object, _configuration.Object);
         var sut = await despatchService.GetDespatchAdviceBySerieAsync(It.IsAny<string>(), It.IsAny<uint>(), It.IsAny<uint>(), false);
 
         //Assert

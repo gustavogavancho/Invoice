@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Invoice.Contracts.Logger;
 using Invoice.Contracts.Repositories;
+using Invoice.Entities.ConfigurationModels;
 using Invoice.Service.BusinessServices;
 using Invoice.Service.Contracts.BusinessServices;
 using Invoice.Service.Contracts.HelperServices;
 using Invoice.Service.Contracts.ServiceManagers;
+using Microsoft.Extensions.Options;
 
 namespace Invoice.Service.ServiceManagers;
 
@@ -23,14 +25,15 @@ public class ServiceManager : IServiceManager
         ILoggerManager logger,
         IMapper mapper,
         IDocumentGeneratorService documentGeneratorService,
-        ISunatService sunatService)
+        ISunatService sunatService,
+        IOptions<SunatConfiguration> configuration)
     {
-        _invoiceService = new Lazy<IInvoiceService>(() => new InvoiceService(repositoryManager, logger, mapper, documentGeneratorService, sunatService));
-        _debitNoteService = new Lazy<IDebitNoteService>(() => new DebitNoteService(repositoryManager, logger, mapper, documentGeneratorService, sunatService));
-        _creditNoteService = new Lazy<ICreditNoteService>(() => new CreditNoteService(repositoryManager, logger, mapper, documentGeneratorService, sunatService));
-        _despatchAdviceService = new Lazy<IDespatchAdviceService>(() => new DespatchAdviceService(repositoryManager, logger, mapper, documentGeneratorService, sunatService));
-        _summaryDocumentsService = new Lazy<ISummaryDocumentsService>(() => new SummaryDocumentsService(repositoryManager, logger, mapper, documentGeneratorService, sunatService));
-        _voidedDocumentsService = new Lazy<IVoidedDocumentsService>(() => new VoidedDocumentsService(repositoryManager, logger, mapper, documentGeneratorService, sunatService));
+        _invoiceService = new Lazy<IInvoiceService>(() => new InvoiceService(repositoryManager, logger, mapper, documentGeneratorService, sunatService, configuration));
+        _debitNoteService = new Lazy<IDebitNoteService>(() => new DebitNoteService(repositoryManager, logger, mapper, documentGeneratorService, sunatService, configuration));
+        _creditNoteService = new Lazy<ICreditNoteService>(() => new CreditNoteService(repositoryManager, logger, mapper, documentGeneratorService, sunatService, configuration));
+        _despatchAdviceService = new Lazy<IDespatchAdviceService>(() => new DespatchAdviceService(repositoryManager, logger, mapper, documentGeneratorService, sunatService, configuration));
+        _summaryDocumentsService = new Lazy<ISummaryDocumentsService>(() => new SummaryDocumentsService(repositoryManager, logger, mapper, documentGeneratorService, sunatService, configuration));
+        _voidedDocumentsService = new Lazy<IVoidedDocumentsService>(() => new VoidedDocumentsService(repositoryManager, logger, mapper, documentGeneratorService, sunatService, configuration));
         _ticketService = new Lazy<ITicketService>(() => new TicketService(repositoryManager, logger, mapper, documentGeneratorService, sunatService));
         _issuerService = new Lazy<IIssuerService>(() => new IssuerService(repositoryManager, logger, mapper));
     }

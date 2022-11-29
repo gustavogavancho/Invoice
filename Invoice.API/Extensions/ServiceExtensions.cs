@@ -1,5 +1,6 @@
 ﻿using Invoice.Contracts.Logger;
 using Invoice.Contracts.Repositories;
+using Invoice.Entities.ConfigurationModels;
 using Invoice.LoggerService;
 using Invoice.Repository;
 using Invoice.Repository.Repositories;
@@ -30,4 +31,7 @@ public static class ServiceExtensions
 
     public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration configuration) =>
         services.AddDbContext<InvoiceContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+
+    public static void AddSunatConfiguration(this IServiceCollection services, IConfiguration configuration) =>
+        services.Configure<SunatConfiguration>(configuration.GetSection("SunatConfiguration"));
 }

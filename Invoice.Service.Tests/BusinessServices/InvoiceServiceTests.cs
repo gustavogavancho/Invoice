@@ -2,12 +2,14 @@
 using AutoMapper;
 using Invoice.Contracts.Logger;
 using Invoice.Contracts.Repositories;
+using Invoice.Entities.ConfigurationModels;
 using Invoice.Entities.Models;
 using Invoice.Service.BusinessServices;
 using Invoice.Service.Contracts.HelperServices;
 using Invoice.Service.Profiles;
 using Invoice.Shared.Request;
 using Invoice.Shared.Response;
+using Microsoft.Extensions.Options;
 using Moq;
 using System.Xml;
 using UBLSunatPE;
@@ -22,6 +24,7 @@ public class InvoiceServiceTests
     private readonly Mapper _mapper;
     private readonly Mock<IDocumentGeneratorService> _documentGeneratorService;
     private readonly Mock<ISunatService> _sunatService;
+    private readonly Mock<IOptions<SunatConfiguration>> _configuration;
 
     public InvoiceServiceTests()
     {
@@ -32,6 +35,7 @@ public class InvoiceServiceTests
         _mapper = new Mapper(mapperConfiguration);
         _documentGeneratorService = new Mock<IDocumentGeneratorService>();
         _sunatService = new Mock<ISunatService>();
+        _configuration = new Mock<IOptions<SunatConfiguration>>();
     }
 
     [Fact]
@@ -40,9 +44,11 @@ public class InvoiceServiceTests
         //Arrange
         var request = _fixture.Create<InvoiceRequest>();
         var issuer = _fixture.Create<Issuer>();
+        var sunatConfiguration = _fixture.Create<SunatConfiguration>();
 
         _repository.Setup(x => x.Issuer.GetIssuerAsync(It.IsAny<Guid>(), false)).ReturnsAsync(issuer);
         _repository.Setup(x => x.Invoice.CreateInvoice(It.IsAny<Entities.Models.Invoice>())).Verifiable();
+        _configuration.Setup(x => x.Value).Returns(sunatConfiguration);
         _sunatService.Setup(x => x.SerializeXmlDocument(typeof(InvoiceType), It.IsAny<InvoiceType>())).Returns(It.IsAny<string>());
         _sunatService.Setup(x => x.SignXml(It.IsAny<String>(), It.IsAny<Issuer>(), It.IsAny<string>())).Returns(new XmlDocument());
         _sunatService.Setup(x => x.ZipXml(It.IsAny<XmlDocument>(), It.IsAny<string>())).Returns(It.IsAny<byte[]>());
@@ -50,7 +56,7 @@ public class InvoiceServiceTests
         _sunatService.Setup(x => x.ReadResponse(It.IsAny<byte[]>())).Returns(new List<string> { "La Factura numero FA01-00000001, ha sido aceptada" });
 
         //Act
-        var invoiceService = new InvoiceService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object);
+        var invoiceService = new InvoiceService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object, _configuration.Object);
         var sut = await invoiceService.CreateInvoiceAsync(It.IsAny<Guid>(), request, false);
 
         //Assert
@@ -66,7 +72,7 @@ public class InvoiceServiceTests
         _repository.Setup(x => x.Invoice.GetInvoicesAsync(false)).ReturnsAsync(invoices);
 
         //Act
-        var invoiceService = new InvoiceService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object);
+        var invoiceService = new InvoiceService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object, _configuration.Object);
         var sut = await invoiceService.GetInvoicesAsync(false);
 
         //Assert
@@ -82,7 +88,7 @@ public class InvoiceServiceTests
         _repository.Setup(x => x.Invoice.GetInvoiceBySerieAsync(It.IsAny<string>(), It.IsAny<uint>(), It.IsAny<uint>(), false)).ReturnsAsync(issuer);
 
         //Act
-        var invoiceService = new InvoiceService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object);
+        var invoiceService = new InvoiceService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object, _configuration.Object);
         var sut = await invoiceService.GetInvoiceBySerieAsync(It.IsAny<string>(), It.IsAny<uint>(), It.IsAny<uint>(), false);
 
         //Assert

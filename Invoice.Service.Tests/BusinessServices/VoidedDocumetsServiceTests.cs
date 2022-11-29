@@ -2,12 +2,14 @@
 using AutoMapper;
 using Invoice.Contracts.Logger;
 using Invoice.Contracts.Repositories;
+using Invoice.Entities.ConfigurationModels;
 using Invoice.Entities.Models;
 using Invoice.Service.BusinessServices;
 using Invoice.Service.Contracts.HelperServices;
 using Invoice.Service.Profiles;
 using Invoice.Shared.Request;
 using Invoice.Shared.Response;
+using Microsoft.Extensions.Options;
 using Moq;
 using System.Xml;
 using UBLSunatPE;
@@ -22,6 +24,7 @@ public class VoidedDocumetsServiceTests
     private readonly Mapper _mapper;
     private readonly Mock<IDocumentGeneratorService> _documentGeneratorService;
     private readonly Mock<ISunatService> _sunatService;
+    private readonly Mock<IOptions<SunatConfiguration>> _configuration;
 
     public VoidedDocumetsServiceTests()
     {
@@ -32,6 +35,7 @@ public class VoidedDocumetsServiceTests
         _mapper = new Mapper(mapperConfiguration);
         _documentGeneratorService = new Mock<IDocumentGeneratorService>();
         _sunatService = new Mock<ISunatService>();
+        _configuration = new Mock<IOptions<SunatConfiguration>>();
     }
 
     [Fact]
@@ -41,6 +45,7 @@ public class VoidedDocumetsServiceTests
         var request = _fixture.Create<VoidedDocumentsRequest>();
         var issuer = _fixture.Create<Issuer>();
         var invoice = _fixture.Create<Entities.Models.Invoice>();
+        var sunatConfiguration = _fixture.Create<SunatConfiguration>();
         invoice.Canceled = false;
         var voidedDocuments = new VoidedDocumentsType
         {
@@ -49,6 +54,7 @@ public class VoidedDocumetsServiceTests
 
         _repository.Setup(x => x.Issuer.GetIssuerAsync(It.IsAny<Guid>(), true)).ReturnsAsync(issuer);
         _repository.Setup(x => x.Ticket.CreateTicket(It.IsAny<Ticket>())).Verifiable();
+        _configuration.Setup(x => x.Value).Returns(sunatConfiguration);
         _repository.Setup(x => x.Invoice.GetInvoiceBySerieAsync(It.IsAny<string>(), It.IsAny<uint>(), It.IsAny<uint>(), true)).ReturnsAsync(invoice);
         _documentGeneratorService.Setup(x => x.GenerateVoidedDocumentsType(It.IsAny<VoidedDocumentsRequest>(), It.IsAny<Issuer>())).Returns(voidedDocuments);
         _sunatService.Setup(x => x.SerializeXmlDocument(typeof(InvoiceType), It.IsAny<InvoiceType>())).Returns(It.IsAny<string>());
@@ -58,7 +64,7 @@ public class VoidedDocumetsServiceTests
         _sunatService.Setup(x => x.ReadResponse(It.IsAny<byte[]>())).Returns(new List<string> { "La Factura numero FA01-00000001, ha sido aceptada" });
 
         //Act
-        var voidedDocumentsService = new VoidedDocumentsService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object);
+        var voidedDocumentsService = new VoidedDocumentsService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object, _configuration.Object);
         var sut = await voidedDocumentsService.CreateVoidedDocumentsAsync(It.IsAny<Guid>(), request, true);
 
         //Assert

@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using Invoice.Contracts.Logger;
 using Invoice.Contracts.Repositories;
+using Invoice.Entities.ConfigurationModels;
 using Invoice.Entities.Exceptions;
 using Invoice.Entities.Models;
 using Invoice.Service.Contracts.BusinessServices;
 using Invoice.Service.Contracts.HelperServices;
 using Invoice.Shared.Request;
 using Invoice.Shared.Response;
+using Microsoft.Extensions.Options;
 using UBLSunatPE;
 
 namespace Invoice.Service.BusinessServices;
@@ -18,14 +20,21 @@ public class DebitNoteService : IDebitNoteService
     private readonly IMapper _mapper;
     private readonly IDocumentGeneratorService _documentGeneratorService;
     private readonly ISunatService _sunatService;
+    private readonly IOptions<SunatConfiguration> _configuration;
 
-    public DebitNoteService(IRepositoryManager repository, ILoggerManager logger, IMapper mapper, IDocumentGeneratorService documentGeneratorService, ISunatService sunatService)
+    public DebitNoteService(IRepositoryManager repository, 
+        ILoggerManager logger, 
+        IMapper mapper, 
+        IDocumentGeneratorService documentGeneratorService, 
+        ISunatService sunatService,
+        IOptions<SunatConfiguration> configuration)
     {
         _repository = repository;
         _logger = logger;
         _mapper = mapper;
         _documentGeneratorService = documentGeneratorService;
         _sunatService = sunatService;
+        _configuration = configuration;
     }
 
     public async Task<InvoiceResponse> CreateDebitNoteAsync(Guid id, NoteRequest request, bool trackChanges)
@@ -51,9 +60,9 @@ public class DebitNoteService : IDebitNoteService
 
         //Send bill
         var zippedFile = xmlFile.Replace(".xml", ".zip");
-        var cdrByte = await _sunatService.SendBill("https://e-beta.sunat.gob.pe/ol-ti-itcpfegem-beta/billService",
-                "20606022779MODDATOS",
-                "moddatos",
+        var cdrByte = await _sunatService.SendBill(_configuration.Value.UrlInvoice,
+                _configuration.Value.Username,
+                _configuration.Value.Password,
                 zippedFile,
                 byteZippedXml);
 

@@ -2,12 +2,14 @@
 using AutoMapper;
 using Invoice.Contracts.Logger;
 using Invoice.Contracts.Repositories;
+using Invoice.Entities.ConfigurationModels;
 using Invoice.Entities.Models;
 using Invoice.Service.BusinessServices;
 using Invoice.Service.Contracts.HelperServices;
 using Invoice.Service.Profiles;
 using Invoice.Shared.Request;
 using Invoice.Shared.Response;
+using Microsoft.Extensions.Options;
 using Moq;
 using System.Xml;
 using UBLSunatPE;
@@ -22,6 +24,7 @@ public class SummaryDocumentsServiceTests
     private readonly Mapper _mapper;
     private readonly Mock<IDocumentGeneratorService> _documentGeneratorService;
     private readonly Mock<ISunatService> _sunatService;
+    private readonly Mock<IOptions<SunatConfiguration>> _configuration;
 
     public SummaryDocumentsServiceTests()
     {
@@ -32,6 +35,7 @@ public class SummaryDocumentsServiceTests
         _mapper = new Mapper(mapperConfiguration);
         _documentGeneratorService = new Mock<IDocumentGeneratorService>();
         _sunatService = new Mock<ISunatService>();
+        _configuration = new Mock<IOptions<SunatConfiguration>>();
     }
 
     [Fact]
@@ -41,6 +45,7 @@ public class SummaryDocumentsServiceTests
         var request = _fixture.Create<SummaryDocumentsRequest>();
         var issuer = _fixture.Create<Issuer>();
         var invoices = _fixture.Create<IEnumerable<Entities.Models.Invoice>>();
+        var sunatConfiguration = _fixture.Create<SunatConfiguration>();
         var summaryDocuments = new SummaryDocumentsType
         {
             ID = new IDType { Value = $"RC-{request.IssueDate.ToString("yyyyMMdd")}-{request.SummaryDocumentsId.ToString("00000")}" }
@@ -63,6 +68,7 @@ public class SummaryDocumentsServiceTests
         _repository.Setup(x => x.Issuer.GetIssuerAsync(It.IsAny<Guid>(), false)).ReturnsAsync(issuer);
         _repository.Setup(x => x.Invoice.GetTicketsByIssueDateAsync(new DateTime(2022, 10, 30), null, false)).ReturnsAsync(invoices);
         _repository.Setup(x => x.Ticket.CreateTicket(It.IsAny<Ticket>())).Verifiable();
+        _configuration.Setup(x => x.Value).Returns(sunatConfiguration);
         _documentGeneratorService.Setup(x => x.GenerateSummaryDocumentsType(It.IsAny<SummaryDocumentsRequest>(), It.IsAny<Issuer>(), It.IsAny<IEnumerable<Entities.Models.Invoice>>())).Returns(summaryDocuments);
         _sunatService.Setup(x => x.SerializeXmlDocument(typeof(DebitNoteType), It.IsAny<DebitNoteType>())).Returns(It.IsAny<string>());
         _sunatService.Setup(x => x.SignXml(It.IsAny<String>(), It.IsAny<Issuer>(), It.IsAny<string>())).Returns(new XmlDocument());
@@ -70,7 +76,7 @@ public class SummaryDocumentsServiceTests
         _sunatService.Setup(x => x.SendSummary(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<byte[]>())).ReturnsAsync("1234567");
 
         //Act
-        var summaryDocumentsService = new SummaryDocumentsService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object);
+        var summaryDocumentsService = new SummaryDocumentsService(_repository.Object, _logger.Object, _mapper, _documentGeneratorService.Object, _sunatService.Object, _configuration.Object);
         var sut = await summaryDocumentsService.CreateSummaryDocumentsAsync(It.IsAny<Guid>(), request, false);
 
         //Assert
