@@ -1,5 +1,7 @@
 # Billing API - SUNAT Peru
 
+RESTful api to register all invoices emited for Peru.
+
 
 ![image](https://user-images.githubusercontent.com/15368343/201546978-d1fbf102-fbaa-4c1e-9939-8e6d7380856c.png)
 
